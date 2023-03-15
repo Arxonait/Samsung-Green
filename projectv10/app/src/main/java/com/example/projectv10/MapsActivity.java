@@ -18,6 +18,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.projectv10.databinding.ActivityMapsBinding;
 
@@ -32,7 +33,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationManager locationManager;
     private LocationListener locationListener;
 
-
+    private boolean isCreate_divice_metca = true;
+    private Marker marker = null;
 
 
 
@@ -41,9 +43,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        //Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(47.219154, 39.700608)).title("Вы здесь"));
+
+
 
         // Инициализация LocationManager
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+
 
         locationListener = new LocationListener() {
             @Override
@@ -52,8 +59,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 LatLng latLng = new LatLng(latitude, longitude);
-                mMap.addMarker(new MarkerOptions().position(latLng).title("Вы здесь"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+                if (isCreate_divice_metca) {
+                    marker = mMap.addMarker(new MarkerOptions().position(latLng).title("Вы здесь"));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    isCreate_divice_metca = false;
+                }
+                marker.setPosition(latLng);
             }
 
             @Override
@@ -67,6 +79,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onProviderDisabled(String provider) {
             }
+
+
+            
         };
 
         // Проверка доступности провайдера GPS
@@ -88,23 +103,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        //LatLng sydney = new LatLng(-34, 151);
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     protected void onDestroy() {
