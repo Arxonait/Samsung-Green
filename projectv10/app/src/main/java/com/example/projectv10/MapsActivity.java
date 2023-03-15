@@ -21,6 +21,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.projectv10.databinding.ActivityMapsBinding;
+import com.google.maps.DirectionsApiRequest;
+import com.google.maps.GeoApiContext;
 
 import android.Manifest;
 
@@ -33,23 +35,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationManager locationManager;
     private LocationListener locationListener;
 
-    private boolean isCreate_divice_metca = true;
+    private boolean isCreate_device_metca = true;
     private Marker marker = null;
-
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        //Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(47.219154, 39.700608)).title("Вы здесь"));
 
 
 
         // Инициализация LocationManager
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
 
 
         locationListener = new LocationListener() {
@@ -60,10 +58,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 double longitude = location.getLongitude();
                 LatLng latLng = new LatLng(latitude, longitude);
 
-                if (isCreate_divice_metca) {
+                if (isCreate_device_metca) {
                     marker = mMap.addMarker(new MarkerOptions().position(latLng).title("Вы здесь"));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                    isCreate_divice_metca = false;
+                    isCreate_device_metca = false;
                 }
                 marker.setPosition(latLng);
             }
@@ -81,7 +79,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
 
-            
         };
 
         // Проверка доступности провайдера GPS
