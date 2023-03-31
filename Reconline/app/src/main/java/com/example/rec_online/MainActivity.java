@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         reg_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent Register = new Intent(this, Register.class);
+                Intent Register = new Intent(MainActivity.this, Register.class);
                 startActivity(Register);
             }
         });
