@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,8 +16,11 @@ public class EnterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Handler handler = new Handler(Looper.getMainLooper());
 
         EditText login_element = (EditText) findViewById(R.id.login);
         EditText password_element = (EditText) findViewById(R.id.password);
@@ -28,8 +33,26 @@ public class EnterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String login = String.valueOf(login_element.getText());
                 String password = String.valueOf(password_element.getText());
-                if(login.length() > 0 && password.length() > 0){
-                    if (login.equals("admin") && password.equals("00")){
+
+
+
+
+                new Thread(new Runnable() {
+                    public void run() {
+                        // выполнение сетевого запроса
+                        String res = Enter_db.run(login, password);
+                        // передача результата в главный поток
+                        handler.post(new Runnable() {
+                            public void run() {
+                                // обновление пользовательского интерфейса с использованием результата
+                                result_element.setText(res);
+                            }
+                        });
+                    }
+                }).start();
+
+                if(login.length() > 0 && password.length() > 0 && false){
+                    if (login.equals("admin") && password.equals("admin")){
                         result_element.setText("Успешно");
                         result_element.setTextColor(Color.GREEN);
                     }
@@ -45,6 +68,13 @@ public class EnterActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+
+
+
+
 
         reg_button.setOnClickListener(new View.OnClickListener() {
             @Override
