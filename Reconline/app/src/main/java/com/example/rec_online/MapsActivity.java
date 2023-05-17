@@ -1,10 +1,10 @@
-package com.example.projectv10;
+package com.example.rec_online;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.rec_online.databinding.ActivityMapsBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,29 +24,21 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.example.projectv10.databinding.ActivityMapsBinding;
-import com.google.android.gms.maps.model.PolylineOptions;
+
 import com.google.maps.DirectionsApi;
 import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
 import com.google.maps.errors.ApiException;
-import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsResult;
-import com.google.maps.model.DirectionsRoute;
-import com.google.maps.model.DirectionsStep;
-import com.google.maps.GeoApiContext;
 
 import android.Manifest;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import com.google.android.gms.maps.SupportMapFragment;
 
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
 
@@ -114,12 +107,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         //
-        
+
 
         //
     }
 
-    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
@@ -155,4 +147,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Остановка получения местоположения при закрытии приложения
         locationManager.removeUpdates(locationListener);
     }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
+    }
 }
+

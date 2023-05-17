@@ -51,10 +51,12 @@ public class EnterActivity extends AppCompatActivity {
                     }
                 }).start();
 
-                if(login.length() > 0 && password.length() > 0 && false){
+                if(login.length() > 0 && password.length() > 0 ){
                     if (login.equals("admin") && password.equals("admin")){
                         result_element.setText("Успешно");
                         result_element.setTextColor(Color.GREEN);
+                        Intent MapsActivity = new Intent(EnterActivity.this, MapsActivity.class);
+                        startActivity(MapsActivity);
                     }
                     else{
                         result_element.setText("Логин или пароль не верен");
@@ -64,6 +66,8 @@ public class EnterActivity extends AppCompatActivity {
                 else{
                     result_element.setText("Заполните все поля ");
                     result_element.setTextColor(Color.RED);
+
+
                 }
 
             }
@@ -79,6 +83,7 @@ public class EnterActivity extends AppCompatActivity {
         reg_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Register.getData(5);
                 Intent Register = new Intent(EnterActivity.this, Register.class);
                 startActivity(Register);
             }
