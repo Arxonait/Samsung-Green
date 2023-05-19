@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class EnterActivity extends AppCompatActivity {
 
     @Override
@@ -19,7 +22,7 @@ public class EnterActivity extends AppCompatActivity {
 
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.enter_activity);
         Handler handler = new Handler(Looper.getMainLooper());
 
         EditText login_element = (EditText) findViewById(R.id.login);
@@ -33,52 +36,42 @@ public class EnterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String login = String.valueOf(login_element.getText());
                 String password = String.valueOf(password_element.getText());
-
-
-
-
-                new Thread(new Runnable() {
-                    public void run() {
-                        // выполнение сетевого запроса
-                        String res = Enter_db.run(login, password);
-                        // передача результата в главный поток
-                        handler.post(new Runnable() {
-                            public void run() {
-                                // обновление пользовательского интерфейса с использованием результата
-                                result_element.setText(res);
-                            }
-                        });
-                    }
-                }).start();
-
                 if(login.length() > 0 && password.length() > 0 ){
-                    if (login.equals("admin") && password.equals("admin")){
-                        result_element.setText("Успешно");
-                        result_element.setTextColor(Color.GREEN);
-                        Intent MapsActivity = new Intent(EnterActivity.this, MapsActivity.class);
-                        startActivity(MapsActivity);
-                    }
-                    else{
-                        result_element.setText("Логин или пароль не верен");
-                        result_element.setTextColor(Color.RED);
-                    }
+                    new Thread(new Runnable() {
+                        public void run() {
+                            // выполнение сетевого запроса
+                            String res = Main_server.Enter(login, password);
+                            // передача результата в главный поток
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    // обновление пользовательского интерфейса с использованием результата
+                                    try {
+                                        JSONObject answer = new JSONObject(res);
+                                        if(answer.getBoolean("status")){
+                                            Intent MapsActivity = new Intent(EnterActivity.this, MapsActivity.class);
+                                            startActivity(MapsActivity);
+                                        }
+                                        else{
+                                            result_element.setText("Логин или пароль не верен");
+                                            result_element.setTextColor(Color.RED);
+                                        }
+
+                                    } catch (JSONException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                            });
+                        }
+                    }).start();
                 }
                 else{
                     result_element.setText("Заполните все поля ");
                     result_element.setTextColor(Color.RED);
 
-
                 }
 
             }
         });
-
-
-
-
-
-
-
 
         reg_button.setOnClickListener(new View.OnClickListener() {
             @Override
