@@ -48,6 +48,9 @@ public class EnterActivity extends AppCompatActivity {
                                     try {
                                         JSONObject answer = new JSONObject(res);
                                         if(answer.getBoolean("status")){
+                                            User user = new User();
+                                            user.parseJson(answer);
+                                            MapsActivity.getData(user);
                                             Intent MapsActivity = new Intent(EnterActivity.this, MapsActivity.class);
                                             startActivity(MapsActivity);
                                         }

@@ -26,10 +26,11 @@ public class HttpControllerREST extends HttpServlet {
     }
 
     @RequestMapping("/reg")
-    public String Enter(@RequestBody String body) {
+    public String reg(@RequestBody String body) throws SQLException {
         JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
-        System.out.println(jsonObject.get("fam").toString());
-        return "true";
+        //JSONObject jsonObject = new JSONObject(body);
+
+        return DB_act.reg(jsonObject);
     }
 
 }

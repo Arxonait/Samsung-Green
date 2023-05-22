@@ -49,6 +49,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Marker marker = null;
 
 
+    static User user;
+    public static void getData(User user0) {
+        user = user0;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +108,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else {
             Toast.makeText(this, "GPS не доступен", Toast.LENGTH_SHORT).show();
         }
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map3);
         mapFragment.getMapAsync(this);
 
 

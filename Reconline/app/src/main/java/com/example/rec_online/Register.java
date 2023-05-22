@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,11 +53,12 @@ public class Register extends AppCompatActivity {
 
                 if(login.length() * password1.length() * password2.length() *  name.length() * fam.length() * numberr.length() > 0){
                     if(password1.equals(password2)){
-                        if (password1.length() > 5){
+                        if (password1.length() > 0){
                             new Thread(new Runnable() {
                                 public void run() {
                                     // выполнение сетевого запроса
-                                    User user_new = new User(name, fam, numberr, login, password1);
+                                    User user_new = new User(name, fam, numberr, login, password1, 0, 0, 0,
+                                    0 , 0, false);
                                     String res = Main_server.reg(user_new);
                                     // передача результата в главный поток
                                     handler.post(new Runnable() {
@@ -65,10 +67,15 @@ public class Register extends AppCompatActivity {
                                             try {
                                                 JSONObject answer = new JSONObject(res);
                                                 if(answer.getBoolean("status")){
+                                                    Toast.makeText(getApplicationContext(), "Вы зарегестрированы",
+                                                            Toast.LENGTH_SHORT).show();
+                                                    Intent enter_act = new Intent(Register.this, EnterActivity.class);
+                                                    startActivity(enter_act);
+
 
                                                 }
                                                 else{
-                                                    result_element.setText("Логин или пароль не верен");
+                                                    result_element.setText("Пользователь с таким логином уже существует");
                                                     result_element.setTextColor(Color.RED);
                                                 }
 
@@ -95,7 +102,13 @@ public class Register extends AppCompatActivity {
             }
         });
 
-
+        button_reg_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent enter_act = new Intent(Register.this, EnterActivity.class);
+                startActivity(enter_act);
+            }
+        });
 
     }
 
