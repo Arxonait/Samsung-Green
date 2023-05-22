@@ -8,30 +8,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 
 @RestController
 public class HttpControllerREST extends HttpServlet {
 
+
     @RequestMapping("/enter")
-    public String Enter(@RequestBody Map<String, String> body) {
+    public String Enter(@RequestBody Map<String, String> body) throws SQLException {
         String login = body.get("login");
         String password = body.get("password");
 
-        JSONObject answer_to_mob = new JSONObject();
 
-
-
-        // проверяем логин и пароль и возвращаем ответ в зависимости от результата
-        if (login.equals("admin") && password.equals("admin")) {
-            answer_to_mob.put("status", "true");
-            answer_to_mob.put("login", "John");
-            return answer_to_mob.toString();
-        } else {
-            answer_to_mob.put("status", "false");
-            return answer_to_mob.toString();
-        }
+        return DB_act.enter(login, password);
     }
 
     @RequestMapping("/reg")
