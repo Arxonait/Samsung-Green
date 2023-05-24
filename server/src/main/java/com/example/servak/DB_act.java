@@ -5,6 +5,8 @@ import org.json.simple.JSONObject;
 
 import java.security.PublicKey;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DB_act {
     static final String URL = "jdbc:postgresql://localhost:5432/Reconline";
@@ -80,6 +82,44 @@ public class DB_act {
         resultSet.close();
         statement.close();
 
+
+        return result;
+    }
+
+
+    public static String factory() throws SQLException {
+        List<JSONObject> jsonObjects = new ArrayList<>();
+        String result;
+        Connection connection;
+        JSONObject answer_to_mob = new JSONObject();
+
+        try {
+            connection = DriverManager.getConnection(URL, USERNAME, PassWord);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        Statement statement = connection.createStatement();
+        String SQL = String.format("select * from factory");
+        ResultSet resultSet = statement.executeQuery(SQL);
+        while (resultSet.next()) {
+            JSONObject json = new JSONObject();
+            json.put("name", resultSet.getString("name"));
+            json.put("adres", resultSet.getString("adres"));
+            json.put("x", resultSet.getString("x"));
+            json.put("y", resultSet.getString("y"));
+            json.put("work_time", resultSet.getString("work_time"));
+            json.put("mobile", resultSet.getString("mobile"));
+
+            jsonObjects.add(json);
+        }
+
+        JSONObject combinedJson = new JSONObject();
+        combinedJson.put("data", jsonObjects);
+
+
+        result = combinedJson.toString();
+        resultSet.close();
+        statement.close();
 
         return result;
     }

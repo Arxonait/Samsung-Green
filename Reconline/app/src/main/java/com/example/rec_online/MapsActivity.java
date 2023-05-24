@@ -1,22 +1,23 @@
 package com.example.rec_online;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.rec_online.databinding.ActivityMapsBinding;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,17 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import com.google.maps.DirectionsApi;
-import com.google.maps.DirectionsApiRequest;
-import com.google.maps.GeoApiContext;
-import com.google.maps.errors.ApiException;
-import com.google.maps.model.DirectionsResult;
-
 import android.Manifest;
-
-import java.io.IOException;
-
-
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -49,16 +40,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Marker marker = null;
 
 
-    static User user;
-    public static void getData(User user0) {
-        user = user0;
-    }
+
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+
 
 
         // Инициализация LocationManager
@@ -75,7 +67,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 if (isCreate_device_metca) {
                     marker = mMap.addMarker(new MarkerOptions().position(latLng).title("Вы здесь"));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
                     isCreate_device_metca = false;
                 }
                 marker.setPosition(latLng);
@@ -112,38 +104,71 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
 
 
-        //
 
-
-        //
     }
 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
 
-        LatLng startPoint = new LatLng(47.216449, 39.626977); // начальная точка
-        LatLng endPoint = new LatLng(47.210331, 39.670987); // конечная точка
-
-        mMap.addMarker(new MarkerOptions().position(startPoint).title("Start Point"));
-        mMap.addMarker(new MarkerOptions().position(endPoint).title("End Point"));
-
-        DirectionsResult result = null;
-        try {
-            GeoApiContext context = new GeoApiContext.Builder()
-                    .apiKey("AIzaSyCKmbN1VyhhxY_GcIGrSItDdkNEW20B2Ds")
-                    .build();
-            DirectionsApiRequest request = DirectionsApi.newRequest(context)
-                    .origin(String.valueOf(startPoint))
-                    .destination(String.valueOf(endPoint));
-            result = request.await();
-        } catch (ApiException | InterruptedException | IOException e) {
-            // обработка исключения
-            Log.e(TAG, "Ошибка: " + e.getMessage());
+        for (factory factory : pass_act.factories) {
+            Marker new_marker;
+            LatLng latLng = new LatLng(factory.x, factory.y);
+            new_marker = mMap.addMarker(new MarkerOptions().position(latLng).title(factory.name));
+            new_marker.setPosition(latLng);
         }
 
 
-        // добавляем маркеры на карту
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+        Button plusZoom = (Button) findViewById(R.id.plus);
+        Button minusZoom = (Button) findViewById(R.id.minus);
+
+        Button myGeo = (Button) findViewById(R.id.geo);
+
+        plusZoom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                float currentZoom = mMap.getCameraPosition().zoom;
+                float newZoom = currentZoom + 1.0f; // Увеличение зума на 1
+
+                CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(newZoom);
+                mMap.animateCamera(cameraUpdate);
+
+            }
+        });
+
+        minusZoom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                float currentZoom = mMap.getCameraPosition().zoom;
+                float newZoom = currentZoom - 1.0f;
+
+                CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(newZoom);
+                mMap.animateCamera(cameraUpdate);
+
+            }
+        });
+
+        myGeo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveToMyLocation();
+            }
+        });
+
+
 
 
     }
@@ -157,6 +182,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
+    }
+
+
+    private void moveToMyLocation() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String provider = locationManager.getBestProvider(criteria, false);
+
+        if (provider != null) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                Location location = locationManager.getLastKnownLocation(provider);
+                if (location != null) {
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15.0f);
+                    mMap.animateCamera(cameraUpdate);
+                }
+            }
+        }
     }
 }
 

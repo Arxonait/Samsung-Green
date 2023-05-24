@@ -36,7 +36,6 @@ public class Register extends AppCompatActivity {
         EditText number_element = (EditText) findViewById(R.id.Numberr);
 
         Button button_reg = (Button) findViewById(R.id.button_reg);
-        Button button_reg_back = (Button) findViewById(R.id.reg_back);
         TextView result_element = (TextView) findViewById(R.id.Reg_result);
 
 
@@ -102,17 +101,6 @@ public class Register extends AppCompatActivity {
             }
         });
 
-        button_reg_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent enter_act = new Intent(Register.this, EnterActivity.class);
-                startActivity(enter_act);
-            }
-        });
-
     }
 
-    public static void getData( Integer data0){
-        data = data0;
-    }
 }

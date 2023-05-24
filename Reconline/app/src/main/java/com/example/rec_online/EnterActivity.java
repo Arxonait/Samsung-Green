@@ -17,6 +17,9 @@ import org.json.JSONObject;
 
 public class EnterActivity extends AppCompatActivity {
 
+    private static User user_enter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -48,9 +51,12 @@ public class EnterActivity extends AppCompatActivity {
                                     try {
                                         JSONObject answer = new JSONObject(res);
                                         if(answer.getBoolean("status")){
-                                            User user = new User();
-                                            user.parseJson(answer);
-                                            MapsActivity.getData(user);
+                                            user_enter = new User();
+                                            user_enter.parseJson(answer);
+
+
+                                            pass_act.main();
+
                                             Intent MapsActivity = new Intent(EnterActivity.this, MapsActivity.class);
                                             startActivity(MapsActivity);
                                         }
@@ -79,11 +85,14 @@ public class EnterActivity extends AppCompatActivity {
         reg_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Register.getData(5);
                 Intent Register = new Intent(EnterActivity.this, Register.class);
                 startActivity(Register);
             }
         });
+    }
+
+    public static User Data_enter(){
+        return user_enter;
     }
 
 }

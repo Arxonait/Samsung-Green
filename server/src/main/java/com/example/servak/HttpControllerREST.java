@@ -28,9 +28,15 @@ public class HttpControllerREST extends HttpServlet {
     @RequestMapping("/reg")
     public String reg(@RequestBody String body) throws SQLException {
         JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
+        System.out.println(1);
         //JSONObject jsonObject = new JSONObject(body);
 
         return DB_act.reg(jsonObject);
+    }
+
+    @RequestMapping("/maps")
+    public String maps(@RequestBody String body) throws SQLException {
+        return DB_act.factory();
     }
 
 }

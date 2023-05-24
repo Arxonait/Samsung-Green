@@ -100,25 +100,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pass2_reg" />
 
-    <Button
-        android:id="@+id/reg_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="20dp"
-        android:text="Назад"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_reg" />
-
     <TextView
         android:id="@+id/Reg_result"
         android:layout_width="210dp"
         android:layout_height="56dp"
         android:layout_marginStart="92dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:textColor="#FF0000"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reg_back" />
+        app:layout_constraintTop_toBottomOf="@+id/button_reg" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

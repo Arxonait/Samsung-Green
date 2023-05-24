@@ -44,6 +44,16 @@ public class Main_server {
         return result;
     }
 
+    public static String maps(){
+        String result;
+        String url = "http://10.0.2.2:8080/maps";
+        String json = "{\"login\":\"" + 111 + "\",\"password\":\"" + 222 + "\"}";
+
+        result = to_server(url, json);
+
+        return result;
+    }
+
     private static String to_server(String url, String json){
         String result;
         OkHttpClient client = new OkHttpClient();
