@@ -1,6 +1,7 @@
 package com.example.rec_online;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -14,6 +15,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rec_online.databinding.ActivityMapsBinding;
@@ -28,16 +30,27 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.Manifest;
 
+import java.util.HashMap;
+import java.util.Map;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
 
-    private boolean isCreate_device_metca = true;
-    private Marker marker = null;
+    private boolean isCreate_device_marker = true;
+    private Marker marker_geo = null;
+    private String marker_geo_id;
+    private ConstraintLayout menu_fact;
+    private TextView  name_fact;
+    private TextView  adres_fact;
+    private TextView  mobile_fact;
+    private TextView  work_time_fact;
+
+    private Map<String, Marker> markerMap;
 
 
 
@@ -52,7 +65,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-
+        markerMap = new HashMap<>();
         // Инициализация LocationManager
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -65,12 +78,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 double longitude = location.getLongitude();
                 LatLng latLng = new LatLng(latitude, longitude);
 
-                if (isCreate_device_metca) {
-                    marker = mMap.addMarker(new MarkerOptions().position(latLng).title("Вы здесь"));
+                if (isCreate_device_marker) {
+                    marker_geo = mMap.addMarker(new MarkerOptions().position(latLng).title("Вы здесь"));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
-                    isCreate_device_metca = false;
+                    isCreate_device_marker = false;
+                    markerMap.put("my_geo", marker_geo);
+                    marker_geo_id = marker_geo.getId();
                 }
-                marker.setPosition(latLng);
+                marker_geo.setPosition(latLng);
             }
 
             @Override
@@ -109,6 +124,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        menu_fact = findViewById(R.id.menu_fact);
 
 
         for (factory factory : pass_act.factories) {
@@ -116,10 +132,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             LatLng latLng = new LatLng(factory.x, factory.y);
             new_marker = mMap.addMarker(new MarkerOptions().position(latLng).title(factory.name));
             new_marker.setPosition(latLng);
+
+            markerMap.put(factory.id, new_marker);
+
         }
+        mMap.setOnMarkerClickListener(this);
 
 
- 
+
 
 
 
@@ -171,6 +191,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
+
+
+
+        Button close_menu_fact = (Button) findViewById(R.id.close_menu_fact);
+        close_menu_fact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                menu_fact.setVisibility(View.INVISIBLE);
+            }
+        });
+        name_fact = (TextView ) findViewById(R.id.name_fact);
+        adres_fact = (TextView ) findViewById(R.id.adres_fact);
+        mobile_fact = (TextView ) findViewById(R.id.mobile_fact);
+        work_time_fact = (TextView) findViewById(R.id.time_work_fact);
+
+
+
     }
 
     protected void onDestroy() {
@@ -202,5 +239,35 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
+
+    public boolean onMarkerClick(Marker marker) {
+        // Обработка события нажатия на маркер
+        factory factort_marker = null;
+        if(!marker.getId().equals(marker_geo_id)){
+            for (Map.Entry<String, Marker> entry : markerMap.entrySet()) {
+                Marker marker_cur = entry.getValue();
+                if(marker.getId().equals(marker_cur.getId())){
+                    String fact_id = entry.getKey();
+                    for(factory fact_cur : pass_act.factories){
+                        if(fact_id.equals(fact_cur.id)){
+                            factort_marker = fact_cur;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            menu_fact.setVisibility(View.VISIBLE);
+            name_fact.setText(factort_marker.name);
+            work_time_fact.setText(factort_marker.work_time);
+            mobile_fact.setText(factort_marker.mobile);
+            adres_fact.setText(factort_marker.adres);
+
+        }
+        return false;
+    }
+
+
 }
 

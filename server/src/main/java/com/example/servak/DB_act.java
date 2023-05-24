@@ -103,6 +103,7 @@ public class DB_act {
         ResultSet resultSet = statement.executeQuery(SQL);
         while (resultSet.next()) {
             JSONObject json = new JSONObject();
+            json.put("id", resultSet.getString("id"));
             json.put("name", resultSet.getString("name"));
             json.put("adres", resultSet.getString("adres"));
             json.put("x", resultSet.getString("x"));
