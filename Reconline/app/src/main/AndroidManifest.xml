@@ -17,7 +17,9 @@
         android:theme="@style/Theme.Reconline"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <activity
+            android:name=".stat"
+            android:exported="false" />
         <!--
              TODO: Before you Enter your application, you need a Google Maps API key.
 

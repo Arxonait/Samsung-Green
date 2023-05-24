@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -15,6 +16,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -38,7 +42,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
 
-    private LocationManager locationManager;
+    private static LocationManager locationManager;
     private LocationListener locationListener;
 
     private boolean isCreate_device_marker = true;
@@ -49,6 +53,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView  adres_fact;
     private TextView  mobile_fact;
     private TextView  work_time_fact;
+    private TextView  distance_fact;
 
     private Map<String, Marker> markerMap;
 
@@ -84,6 +89,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     isCreate_device_marker = false;
                     markerMap.put("my_geo", marker_geo);
                     marker_geo_id = marker_geo.getId();
+                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.geo);
+                    marker_geo.setIcon(icon);
                 }
                 marker_geo.setPosition(latLng);
             }
@@ -115,7 +122,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else {
             Toast.makeText(this, "GPS не доступен", Toast.LENGTH_SHORT).show();
         }
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map3);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
 
@@ -126,12 +133,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         menu_fact = findViewById(R.id.menu_fact);
 
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.green);
 
         for (factory factory : pass_act.factories) {
             Marker new_marker;
             LatLng latLng = new LatLng(factory.x, factory.y);
             new_marker = mMap.addMarker(new MarkerOptions().position(latLng).title(factory.name));
             new_marker.setPosition(latLng);
+            new_marker.setIcon(icon);
 
             markerMap.put(factory.id, new_marker);
 
@@ -156,6 +165,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Button minusZoom = (Button) findViewById(R.id.minus);
 
         Button myGeo = (Button) findViewById(R.id.geo);
+        Button bt_stat = (Button) findViewById(R.id.bt_stat);
 
         plusZoom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,7 +204,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-        Button close_menu_fact = (Button) findViewById(R.id.close_menu_fact);
+        ImageButton close_menu_fact =  findViewById(R.id.close_menu_fact);
         close_menu_fact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,10 +215,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         adres_fact = (TextView ) findViewById(R.id.adres_fact);
         mobile_fact = (TextView ) findViewById(R.id.mobile_fact);
         work_time_fact = (TextView) findViewById(R.id.time_work_fact);
+        distance_fact = (TextView) findViewById(R.id.distance_fact);
 
 
+
+
+        bt_stat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent Stat = new Intent(MapsActivity.this, stat.class);
+                startActivity(Stat);
+            }
+        });
 
     }
+
+
+
+
 
     protected void onDestroy() {
         super.onDestroy();
@@ -238,6 +262,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         }
+
     }
 
     public boolean onMarkerClick(Marker marker) {
@@ -263,10 +288,49 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             work_time_fact.setText(factort_marker.work_time);
             mobile_fact.setText(factort_marker.mobile);
             adres_fact.setText(factort_marker.adres);
+            double dist = calkDist(factort_marker.x, factort_marker.y);
+            String dist_str;
+            if(dist < 1300){
+                dist = Math.round(dist*10)/10.0;
+                dist_str = String.format(dist + " м");
+            }
+            else{
+                dist = dist/1000;
+                dist = Math.round(dist*10)/10.0;
+                dist_str = String.format(dist +  " км");
+            }
+
+            distance_fact.setText(dist_str);
 
         }
         return false;
     }
+
+    public double calkDist(double objLat, double objLong){
+        double distance = 0.0;
+
+        Criteria criteria = new Criteria();
+        String provider = locationManager.getBestProvider(criteria, false);
+
+        if (provider != null) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                Location location = locationManager.getLastKnownLocation(provider);
+                if (location != null) {
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    float[] results = new float[1];
+                    Location.distanceBetween(location.getLatitude(), location.getLongitude(), objLat, objLong, results);
+
+                    distance = results[0];
+                }
+            }
+        }
+
+
+        return distance;
+    }
+
+
 
 
 }
