@@ -14,7 +14,7 @@ import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
-    private List<Gift_obj> data;
+    private List<Gift_obj> data ;
     private ItemClickListener clickListener;
 
     public MyAdapter(ItemClickListener clickListener) {
@@ -24,6 +24,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     public void setData(List<Gift_obj> data) {
         this.data = data;
+        notifyDataSetChanged();
+    }
+    public void addData(Gift_obj new_gift) {
+        this.data.add(new_gift);
         notifyDataSetChanged();
     }
 
@@ -58,6 +62,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     public int getItemCount() {
         return data.size();
     }
+
+
 
     public interface ItemClickListener {
         void onItemClick(@Nullable View view, int position);

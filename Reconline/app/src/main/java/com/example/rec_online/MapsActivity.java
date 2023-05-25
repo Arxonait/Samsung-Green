@@ -223,7 +223,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         bt_stat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pass_act.gift_view();
                 Intent Stat = new Intent(MapsActivity.this, stat.class);
                 startActivity(Stat);
             }

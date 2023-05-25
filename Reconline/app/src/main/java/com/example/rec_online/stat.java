@@ -1,5 +1,7 @@
 package com.example.rec_online;
 
+import static com.example.rec_online.pass_act.gifts_view;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -18,6 +20,7 @@ import android.graphics.PorterDuff;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -46,6 +49,10 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
     private RecyclerView recyclerView;
     private MyAdapter adapter;
     private Handler handler = new Handler(Looper.getMainLooper());
+
+
+    private List<Gift_obj> gifts_view;
+    boolean is_new_user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +63,7 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
 
 
         load_sec_give();
+
 
 
 
@@ -245,9 +253,11 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
                                     // выполнение сетевого запроса
                                     Gift_obj gift_new= new Gift_obj(EnterActivity.Data_enter().id, near_factory.id, metal, plastic, glass);
                                     String res = Main_server.gift(gift_new);
+
                                     // передача результата в главный поток
                                     handler.post(new Runnable() {
                                         public void run() {
+                                            load_sec_give();
                                             // обновление пользовательского интерфейса с использованием результата
                                             //try {
                                                 //JSONObject answer = new JSONObject(res);
@@ -268,7 +278,7 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
                                 }
                         }).start();
                 }
-                load_sec_give();
+
             }
         });
 
@@ -328,15 +338,22 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
 
     public void onItemClick(@Nullable View view, int position) {
         // При нажатии на элемент показываем сообщение с кнопкой "Ок"
-        showDialog();
+        showCustomDialog(position);
     }
-    private void showDialog() {
+    private void showCustomDialog(int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Сообщение")
+
+
+        Gift_obj gift = gifts_view.get(position);
+
+
+        builder.setMessage(String.format("Номер вашей сдачи: none\nНазвание перерабатывающего центра: %s\nСтекло - %d, Пластик - %d, Металл - %d\n" +
+                                "Статус: %d\nБаллы: %d\nДата и время - none", gift.id_fact,
+                        gift.glass, gift.plastic, gift.metal, gift.status, gift.ball))
                 .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Действия при нажатии на кнопку "Ок"
+
                     }
                 })
                 .show();
@@ -346,8 +363,11 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
 
 
 
-    private  void load_sec_give(){
+
+    private void load_sec_give() {
         recyclerView = findViewById(R.id.recyclerView);
+        TextView title_give = findViewById(R.id.title_give);
+        TextView current_ball = findViewById(R.id.current_ball);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Создаем и устанавливаем адаптер
@@ -359,56 +379,90 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
         adapter.setClickListener(this);
 
 
-        List<Gift_obj> gifts_view = new ArrayList<>();
 
         new Thread(new Runnable() {
             public void run() {
-                // выполнение сетевого запроса
-
+                // Выполнение сетевого запроса
                 String answer_from_server = Main_server.veiw_gift(Integer.parseInt(EnterActivity.Data_enter().id));
-                // передача результата в главный поток
-                handler.post(new Runnable() {
-                    public void run() {
-                        // обновление пользовательского интерфейса с использованием результата
-                        JSONParser parser = new JSONParser();
-                        try {
-                            JSONObject combinedJson = (JSONObject) parser.parse(answer_from_server);
-                            JSONArray jsonArray = (JSONArray) combinedJson.get("data");
 
-                            for (Object element : jsonArray) {
-                                JSONObject jsonObject = (JSONObject) element;
+                // Обновление пользовательского интерфейса с использованием результата
+                JSONParser parser = new JSONParser();
+                is_new_user = false;
+                try {
+                    JSONObject combinedJson = (JSONObject) parser.parse(answer_from_server);
+                    if(String.valueOf(combinedJson.get("status")).equals("false")){
+                        is_new_user = true;
+                    }
+                    JSONArray jsonArray = (JSONArray) combinedJson.get("data");
+
+                    gifts_view = new ArrayList<>();
+
+                    for (Object element : jsonArray) {
+                        JSONObject jsonObject = (JSONObject) element;
+
+                        Gift_obj new_gift = new Gift_obj();
+                        new_gift.parseJson(jsonObject);
+
+                        gifts_view.add(new_gift);
+                    }
 
 
-                                Gift_obj new_gift = new Gift_obj();
-                                new_gift.parseJson(jsonObject);
-
-                                gifts_view.add(new_gift);
-
-                            }
-
-                            if (gifts_view.size() > 2){
-                                adapter.setData(gifts_view.subList(0, 3));
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            if(is_new_user){
+                                current_ball.setText("0");
+                                recyclerView.setVisibility(View.GONE);
+                                title_give.setText("Здесь будут отображаться Ваши баллы,\nНо пока что Вы ничего не сдали");
                             }
                             else {
-                                adapter.setData(gifts_view);
+                                int balls = 0;
+                                for (Gift_obj gift: gifts_view) {
+                                    if(gift.status == 11){
+                                        balls +=gift.ball;
+                                    }
+                                }
+                                current_ball.setText(String.valueOf(balls));
+
+                                if (gifts_view.size() > 2) {
+                                    adapter.setData(gifts_view.subList(0, 3));
+                                } else {
+                                    adapter.setData(gifts_view);
+                                }
+                                title_give.setText("Ваши прошлые gift");
+                                recyclerView.setVisibility(View.VISIBLE);
                             }
-                            recyclerView.setVisibility(View.VISIBLE);
 
-
-
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
                         }
-                    }
-                });
+                    });
 
-
+                } catch (JSONException e) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            // Обработка ошибки
+                        }
+                    });
+                } catch (ParseException e) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            // Обработка ошибки
+                        }
+                    });
+                }
             }
         }).start();
-
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
 }
+

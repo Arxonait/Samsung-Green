@@ -165,6 +165,7 @@ public class DB_act {
         String result;
         Connection connection;
         List<JSONObject> jsonObjects = new ArrayList<>();
+        int cont_row = 0;
 
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PassWord);
@@ -186,19 +187,27 @@ public class DB_act {
 
             json.put("status", resultSet.getString("status"));
 
+            cont_row++;
 
 
             jsonObjects.add(json);
         }
-        
+
 
 
         JSONObject combinedJson = new JSONObject();
         combinedJson.put("data", jsonObjects);
+        if(cont_row>0){
+            combinedJson.put("status", "true");
+        }
+        else {
+            combinedJson.put("status", "false");
+        }
 
 
 
         result = combinedJson.toString();
+        System.out.println(result);
         resultSet.close();
         statement.close();
 
