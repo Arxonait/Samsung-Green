@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 public class EnterActivity extends AppCompatActivity {
 
-    private static User user_enter;
+    private static User_obj user_enter;
 
 
     @Override
@@ -51,7 +51,7 @@ public class EnterActivity extends AppCompatActivity {
                                     try {
                                         JSONObject answer = new JSONObject(res);
                                         if(answer.getBoolean("status")){
-                                            user_enter = new User();
+                                            user_enter = new User_obj();
                                             user_enter.parseJson(answer);
 
 
@@ -91,7 +91,7 @@ public class EnterActivity extends AppCompatActivity {
         });
     }
 
-    public static User Data_enter(){
+    public static User_obj Data_enter(){
         return user_enter;
     }
 

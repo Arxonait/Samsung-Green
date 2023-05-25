@@ -135,7 +135,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.green);
 
-        for (factory factory : pass_act.factories) {
+        for (Factory_obj factory : pass_act.factories) {
             Marker new_marker;
             LatLng latLng = new LatLng(factory.x, factory.y);
             new_marker = mMap.addMarker(new MarkerOptions().position(latLng).title(factory.name));
@@ -223,6 +223,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         bt_stat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pass_act.gift_view();
                 Intent Stat = new Intent(MapsActivity.this, stat.class);
                 startActivity(Stat);
             }
@@ -267,13 +268,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public boolean onMarkerClick(Marker marker) {
         // Обработка события нажатия на маркер
-        factory factort_marker = null;
+        Factory_obj factort_marker = null;
         if(!marker.getId().equals(marker_geo_id)){
             for (Map.Entry<String, Marker> entry : markerMap.entrySet()) {
                 Marker marker_cur = entry.getValue();
                 if(marker.getId().equals(marker_cur.getId())){
                     String fact_id = entry.getKey();
-                    for(factory fact_cur : pass_act.factories){
+                    for(Factory_obj fact_cur : pass_act.factories){
                         if(fact_id.equals(fact_cur.id)){
                             factort_marker = fact_cur;
                             break;

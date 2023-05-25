@@ -4,10 +4,9 @@ package com.example.rec_online;
 
 import com.google.gson.Gson;
 
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 
 import java.io.IOException;
-import java.util.Map;
 
 
 import okhttp3.MediaType;
@@ -28,7 +27,7 @@ public class Main_server {
         return result;
 
     }
-    public static String reg(User user_new){
+    public static String reg(User_obj user_new){
         String result;
 
         Gson gson = new Gson();
@@ -73,6 +72,37 @@ public class Main_server {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return result;
+    }
+
+    public static String gift(Gift_obj gift_new) {
+        String result;
+
+        Gson gson = new Gson();
+
+        // Преобразование объекта в JSON-строку
+        String jsonString = gson.toJson(gift_new);
+
+        String url = "http://10.0.2.2:8080/stat/gift_new";
+
+
+        result = to_server(url, jsonString);
+
+        return result;
+    }
+
+    public static String veiw_gift(int id_user) {
+        String result;
+
+        JSONObject json = new JSONObject();
+        json.put("id_user", id_user);
+
+
+        String url = "http://10.0.2.2:8080/stat/view_gift";
+
+
+        result = to_server(url, json.toJSONString());
+
         return result;
     }
 }

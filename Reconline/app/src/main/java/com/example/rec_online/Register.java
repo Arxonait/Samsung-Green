@@ -56,7 +56,7 @@ public class Register extends AppCompatActivity {
                             new Thread(new Runnable() {
                                 public void run() {
                                     // выполнение сетевого запроса
-                                    User user_new = new User(name, fam, numberr, login, password1, 0, 0, 0,
+                                    User_obj user_new = new User_obj(name, fam, numberr, login, password1, 0, 0, 0,
                                     0 , 0, false);
                                     String res = Main_server.reg(user_new);
                                     // передача результата в главный поток

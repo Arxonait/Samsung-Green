@@ -3,7 +3,6 @@ package com.example.servak;
 import com.google.gson.JsonObject;
 import org.json.simple.JSONObject;
 
-import java.security.PublicKey;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +30,7 @@ public class DB_act {
                 answer_to_mob.put("status", "true");
                 answer_to_mob.put("login", login);
                 answer_to_mob.put("password", password);
+                answer_to_mob.put("id", resultSet.getString("id"));
                 answer_to_mob.put("fam", resultSet.getString("fam"));
                 answer_to_mob.put("name", resultSet.getString("name"));
                 answer_to_mob.put("mnumber", resultSet.getString("mnumber"));
@@ -91,7 +91,7 @@ public class DB_act {
         List<JSONObject> jsonObjects = new ArrayList<>();
         String result;
         Connection connection;
-        JSONObject answer_to_mob = new JSONObject();
+
 
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PassWord);
@@ -110,6 +110,10 @@ public class DB_act {
             json.put("y", resultSet.getString("y"));
             json.put("work_time", resultSet.getString("work_time"));
             json.put("mobile", resultSet.getString("mobile"));
+            json.put("glass", resultSet.getString("glass"));
+            json.put("metal", resultSet.getString("metal"));
+            json.put("plastic", resultSet.getString("plastic"));
+
 
             jsonObjects.add(json);
         }
@@ -126,5 +130,79 @@ public class DB_act {
     }
 
 
+    public static String insert_gift(JsonObject json) throws SQLException {
+        String result = "";
+        int glass = Integer.parseInt(json.get("glass").toString());
+        int metal = Integer.parseInt(json.get("metal").toString());
+        int plastic = Integer.parseInt(json.get("plastic").toString());
 
+        int ball_new = glass * 10 + plastic * 5 + metal * 2;
+
+
+
+
+        Connection connection;
+        JSONObject answer_to_mob = new JSONObject();
+
+        try {
+            connection = DriverManager.getConnection(URL, USERNAME, PassWord);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        Statement statement = connection.createStatement();
+
+        String SQL = String.format("INSERT INTO public.gift (id_user, id_fact, metal, plastic, glass, ball, status) VALUES ('%s', " +
+                "'%s', '%d', '%d', '%d', '%d', '%d')", json.get("id_user").toString().replace("\"", ""),
+                json.get("id_fact").toString().replace("\"", ""), metal, plastic, glass, ball_new, 1 );
+        statement.executeUpdate(SQL);
+
+
+
+        return result;
+    }
+
+    public static String select_gift(JsonObject jsonObject) throws SQLException {
+        String result;
+        Connection connection;
+        List<JSONObject> jsonObjects = new ArrayList<>();
+
+        try {
+            connection = DriverManager.getConnection(URL, USERNAME, PassWord);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        Statement statement = connection.createStatement();
+        String SQL = String.format("select * from gift WHERE id_user = '%s' ORDER BY id DESC", jsonObject.get("id_user"));
+        ResultSet resultSet = statement.executeQuery(SQL);
+        while (resultSet.next()) {
+            JSONObject json = new JSONObject();
+            json.put("id", resultSet.getString("id"));
+            json.put("id_fact", resultSet.getString("id_fact"));
+            json.put("id_user", resultSet.getString("id_user"));
+            json.put("ball", resultSet.getString("ball"));
+            json.put("plastic", resultSet.getString("plastic"));
+            json.put("glass", resultSet.getString("glass"));
+            json.put("metal", resultSet.getString("metal"));
+
+            json.put("status", resultSet.getString("status"));
+
+
+
+            jsonObjects.add(json);
+        }
+        
+
+
+        JSONObject combinedJson = new JSONObject();
+        combinedJson.put("data", jsonObjects);
+
+
+
+        result = combinedJson.toString();
+        resultSet.close();
+        statement.close();
+
+        return result;
+
+    }
 }

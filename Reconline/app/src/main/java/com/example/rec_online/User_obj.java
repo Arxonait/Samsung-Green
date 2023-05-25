@@ -3,7 +3,9 @@ package com.example.rec_online;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class User {
+public class User_obj {
+
+    String id;
     String name;
     String fam;
 
@@ -22,8 +24,8 @@ public class User {
 
 
 
-    User(String name, String fam, String mnumber, String login, String password, int max_balls, int current_balls, int glass,
-         int metal, int plastic, boolean admin){
+    User_obj(String name, String fam, String mnumber, String login, String password, int max_balls, int current_balls, int glass,
+             int metal, int plastic, boolean admin){
         this.name = name;
         this.fam = fam;
         this.mnumber = mnumber;
@@ -42,13 +44,13 @@ public class User {
 
     }
 
-    User(){
+    User_obj(){
 
     }
 
     public void parseJson(JSONObject answer) throws JSONException {
 
-        System.out.println(answer.getBoolean("admin"));
+        this.id = answer.getString("id");
         this.name = answer.getString("name");
         this.fam = answer.getString("fam");
         this.mnumber = answer.getString("mnumber");

@@ -1,32 +1,67 @@
 package com.example.rec_online;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class stat extends AppCompatActivity {
+import org.json.JSONException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import java.util.ArrayList;
+import java.util.List;
+
+public class stat extends AppCompatActivity implements MyAdapter.ItemClickListener {
+
+    private RecyclerView recyclerView;
+    private MyAdapter adapter;
+    private Handler handler = new Handler(Looper.getMainLooper());
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stat);
+
+
+
+
+
+        load_sec_give();
+
+
+
+
+
+
 
 
         TextView name_stat =  findViewById(R.id.name_stat);
@@ -50,13 +85,42 @@ public class stat extends AppCompatActivity {
         ConstraintLayout sec_give_fact = findViewById(R.id.sec_give_fact);
 
 
+
+
+
         Button bt_map = (Button) findViewById(R.id.bt_map);
 
-        factory near_factory = near_fact();
+        Factory_obj near_factory = near_fact();
+        ImageView plastic_i = (ImageView) findViewById(R.id.plastic_i);
+        ImageView metal_i = (ImageView) findViewById(R.id.metal_i);
+        ImageView glass_i = (ImageView) findViewById(R.id.glass_i);
+
+        //System.out.println(near_factory.glass);
+        //System.out.println(near_factory.metal);
+        //.out.println(near_factory.plastic);
+
+
+        int color = Color.parseColor("#808080");
+        if(!near_factory.glass){
+            glass_i.setVisibility(View.GONE);
+            p_gl.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            m_gl.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        }
+        if(!near_factory.metal){
+            metal_i.setVisibility(View.GONE);
+            p_m.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            m_m.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        }
+        if(!near_factory.plastic){
+            plastic_i.setVisibility(View.GONE);
+            p_p.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            m_p.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        }
+
         double near_dist = calkDist(near_factory.x, near_factory.y);
         if(near_dist> 150){
             sec_near_fact.setVisibility(View.VISIBLE);
-            sec_give_fact.setVisibility(View.INVISIBLE);
+            sec_give_fact.setVisibility(View.GONE);
 
             name_stat.setText(near_factory.name);
             adres_stat.setText(near_factory.adres);
@@ -81,6 +145,7 @@ public class stat extends AppCompatActivity {
             tv_count_m.setText("0");
             tv_count_p.setText("0");
 
+
             name_give.setText(near_factory.name);
 
 
@@ -89,76 +154,121 @@ public class stat extends AppCompatActivity {
         p_gl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
-                v.startAnimation(fadeAnimation);
-                int count = Integer.parseInt(tv_count_gl.getText().toString()) + 1;
-                tv_count_gl.setText(String.valueOf(count));
+                if(near_factory.glass){
+                    Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
+                    v.startAnimation(fadeAnimation);
+                    int count = Integer.parseInt(tv_count_gl.getText().toString()) + 1;
+                    tv_count_gl.setText(String.valueOf(count));
+                }
             }
         });
 
         p_m.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
-                v.startAnimation(fadeAnimation);
-                int count = Integer.parseInt(tv_count_m.getText().toString()) + 1;
-                tv_count_m.setText(String.valueOf(count));
+                if(near_factory.metal) {
+                    Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
+                    v.startAnimation(fadeAnimation);
+                    int count = Integer.parseInt(tv_count_m.getText().toString()) + 1;
+                    tv_count_m.setText(String.valueOf(count));
+                }
             }
         });
 
         p_p.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
-                v.startAnimation(fadeAnimation);
-                int count = Integer.parseInt(tv_count_p.getText().toString()) + 1;
-                tv_count_p.setText(String.valueOf(count));
+                if(near_factory.plastic) {
+                    Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
+                    v.startAnimation(fadeAnimation);
+                    int count = Integer.parseInt(tv_count_p.getText().toString()) + 1;
+                    tv_count_p.setText(String.valueOf(count));
+                }
             }
         });
 
         m_gl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
-                v.startAnimation(fadeAnimation);
-                int count = Integer.parseInt(tv_count_gl.getText().toString()) - 1;
-                if(count< 0){
-                    count = 0;
+                if(near_factory.glass){
+                    Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
+                    v.startAnimation(fadeAnimation);
+                    int count = Integer.parseInt(tv_count_gl.getText().toString()) - 1;
+                    if(count< 0){
+                        count = 0;
+                    }
+                    tv_count_gl.setText(String.valueOf(count));
                 }
-                tv_count_gl.setText(String.valueOf(count));
             }
         });
 
         m_m.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
-                v.startAnimation(fadeAnimation);
-                int count = Integer.parseInt(tv_count_m.getText().toString()) - 1;
-                if(count< 0){
-                    count = 0;
+                if(near_factory.metal) {
+                    Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
+                    v.startAnimation(fadeAnimation);
+                    int count = Integer.parseInt(tv_count_m.getText().toString()) - 1;
+                    if (count < 0) {
+                        count = 0;
+                    }
+                    tv_count_m.setText(String.valueOf(count));
                 }
-                tv_count_m.setText(String.valueOf(count));
             }
         });
 
         m_p.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
-                v.startAnimation(fadeAnimation);
-                int count = Integer.parseInt(tv_count_p.getText().toString()) - 1;
-                if(count< 0){
-                    count = 0;
+                if(near_factory.plastic) {
+                    Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
+                    v.startAnimation(fadeAnimation);
+                    int count = Integer.parseInt(tv_count_p.getText().toString()) - 1;
+                    if (count < 0) {
+                        count = 0;
+                    }
+                    tv_count_p.setText(String.valueOf(count));
                 }
-                tv_count_p.setText(String.valueOf(count));
             }
         });
 
         bt_give.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int glass = Integer.parseInt(tv_count_gl.getText().toString());
+                int metal = Integer.parseInt(tv_count_m.getText().toString());
+                int plastic = Integer.parseInt(tv_count_p.getText().toString());
+                if(glass + metal + plastic > 0) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                        new Thread(new Runnable() {
+                                public void run() {
+                                    // выполнение сетевого запроса
+                                    Gift_obj gift_new= new Gift_obj(EnterActivity.Data_enter().id, near_factory.id, metal, plastic, glass);
+                                    String res = Main_server.gift(gift_new);
+                                    // передача результата в главный поток
+                                    handler.post(new Runnable() {
+                                        public void run() {
+                                            // обновление пользовательского интерфейса с использованием результата
+                                            //try {
+                                                //JSONObject answer = new JSONObject(res);
+//                                                if(answer.getBoolean("status")){
+//                                                    Toast.makeText(getApplicationContext(), "Вы зарегестрированы",
+//                                                            Toast.LENGTH_SHORT).show();
+//                                                }
+//                                                else{
+//                                                    result_element.setText("Пользователь с таким логином уже существует");
+//                                                    result_element.setTextColor(Color.RED);
+//                                                }
 
+                                            //} catch (JSONException e) {
+                                                //throw new RuntimeException(e);
+                                            //}
+                                        }
+                                    });
+                                }
+                        }).start();
+                }
+                load_sec_give();
             }
         });
 
@@ -173,10 +283,10 @@ public class stat extends AppCompatActivity {
 
     }
 
-    public factory near_fact(){
-        factory best_factory = pass_act.factories.get(0);
+    public Factory_obj near_fact(){
+        Factory_obj best_factory = pass_act.factories.get(0);
         double best_dist = calkDist(best_factory.x, best_factory.y);
-        for (factory factory : pass_act.factories) {
+        for (Factory_obj factory : pass_act.factories) {
             double cur_dist = calkDist(factory.x, factory.y);
             if (best_dist > cur_dist){
                 best_dist = cur_dist;
@@ -211,4 +321,94 @@ public class stat extends AppCompatActivity {
 
         return distance;
     }
+
+
+
+
+
+    public void onItemClick(@Nullable View view, int position) {
+        // При нажатии на элемент показываем сообщение с кнопкой "Ок"
+        showDialog();
+    }
+    private void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Сообщение")
+                .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Действия при нажатии на кнопку "Ок"
+                    }
+                })
+                .show();
+    }
+
+
+
+
+
+    private  void load_sec_give(){
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Создаем и устанавливаем адаптер
+        adapter = new MyAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setVisibility(View.INVISIBLE);
+
+        // Устанавливаем слушатель нажатий на элементы адаптера
+        adapter.setClickListener(this);
+
+
+        List<Gift_obj> gifts_view = new ArrayList<>();
+
+        new Thread(new Runnable() {
+            public void run() {
+                // выполнение сетевого запроса
+
+                String answer_from_server = Main_server.veiw_gift(Integer.parseInt(EnterActivity.Data_enter().id));
+                // передача результата в главный поток
+                handler.post(new Runnable() {
+                    public void run() {
+                        // обновление пользовательского интерфейса с использованием результата
+                        JSONParser parser = new JSONParser();
+                        try {
+                            JSONObject combinedJson = (JSONObject) parser.parse(answer_from_server);
+                            JSONArray jsonArray = (JSONArray) combinedJson.get("data");
+
+                            for (Object element : jsonArray) {
+                                JSONObject jsonObject = (JSONObject) element;
+
+
+                                Gift_obj new_gift = new Gift_obj();
+                                new_gift.parseJson(jsonObject);
+
+                                gifts_view.add(new_gift);
+
+                            }
+
+                            if (gifts_view.size() > 2){
+                                adapter.setData(gifts_view.subList(0, 3));
+                            }
+                            else {
+                                adapter.setData(gifts_view);
+                            }
+                            recyclerView.setVisibility(View.VISIBLE);
+
+
+
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+
+
+            }
+        }).start();
+
+    }
+
+
 }

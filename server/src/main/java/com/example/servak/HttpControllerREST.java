@@ -1,9 +1,7 @@
 package com.example.servak;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import jakarta.servlet.http.HttpServlet;
-import org.json.simple.JSONObject;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +35,18 @@ public class HttpControllerREST extends HttpServlet {
     @RequestMapping("/maps")
     public String maps(@RequestBody String body) throws SQLException {
         return DB_act.factory();
+    }
+
+    @RequestMapping("/stat/gift_new")
+    public String gift(@RequestBody String body) throws SQLException {
+        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
+        return DB_act.insert_gift(jsonObject);
+    }
+
+    @RequestMapping("/stat/view_gift")
+    public String view_gift(@RequestBody String body) throws SQLException {
+        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
+        return DB_act.select_gift(jsonObject);
     }
 
 }
