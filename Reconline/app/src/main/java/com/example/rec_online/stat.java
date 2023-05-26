@@ -1,26 +1,16 @@
 package com.example.rec_online;
 
-import static com.example.rec_online.pass_act.gifts_view;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -30,10 +20,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
+//import org.json.JSONObject;
 
 import org.json.JSONException;
 import org.json.simple.JSONArray;
@@ -46,9 +37,9 @@ import java.util.List;
 
 public class stat extends AppCompatActivity implements MyAdapter.ItemClickListener {
 
-    private RecyclerView recyclerView;
+    private RecyclerView rec_inf_history;
     private MyAdapter adapter;
-    private Handler handler = new Handler(Looper.getMainLooper());
+    //private Handler handler = new Handler(Looper.getMainLooper());
 
 
     private List<Gift_obj> gifts_view;
@@ -58,27 +49,78 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stat);
 
+        load_sec_inf_ball();
+
+        Factory_obj near_factory = near_fact();
+        double near_dist = MapsActivity.calcDist(near_factory.x, near_factory.y, stat.this);
 
 
+        if(near_dist> 150){
+            load_sec_oper_far(near_factory, near_dist);
+        }
+        else {
+            load_sec_oper_pass(near_factory);
+        }
+
+        Button bt_map = (Button) findViewById(R.id.bt_map);
+        bt_map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent Map = new Intent(stat.this, MapsActivity.class);
+                startActivity(Map);
+            }
+        });
 
 
-        load_sec_give();
+    }
 
-
-
-
-
-
-
-
+    private void load_sec_oper_far(Factory_obj near_factory, double near_dist){
 
         TextView name_stat =  findViewById(R.id.name_stat);
         TextView adres_stat=  findViewById(R.id.adres_stat);
         TextView mobile_stat =  findViewById(R.id.mobile_stat);
         TextView work_time_stat =  findViewById(R.id.time_work_stat);
         TextView distance_stat =  findViewById(R.id.dist_stat);
-        ConstraintLayout sec_near_fact = findViewById(R.id.sec_near_fact);
 
+        ConstraintLayout sec_oper_far = findViewById(R.id.sec_oper_far);
+        sec_oper_far.setVisibility(View.VISIBLE);
+
+        ImageView im_glass = findViewById(R.id.im_far_glass);
+        ImageView im_metal = findViewById(R.id.im_far_metal);
+        ImageView im_plastic = findViewById(R.id.im_far_plastic);
+
+        name_stat.setText(near_factory.name);
+        adres_stat.setText(near_factory.adres);
+        mobile_stat.setText(near_factory.mobile);
+        work_time_stat.setText(near_factory.work_time);
+        String dist_str;
+        if(near_dist < 1300){
+            near_dist = Math.round(near_dist*10)/10.0;
+            dist_str = String.format(near_dist + " м");
+        }
+        else{
+            near_dist = near_dist/1000;
+            near_dist = Math.round(near_dist*10)/10.0;
+            dist_str = String.format(near_dist +  " км");
+        }
+        distance_stat.setText(dist_str);
+        Pass_act.show_image(near_factory, im_glass,im_metal, im_plastic);
+
+        Button bt_map_to_fact = findViewById(R.id.bt_map_to_fact);
+        bt_map_to_fact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MapsActivity.factory = near_factory;
+                Intent Map = new Intent(stat.this, MapsActivity.class);
+                startActivity(Map);
+            }
+        });
+
+
+    }
+
+
+    private void load_sec_oper_pass(Factory_obj near_factory){
         TextView name_give =  findViewById(R.id.name_stat_give);
         TextView tv_count_gl =  findViewById(R.id.count_gl);
         TextView tv_count_m =  findViewById(R.id.count_m);
@@ -93,19 +135,11 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
         ConstraintLayout sec_give_fact = findViewById(R.id.sec_give_fact);
 
 
-
-
-
-        Button bt_map = (Button) findViewById(R.id.bt_map);
-
-        Factory_obj near_factory = near_fact();
         ImageView plastic_i = (ImageView) findViewById(R.id.plastic_i);
         ImageView metal_i = (ImageView) findViewById(R.id.metal_i);
         ImageView glass_i = (ImageView) findViewById(R.id.glass_i);
 
-        //System.out.println(near_factory.glass);
-        //System.out.println(near_factory.metal);
-        //.out.println(near_factory.plastic);
+
 
 
         int color = Color.parseColor("#808080");
@@ -125,39 +159,15 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
             m_p.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         }
 
-        double near_dist = calkDist(near_factory.x, near_factory.y);
-        if(near_dist> 150){
-            sec_near_fact.setVisibility(View.VISIBLE);
-            sec_give_fact.setVisibility(View.GONE);
 
-            name_stat.setText(near_factory.name);
-            adres_stat.setText(near_factory.adres);
-            mobile_stat.setText(near_factory.mobile);
-            work_time_stat.setText(near_factory.work_time);
-            String dist_str;
-            if(near_dist < 1300){
-                near_dist = Math.round(near_dist*10)/10.0;
-                dist_str = String.format(near_dist + " м");
-            }
-            else{
-                near_dist = near_dist/1000;
-                near_dist = Math.round(near_dist*10)/10.0;
-                dist_str = String.format(near_dist +  " км");
-            }
-            distance_stat.setText(dist_str);
-        }
-        else {
-            sec_give_fact.setVisibility(View.VISIBLE);
-            sec_near_fact.setVisibility(View.INVISIBLE);
-            tv_count_gl.setText("0");
-            tv_count_m.setText("0");
-            tv_count_p.setText("0");
+        sec_give_fact.setVisibility(View.VISIBLE);
+        tv_count_gl.setText("0");
+        tv_count_m.setText("0");
+        tv_count_p.setText("0");
 
 
-            name_give.setText(near_factory.name);
+        name_give.setText(near_factory.name);
 
-
-        }
 
         p_gl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,6 +250,7 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
             }
         });
 
+
         bt_give.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -248,56 +259,54 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
                 int plastic = Integer.parseInt(tv_count_p.getText().toString());
                 if(glass + metal + plastic > 0) {
                     Handler handler = new Handler(Looper.getMainLooper());
-                        new Thread(new Runnable() {
+                    new Thread(new Runnable() {
+                        public void run() {
+                            // выполнение сетевого запроса
+                            Gift_obj gift_new= new Gift_obj(EnterActivity.Data_enter().id, near_factory.id, metal, plastic, glass);
+                            String res = Main_server.gift(gift_new);
+                            // передача результата в главный поток
+                            handler.post(new Runnable() {
                                 public void run() {
-                                    // выполнение сетевого запроса
-                                    Gift_obj gift_new= new Gift_obj(EnterActivity.Data_enter().id, near_factory.id, metal, plastic, glass);
-                                    String res = Main_server.gift(gift_new);
+                                    load_sec_inf_ball();
 
-                                    // передача результата в главный поток
-                                    handler.post(new Runnable() {
-                                        public void run() {
-                                            load_sec_give();
-                                            // обновление пользовательского интерфейса с использованием результата
-                                            //try {
-                                                //JSONObject answer = new JSONObject(res);
-//                                                if(answer.getBoolean("status")){
-//                                                    Toast.makeText(getApplicationContext(), "Вы зарегестрированы",
-//                                                            Toast.LENGTH_SHORT).show();
-//                                                }
-//                                                else{
-//                                                    result_element.setText("Пользователь с таким логином уже существует");
-//                                                    result_element.setTextColor(Color.RED);
-//                                                }
+                                     //обновление пользовательского интерфейса с использованием результата
+                                    try {
 
-                                            //} catch (JSONException e) {
-                                                //throw new RuntimeException(e);
-                                            //}
+                                        JSONParser parser = new JSONParser();
+                                        JSONObject answer = (JSONObject) parser.parse(res);
+                                        if(answer.get("status").toString().equals("true")){
+                                            Toast.makeText(getApplicationContext(), "Отправлено на проверку",
+                                                    Toast.LENGTH_SHORT).show();
                                         }
-                                    });
+                                        else{
+
+                                        }
+
+                                    } catch (ParseException e) {
+                                        throw new RuntimeException(e);
+                                    }
                                 }
-                        }).start();
+                            });
+                        }
+                    }).start();
                 }
+                else {
+                    Toast.makeText(getApplicationContext(), "Вы ничего не указали",
+                            Toast.LENGTH_SHORT).show();
+                }
+                tv_count_gl.setText("0");
+                tv_count_p.setText("0");
+                tv_count_m.setText("0");
 
             }
         });
-
-        bt_map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent Map = new Intent(stat.this, MapsActivity.class);
-                startActivity(Map);
-            }
-        });
-
-
     }
 
     public Factory_obj near_fact(){
-        Factory_obj best_factory = pass_act.factories.get(0);
-        double best_dist = calkDist(best_factory.x, best_factory.y);
-        for (Factory_obj factory : pass_act.factories) {
-            double cur_dist = calkDist(factory.x, factory.y);
+        Factory_obj best_factory = Pass_act.factories.get(0);
+        double best_dist = MapsActivity.calcDist(best_factory.x, best_factory.y, stat.this);
+        for (Factory_obj factory : Pass_act.factories) {
+            double cur_dist = MapsActivity.calcDist(factory.x, factory.y, stat.this);
             if (best_dist > cur_dist){
                 best_dist = cur_dist;
                 best_factory = factory;
@@ -307,73 +316,50 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
 
     }
 
-    public double calkDist(double objLat, double objLong){
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        double distance = 0.0;
-
-        Criteria criteria = new Criteria();
-        String provider = locationManager.getBestProvider(criteria, false);
-
-        if (provider != null) {
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                Location location = locationManager.getLastKnownLocation(provider);
-                if (location != null) {
-                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    float[] results = new float[1];
-                    Location.distanceBetween(location.getLatitude(), location.getLongitude(), objLat, objLong, results);
-
-                    distance = results[0];
-                }
-            }
-        }
-
-
-        return distance;
-    }
-
-
-
-
-
     public void onItemClick(@Nullable View view, int position) {
         // При нажатии на элемент показываем сообщение с кнопкой "Ок"
-        showCustomDialog(position);
+        show_mes_itemOf_Infhistory(position);
     }
-    private void showCustomDialog(int position) {
+    private void show_mes_itemOf_Infhistory(int position) {
+        Gift_obj gift = gifts_view.get(position);
+        int status = gift.status;
+        String text_status;
+
+        if(status == 1){
+            text_status = "На рассмотрении";
+        }
+        else if(status == 10) {
+            text_status = "Отклоненно";
+        }
+        else {
+            text_status = "Принято";
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-
-        Gift_obj gift = gifts_view.get(position);
-
-
-        builder.setMessage(String.format("Номер вашей сдачи: none\nНазвание перерабатывающего центра: %s\nСтекло - %d, Пластик - %d, Металл - %d\n" +
-                                "Статус: %d\nБаллы: %d\nДата и время - none", gift.id_fact,
-                        gift.glass, gift.plastic, gift.metal, gift.status, gift.ball))
+        builder.setMessage(String.format("Номер вашей сдачи: %d\nПерерабатывающий центр: %s\nСтекло - %d, Пластик - %d, Металл - %d\n" +
+                                "Статус: %s\nБаллы: %d\nДата и время - %s", gift.num_cont, gift.name_fact,
+                        gift.glass, gift.plastic, gift.metal, text_status, gift.ball, gift.time.toString()))
                 .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
-                })
-                .show();
+                }).show();
     }
 
 
-
-
-
-
-    private void load_sec_give() {
-        recyclerView = findViewById(R.id.recyclerView);
+    private void load_sec_inf_ball() {
+        rec_inf_history = findViewById(R.id.rec_inf_history);
         TextView title_give = findViewById(R.id.title_give);
         TextView current_ball = findViewById(R.id.current_ball);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayout title_rec_view = findViewById(R.id.titleRecView);
+        rec_inf_history.setLayoutManager(new LinearLayoutManager(this));
 
         // Создаем и устанавливаем адаптер
         adapter = new MyAdapter(this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setVisibility(View.INVISIBLE);
+        rec_inf_history.setAdapter(adapter);
+        rec_inf_history.setVisibility(View.INVISIBLE);
 
         // Устанавливаем слушатель нажатий на элементы адаптера
         adapter.setClickListener(this);
@@ -411,25 +397,34 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
                         public void run() {
                             if(is_new_user){
                                 current_ball.setText("0");
-                                recyclerView.setVisibility(View.GONE);
+                                rec_inf_history.setVisibility(View.GONE);
+                                title_rec_view.setVisibility(View.GONE);
                                 title_give.setText("Здесь будут отображаться Ваши баллы,\nНо пока что Вы ничего не сдали");
                             }
                             else {
                                 int balls = 0;
+                                int count_gift = gifts_view.size();
+                                int rev_gift = 0;
                                 for (Gift_obj gift: gifts_view) {
+                                    gift.num_cont = count_gift - rev_gift;
+                                    rev_gift++;
                                     if(gift.status == 11){
                                         balls +=gift.ball;
                                     }
                                 }
+
+
+
                                 current_ball.setText(String.valueOf(balls));
 
                                 if (gifts_view.size() > 2) {
-                                    adapter.setData(gifts_view.subList(0, 3));
+                                    adapter.setData(gifts_view.subList(0, 10));
                                 } else {
                                     adapter.setData(gifts_view);
                                 }
                                 title_give.setText("Ваши прошлые gift");
-                                recyclerView.setVisibility(View.VISIBLE);
+                                rec_inf_history.setVisibility(View.VISIBLE);
+                                title_rec_view.setVisibility(View.VISIBLE);
                             }
 
                         }
@@ -447,22 +442,28 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
                             // Обработка ошибки
                         }
                     });
+                } catch (java.text.ParseException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }).start();
+
+
+        Button bt_inf_about_balls = (Button) findViewById(R.id.bt_inf_about_balls);
+        bt_inf_about_balls.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(stat.this);
+                builder.setMessage(String.format("Информация о баллах\n"))
+                        .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).show();
+            }
+        });
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
 

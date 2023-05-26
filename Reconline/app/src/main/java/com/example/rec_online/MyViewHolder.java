@@ -30,7 +30,7 @@ public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClic
         int color;
         if(status == 1){
             text_status = "На рассмотрении";
-            color = Color.CYAN;
+            color = Color.parseColor("#cccc00");
         }
         else if(status == 10) {
             text_status = "Отклоненно";

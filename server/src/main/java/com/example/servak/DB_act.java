@@ -5,6 +5,8 @@ import org.json.simple.JSONObject;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class DB_act {
@@ -131,12 +133,15 @@ public class DB_act {
 
 
     public static String insert_gift(JsonObject json) throws SQLException {
-        String result = "";
+        String result;
         int glass = Integer.parseInt(json.get("glass").toString());
         int metal = Integer.parseInt(json.get("metal").toString());
         int plastic = Integer.parseInt(json.get("plastic").toString());
 
         int ball_new = glass * 10 + plastic * 5 + metal * 2;
+        Calendar calendar = Calendar.getInstance();
+        Date time = calendar.getTime();
+        System.out.println(time);
 
 
 
@@ -151,13 +156,13 @@ public class DB_act {
         }
         Statement statement = connection.createStatement();
 
-        String SQL = String.format("INSERT INTO public.gift (id_user, id_fact, metal, plastic, glass, ball, status) VALUES ('%s', " +
-                "'%s', '%d', '%d', '%d', '%d', '%d')", json.get("id_user").toString().replace("\"", ""),
-                json.get("id_fact").toString().replace("\"", ""), metal, plastic, glass, ball_new, 1 );
+        String SQL = String.format("INSERT INTO public.gift (id_user, id_fact, metal, plastic, glass, ball, status, timee) VALUES ('%s', " +
+                "'%s', '%d', '%d', '%d', '%d', '%d', '%s')", json.get("id_user").toString().replace("\"", ""),
+                json.get("id_fact").toString().replace("\"", ""), metal, plastic, glass, ball_new, 1, time );
         statement.executeUpdate(SQL);
 
-
-
+        answer_to_mob.put("status", "true");
+        result = answer_to_mob.toString();
         return result;
     }
 
@@ -173,12 +178,13 @@ public class DB_act {
             throw new RuntimeException(e);
         }
         Statement statement = connection.createStatement();
-        String SQL = String.format("select * from gift WHERE id_user = '%s' ORDER BY id DESC", jsonObject.get("id_user"));
+        String SQL = String.format("select * from gift INNER JOIN factory ON factory.id = gift.id_fact WHERE   id_user = '%s' ORDER BY gift.id DESC", jsonObject.get("id_user"));
         ResultSet resultSet = statement.executeQuery(SQL);
         while (resultSet.next()) {
             JSONObject json = new JSONObject();
             json.put("id", resultSet.getString("id"));
             json.put("id_fact", resultSet.getString("id_fact"));
+            json.put("name_fact", resultSet.getString("name"));
             json.put("id_user", resultSet.getString("id_user"));
             json.put("ball", resultSet.getString("ball"));
             json.put("plastic", resultSet.getString("plastic"));
@@ -186,6 +192,8 @@ public class DB_act {
             json.put("metal", resultSet.getString("metal"));
 
             json.put("status", resultSet.getString("status"));
+            json.put("time", resultSet.getString("timee"));
+
 
             cont_row++;
 
@@ -207,7 +215,7 @@ public class DB_act {
 
 
         result = combinedJson.toString();
-        System.out.println(result);
+        //System.out.println(result);
         resultSet.close();
         statement.close();
 

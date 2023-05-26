@@ -44,7 +44,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        String id = String.valueOf(position + 1 );
+        String id = String.valueOf(data.get(position).num_cont);
         String ball = String.valueOf(data.get(position).ball);
         int status = data.get(position).status;
         holder.bind(id, ball, status);

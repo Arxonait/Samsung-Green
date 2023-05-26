@@ -55,7 +55,7 @@ public class EnterActivity extends AppCompatActivity {
                                             user_enter.parseJson(answer);
 
 
-                                            pass_act.main();
+                                            Pass_act.main();
 
                                             Intent MapsActivity = new Intent(EnterActivity.this, MapsActivity.class);
                                             startActivity(MapsActivity);

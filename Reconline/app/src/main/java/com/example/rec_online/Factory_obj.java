@@ -21,7 +21,7 @@ public class Factory_obj {
     public void parseJson(JSONObject answer) throws JSONException {
         this.id = (String) answer.get("id");
         this.name = (String) answer.get("name");
-        this.adres = (String) answer.get("id_fact");
+        this.adres = (String) answer.get("adres");
         this.mobile = (String) answer.get("mobile");
 
         this.x = Double.parseDouble((String) answer.get("x"));

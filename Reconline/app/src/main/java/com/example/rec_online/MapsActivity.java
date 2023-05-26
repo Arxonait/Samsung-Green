@@ -39,7 +39,7 @@ import java.util.Map;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
-    private GoogleMap mMap;
+    private static GoogleMap mMap;
     private ActivityMapsBinding binding;
 
     private static LocationManager locationManager;
@@ -56,6 +56,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView  distance_fact;
 
     private Map<String, Marker> markerMap;
+
+
+    public static Factory_obj factory = null;
 
 
 
@@ -84,13 +87,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 LatLng latLng = new LatLng(latitude, longitude);
 
                 if (isCreate_device_marker) {
-                    marker_geo = mMap.addMarker(new MarkerOptions().position(latLng).title("Вы здесь"));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
-                    isCreate_device_marker = false;
-                    markerMap.put("my_geo", marker_geo);
-                    marker_geo_id = marker_geo.getId();
-                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.geo);
-                    marker_geo.setIcon(icon);
+                    try {
+                        marker_geo = mMap.addMarker(new MarkerOptions().position(latLng).title("Вы здесь"));
+                        if(factory !=null){
+                            start_location();
+                        }
+                        else {
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
+                        }
+
+                        isCreate_device_marker = false;
+                        markerMap.put("my_geo", marker_geo);
+                        marker_geo_id = marker_geo.getId();
+                        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.geo);
+                        marker_geo.setIcon(icon);
+                    } catch (Exception e){
+
+                    }
+
                 }
                 marker_geo.setPosition(latLng);
             }
@@ -135,7 +149,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.green);
 
-        for (Factory_obj factory : pass_act.factories) {
+        for (Factory_obj factory : Pass_act.factories) {
             Marker new_marker;
             LatLng latLng = new LatLng(factory.x, factory.y);
             new_marker = mMap.addMarker(new MarkerOptions().position(latLng).title(factory.name));
@@ -273,7 +287,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Marker marker_cur = entry.getValue();
                 if(marker.getId().equals(marker_cur.getId())){
                     String fact_id = entry.getKey();
-                    for(Factory_obj fact_cur : pass_act.factories){
+                    for(Factory_obj fact_cur : Pass_act.factories){
                         if(fact_id.equals(fact_cur.id)){
                             factort_marker = fact_cur;
                             break;
@@ -288,7 +302,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             work_time_fact.setText(factort_marker.work_time);
             mobile_fact.setText(factort_marker.mobile);
             adres_fact.setText(factort_marker.adres);
-            double dist = calkDist(factort_marker.x, factort_marker.y);
+            double dist = calcDist(factort_marker.x, factort_marker.y, MapsActivity.this);
             String dist_str;
             if(dist < 1300){
                 dist = Math.round(dist*10)/10.0;
@@ -306,15 +320,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return false;
     }
 
-    public double calkDist(double objLat, double objLong){
+    public static double calcDist(double objLat, double objLong, Context context){
         double distance = 0.0;
 
         Criteria criteria = new Criteria();
         String provider = locationManager.getBestProvider(criteria, false);
 
         if (provider != null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Location location = locationManager.getLastKnownLocation(provider);
                 if (location != null) {
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -331,7 +345,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
+    public static void start_location(){
+        LatLng latLng = new LatLng(factory.x, factory.y);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15.0f);
+        mMap.animateCamera(cameraUpdate);
 
+        factory = null;
+    }
 
 }
 
