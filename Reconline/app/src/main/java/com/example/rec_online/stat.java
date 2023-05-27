@@ -62,14 +62,7 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
             load_sec_oper_pass(near_factory);
         }
 
-        Button bt_map = (Button) findViewById(R.id.bt_map);
-        bt_map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent Map = new Intent(stat.this, MapsActivity.class);
-                startActivity(Map);
-            }
-        });
+        load_menu();
 
 
     }
@@ -364,38 +357,49 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
         // Устанавливаем слушатель нажатий на элементы адаптера
         adapter.setClickListener(this);
 
-
+        Handler handler = new Handler(Looper.getMainLooper());
 
         new Thread(new Runnable() {
             public void run() {
-                // Выполнение сетевого запроса
+                // выполнение сетевого запроса
                 String answer_from_server = Main_server.veiw_gift(Integer.parseInt(EnterActivity.Data_enter().id));
 
-                // Обновление пользовательского интерфейса с использованием результата
-                JSONParser parser = new JSONParser();
                 is_new_user = false;
-                try {
-                    JSONObject combinedJson = (JSONObject) parser.parse(answer_from_server);
-                    if(String.valueOf(combinedJson.get("status")).equals("false")){
-                        is_new_user = true;
-                    }
-                    JSONArray jsonArray = (JSONArray) combinedJson.get("data");
+                handler.post(new Runnable() {
+                    public void run() {
+                        // обновление пользовательского интерфейса с использованием результата
+                        JSONParser parser = new JSONParser();
+                        JSONObject combinedJson = null;
+                        try {
+                            combinedJson = (JSONObject) parser.parse(answer_from_server);
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                        if(String.valueOf(combinedJson.get("status")).equals("false")){
+                            is_new_user = true;
+                        }
+                        JSONArray jsonArray = (JSONArray) combinedJson.get("data");
 
-                    gifts_view = new ArrayList<>();
+                        gifts_view = new ArrayList<>();
 
-                    for (Object element : jsonArray) {
-                        JSONObject jsonObject = (JSONObject) element;
+                        for (Object element : jsonArray) {
+                            JSONObject jsonObject = (JSONObject) element;
 
-                        Gift_obj new_gift = new Gift_obj();
-                        new_gift.parseJson(jsonObject);
+                            Gift_obj new_gift = new Gift_obj();
+                            try {
+                                new_gift.parseJson(jsonObject);
+                            } catch (JSONException ex) {
+                                throw new RuntimeException(ex);
+                            } catch (java.text.ParseException ex) {
+                                throw new RuntimeException(ex);
+                            }
 
-                        gifts_view.add(new_gift);
-                    }
+                            gifts_view.add(new_gift);
+                        }
 
 
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            if(is_new_user){
+
+                        if(is_new_user){
                                 current_ball.setText("0");
                                 rec_inf_history.setVisibility(View.GONE);
                                 title_rec_view.setVisibility(View.GONE);
@@ -427,26 +431,93 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
                                 title_rec_view.setVisibility(View.VISIBLE);
                             }
 
-                        }
-                    });
 
-                } catch (JSONException e) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            // Обработка ошибки
-                        }
-                    });
-                } catch (ParseException e) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            // Обработка ошибки
-                        }
-                    });
-                } catch (java.text.ParseException e) {
-                    throw new RuntimeException(e);
-                }
+                    }
+                });
             }
         }).start();
+
+//        new Thread(new Runnable() {
+//            public void run() {
+//                // Выполнение сетевого запроса
+//                String answer_from_server = Main_server.veiw_gift(Integer.parseInt(EnterActivity.Data_enter().id));
+//
+//                // Обновление пользовательского интерфейса с использованием результата
+//                JSONParser parser = new JSONParser();
+//                is_new_user = false;
+//                try {
+//                    JSONObject combinedJson = (JSONObject) parser.parse(answer_from_server);
+//                    if(String.valueOf(combinedJson.get("status")).equals("false")){
+//                        is_new_user = true;
+//                    }
+//                    JSONArray jsonArray = (JSONArray) combinedJson.get("data");
+//
+//                    gifts_view = new ArrayList<>();
+//
+//                    for (Object element : jsonArray) {
+//                        JSONObject jsonObject = (JSONObject) element;
+//
+//                        Gift_obj new_gift = new Gift_obj();
+//                        new_gift.parseJson(jsonObject);
+//
+//                        gifts_view.add(new_gift);
+//                    }
+//
+//
+//                    runOnUiThread(new Runnable() {
+//                        public void run() {
+//                            if(is_new_user){
+//                                current_ball.setText("0");
+//                                rec_inf_history.setVisibility(View.GONE);
+//                                title_rec_view.setVisibility(View.GONE);
+//                                title_give.setText("Здесь будут отображаться Ваши баллы,\nНо пока что Вы ничего не сдали");
+//                            }
+//                            else {
+//                                int balls = 0;
+//                                int count_gift = gifts_view.size();
+//                                int rev_gift = 0;
+//                                for (Gift_obj gift: gifts_view) {
+//                                    gift.num_cont = count_gift - rev_gift;
+//                                    rev_gift++;
+//                                    if(gift.status == 11){
+//                                        balls +=gift.ball;
+//                                    }
+//                                }
+//
+//
+//
+//                                current_ball.setText(String.valueOf(balls));
+//
+//                                if (gifts_view.size() > 2) {
+//                                    adapter.setData(gifts_view.subList(0, 10));
+//                                } else {
+//                                    adapter.setData(gifts_view);
+//                                }
+//                                title_give.setText("Ваши прошлые gift");
+//                                rec_inf_history.setVisibility(View.VISIBLE);
+//                                title_rec_view.setVisibility(View.VISIBLE);
+//                            }
+//
+//                        }
+//                    });
+//
+//                } catch (JSONException e) {
+//                    runOnUiThread(new Runnable() {
+//                        public void run() {
+//                            // Обработка ошибки
+//                        }
+//                    });
+//                } catch (ParseException e) {
+//                    runOnUiThread(new Runnable() {
+//                        public void run() {
+//                            // Обработка ошибки
+//                        }
+//                    });
+//                } catch (java.text.ParseException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//        }).start();
 
 
         Button bt_inf_about_balls = (Button) findViewById(R.id.bt_inf_about_balls);
@@ -461,6 +532,36 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
 
                             }
                         }).show();
+            }
+        });
+    }
+
+
+    private void load_menu() {
+        Button bt_stat = findViewById(R.id.bt_stat);
+        bt_stat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent activity_new = new Intent(stat.this, stat.class);
+                startActivity(activity_new);
+            }
+        });
+
+        Button bt_map = findViewById(R.id.bt_map);
+        bt_map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent activity_new = new Intent(stat.this, MapsActivity.class);
+                startActivity(activity_new);
+            }
+        });
+
+        Button bt_prof = findViewById(R.id.bt_prof);
+        bt_prof.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent activity_new = new Intent(stat.this, ProfileActivity.class);
+                startActivity(activity_new);
             }
         });
     }

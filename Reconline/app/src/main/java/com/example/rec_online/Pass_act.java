@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.simple.JSONArray;
@@ -19,8 +20,7 @@ import java.util.List;
 public class Pass_act {
     public static List<Factory_obj> factories = new ArrayList<>();
 
-    //public static List<Gift_obj> gifts_view = new ArrayList<>();
-    public static JSONObject json;
+
     private static Handler handler = new Handler(Looper.getMainLooper());
 
     public static void main() {
@@ -65,33 +65,33 @@ public class Pass_act {
     }
 
 
-    public static void prof_oper_rec(final PassActCallback callback) {
-        new Thread(new Runnable() {
-            public void run() {
-                // выполнение сетевого запроса
-                final String answer = Main_server.prof_oper_rec(Integer.parseInt(EnterActivity.Data_enter().id));
-                // передача результата в главный поток
-                handler.post(new Runnable() {
-                    public void run() {
-                        // обновление пользовательского интерфейса с использованием результата
-                        JSONParser parser = new JSONParser();
-                        try {
-                            json = (JSONObject) parser.parse(answer);
-                            // вызываем метод обратного вызова и передаем результат
-                            callback.onPassActComplete(json);
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
-            }
-        }).start();
-    }
+//    public static void prof_oper_rec(final PassActCallback callback) {
+//        new Thread(new Runnable() {
+//            public void run() {
+//                // выполнение сетевого запроса
+//                final String answer = Main_server.prof_oper_rec(Integer.parseInt(EnterActivity.Data_enter().id));
+//                // передача результата в главный поток
+//                handler.post(new Runnable() {
+//                    public void run() {
+//                        // обновление пользовательского интерфейса с использованием результата
+//                        JSONParser parser = new JSONParser();
+//                        try {
+//                            json = (JSONObject) parser.parse(answer);
+//                            // вызываем метод обратного вызова и передаем результат
+//                            callback.onPassActComplete(json);
+//                        } catch (ParseException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    }
+//                });
+//            }
+//        }).start();
+//    }
 
 
-    public interface PassActCallback {
-        void onPassActComplete(JSONObject result);
-    }
+//    public interface PassActCallback {
+//        void onPassActComplete(JSONObject result);
+//    }
 
 
 

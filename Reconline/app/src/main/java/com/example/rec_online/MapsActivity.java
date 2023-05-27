@@ -107,12 +107,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         marker_geo_id = marker_geo.getId();
                         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.geo);
                         marker_geo.setIcon(icon);
+                        marker_geo.setPosition(latLng);
                     } catch (Exception e){
 
                     }
 
                 }
-                marker_geo.setPosition(latLng);
+
             }
 
             @Override
@@ -150,6 +151,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void onMapReady(GoogleMap googleMap) {
+        load_menu();
         mMap = googleMap;
         menu_fact = findViewById(R.id.menu_fact);
 
@@ -185,7 +187,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Button minusZoom = (Button) findViewById(R.id.minus);
 
         Button myGeo = (Button) findViewById(R.id.geo);
-        Button bt_stat = (Button) findViewById(R.id.bt_stat);
+
 
         plusZoom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,27 +242,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-        bt_stat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent Stat = new Intent(MapsActivity.this, stat.class);
-                startActivity(Stat);
-            }
-        });
 
-        Button bt_prof = findViewById(R.id.bt_prof);
-        bt_prof.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Pass_act.prof_oper_rec(new Pass_act.PassActCallback() {
-                    @Override
-                    public void onPassActComplete(JSONObject result) {
-                        Intent Profile = new Intent(MapsActivity.this, ProfileActivity.class);
-                        startActivity(Profile);
-                    }
-                });
-            }
-        });
 
 
     }
@@ -372,6 +354,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.animateCamera(cameraUpdate);
 
         factory = null;
+    }
+
+
+    private void load_menu() {
+        Button bt_stat = findViewById(R.id.bt_stat);
+        bt_stat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent activity_new = new Intent(MapsActivity.this, stat.class);
+                startActivity(activity_new);
+            }
+        });
+
+        Button bt_map = findViewById(R.id.bt_map);
+        bt_map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent activity_new = new Intent(MapsActivity.this, MapsActivity.class);
+                startActivity(activity_new);
+            }
+        });
+
+        Button bt_prof = findViewById(R.id.bt_prof);
+        bt_prof.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent activity_new = new Intent(MapsActivity.this, ProfileActivity.class);
+                startActivity(activity_new);
+            }
+        });
     }
 
 }
