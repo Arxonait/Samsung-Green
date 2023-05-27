@@ -49,6 +49,13 @@ public class HttpControllerREST extends HttpServlet {
         return DB_act.select_gift(jsonObject);
     }
 
+    @RequestMapping("/prof/prof_oper_rec")
+    public String prof_oper_rec(@RequestBody String body) throws SQLException {
+        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
+        return DB_act.prof_oper_rec(jsonObject);
+
+
+    }
 }
 
 

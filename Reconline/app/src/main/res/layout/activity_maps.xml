@@ -30,7 +30,7 @@
             android:text="Карта" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/bt_prof"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_weight="1"

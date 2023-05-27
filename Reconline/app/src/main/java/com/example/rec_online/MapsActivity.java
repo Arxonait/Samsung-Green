@@ -5,6 +5,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -34,8 +36,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.Manifest;
 
+import org.json.simple.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.security.auth.callback.Callback;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -241,6 +247,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(Stat);
             }
         });
+
+        Button bt_prof = findViewById(R.id.bt_prof);
+        bt_prof.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Pass_act.prof_oper_rec(new Pass_act.PassActCallback() {
+                    @Override
+                    public void onPassActComplete(JSONObject result) {
+                        Intent Profile = new Intent(MapsActivity.this, ProfileActivity.class);
+                        startActivity(Profile);
+                    }
+                });
+            }
+        });
+
 
     }
 

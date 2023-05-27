@@ -105,4 +105,19 @@ public class Main_server {
 
         return result;
     }
+
+    public static String prof_oper_rec(int id_user) {
+        String result;
+
+        JSONObject json = new JSONObject();
+        json.put("id_user", id_user);
+
+
+        String url = "http://10.0.2.2:8080/prof/prof_oper_rec";
+
+
+        result = to_server(url, json.toJSONString());
+
+        return result;
+    }
 }
