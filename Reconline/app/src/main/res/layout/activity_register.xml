@@ -4,111 +4,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#4CAF50"
     tools:context=".Register">
 
-    <EditText
-        android:id="@+id/pass1_reg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="Пароль"
-        android:inputType="textPassword"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_reg" />
-
-    <TextView
-        android:id="@+id/ttt"
-        android:layout_width="224dp"
-        android:layout_height="65dp"
-        android:layout_marginTop="68dp"
-        android:text="Регестрация"
-        android:textColor="#000000"
-        android:textSize="36sp"
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="600dp"
+        android:layout_marginTop="72dp"
+        android:background="@drawable/rounded_background"
+        android:elevation="100dp"
+        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/userName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="Имя"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ttt" />
+        <TextView
+            android:id="@+id/ttt"
+            android:layout_width="224dp"
+            android:layout_height="65dp"
+            android:layout_marginTop="40dp"
+            android:text="Регестрация"
+            android:textColor="#000000"
+            android:textSize="36sp" />
 
-    <EditText
-        android:id="@+id/userFam"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="Фамилия"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userName" />
+        <EditText
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:hint="Имя"
+            android:inputType="textPersonName" />
 
-    <EditText
-        android:id="@+id/Numberr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="Номер телефна"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userFam" />
+        <EditText
+            android:id="@+id/userFam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="Фамилия"
+            android:inputType="textPersonName" />
 
-    <EditText
-        android:id="@+id/pass2_reg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="Повтроите пароль"
-        android:inputType="textPassword"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pass1_reg" />
+        <EditText
+            android:id="@+id/Numberr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="Номер телефна"
+            android:inputType="textPersonName" />
 
-    <EditText
-        android:id="@+id/login_reg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="Логин"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Numberr" />
+        <EditText
+            android:id="@+id/login_reg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:hint="Логин"
+            android:inputType="textPersonName" />
 
-    <Button
-        android:id="@+id/button_reg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="28dp"
-        android:text="Зарегестрироваться"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pass2_reg" />
+        <EditText
+            android:id="@+id/pass1_reg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="Пароль"
+            android:inputType="textPassword" />
 
-    <TextView
-        android:id="@+id/Reg_result"
-        android:layout_width="210dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="24dp"
-        android:textColor="#FF0000"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_reg" />
+        <EditText
+            android:id="@+id/pass2_reg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="Повтроите пароль"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/button_reg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Зарегестрироваться" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

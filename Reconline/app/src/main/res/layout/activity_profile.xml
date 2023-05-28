@@ -4,47 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#4CAF50"
     tools:context=".ProfileActivity">
 
     <LinearLayout
-        android:id="@+id/menu"
+        android:id="@+id/map_menu"
         android:layout_width="413dp"
-        android:layout_height="80dp"
-        android:layout_weight="20"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_rounded_top"
+        android:elevation="100dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-2dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/bt_stat"
+        <ImageButton
+            android:id="@+id/bt_prof_rec"
             android:layout_width="wrap_content"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Статистика" />
+            android:backgroundTint="#00372929"
+            android:tint="#4CAF50"
+            app:srcCompat="@drawable/rec" />
 
-        <Button
-            android:id="@+id/bt_map"
+        <ImageButton
+            android:id="@+id/bt_prof_map"
             android:layout_width="wrap_content"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Карта"
-            android:textColor="#FFFFFF" />
+            android:backgroundTint="#00FFFFFF"
+            android:tint="#4CAF50"
+            app:srcCompat="@drawable/map" />
 
-        <Button
-            android:id="@+id/bt_prof"
+        <ImageButton
+            android:id="@+id/bt_prof_prof"
             android:layout_width="wrap_content"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Профиль" />
+            android:backgroundTint="#00FFFFFF"
+            android:tint="#4CAF50"
+            app:srcCompat="@drawable/prof" />
+
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sec_profile_info"
-        android:layout_width="409dp"
+        android:layout_width="375dp"
         android:layout_height="400dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp">
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_background"
+        android:elevation="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView5"
@@ -60,7 +72,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayout3"
-            android:layout_width="407dp"
+            android:layout_width="375dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
@@ -88,7 +100,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayout4"
-            android:layout_width="407dp"
+            android:layout_width="375dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
@@ -116,7 +128,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayout5"
-            android:layout_width="407dp"
+            android:layout_width="375dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
@@ -144,7 +156,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout3"
-            android:layout_width="407dp"
+            android:layout_width="375dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
@@ -280,8 +292,13 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sec_profile_history"
-        android:layout_width="match_parent"
-        android:layout_height="409dp"
+        android:layout_width="375dp"
+        android:layout_height="265dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_background"
+        android:elevation="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sec_profile_info">
 
     </androidx.constraintlayout.widget.ConstraintLayout>

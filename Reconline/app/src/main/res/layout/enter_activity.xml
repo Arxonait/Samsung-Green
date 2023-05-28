@@ -4,102 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#4CAF50"
     tools:context=".EnterActivity">
 
-    <Button
-        android:id="@+id/register"
-        android:layout_width="222dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="24dp"
-        android:text="Зарегистрироваться"
+    <LinearLayout
+        android:layout_width="301dp"
+        android:layout_height="418dp"
+        android:layout_marginTop="136dp"
+        android:background="@drawable/rounded_background"
+        android:elevation="100dp"
+        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.469"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enter" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="223dp"
-        android:layout_height="36dp"
-        android:layout_marginTop="20dp"
-        android:text="Пароль"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="224dp"
+            android:layout_height="65dp"
+            android:layout_marginTop="68dp"
+            android:layout_marginBottom="48dp"
+            android:text="Вход"
+            android:textColor="#000000"
+            android:textSize="48sp" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="224dp"
-        android:layout_height="65dp"
-        android:layout_marginTop="68dp"
-        android:text="Вход"
-        android:textColor="#000000"
-        android:textSize="48sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.481"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+            android:id="@+id/login"
+            android:layout_width="222dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="24dp"
+            android:ems="10"
+            android:hint="Логин"
+            android:inputType="textPersonName" />
 
-    <EditText
-        android:id="@+id/login"
-        android:layout_width="222dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="222dp"
+            android:layout_height="40dp"
+            android:ems="10"
+            android:hint="Пароль"
+            android:inputType="textPassword" />
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="222dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.47"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        <Button
+            android:id="@+id/enter"
+            android:layout_width="222dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:text="Войти" />
 
-    <TextView
-        android:id="@+id/result_enter"
-        android:layout_width="220dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="28dp"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/register" />
-
-    <Button
-        android:id="@+id/enter"
-        android:layout_width="222dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="20dp"
-        android:text="Войти"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.469"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="222dp"
-        android:layout_height="36dp"
-        android:layout_marginTop="48dp"
-        android:text="Логин"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        <Button
+            android:id="@+id/register"
+            android:layout_width="222dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:text="Зарегистрироваться" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

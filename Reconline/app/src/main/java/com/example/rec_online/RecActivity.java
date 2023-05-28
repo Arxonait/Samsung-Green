@@ -35,7 +35,7 @@ import org.json.simple.parser.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class stat extends AppCompatActivity implements MyAdapter.ItemClickListener {
+public class RecActivity extends AppCompatActivity implements MyAdapter.ItemClickListener {
 
     private RecyclerView rec_inf_history;
     private MyAdapter adapter;
@@ -52,7 +52,7 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
         load_sec_inf_ball();
 
         Factory_obj near_factory = near_fact();
-        double near_dist = MapsActivity.calcDist(near_factory.x, near_factory.y, stat.this);
+        double near_dist = MapsActivity.calcDist(near_factory.x, near_factory.y, RecActivity.this);
 
 
         if(near_dist> 150){
@@ -78,9 +78,9 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
         ConstraintLayout sec_oper_far = findViewById(R.id.sec_oper_far);
         sec_oper_far.setVisibility(View.VISIBLE);
 
-        ImageView im_glass = findViewById(R.id.im_far_glass);
-        ImageView im_metal = findViewById(R.id.im_far_metal);
-        ImageView im_plastic = findViewById(R.id.im_far_plastic);
+        ImageView im_glass = findViewById(R.id.im_map_glass);
+        ImageView im_metal = findViewById(R.id.im_map_metal);
+        ImageView im_plastic = findViewById(R.id.im_map_plastic);
 
         name_stat.setText(near_factory.name);
         adres_stat.setText(near_factory.adres);
@@ -99,12 +99,12 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
         distance_stat.setText(dist_str);
         Pass_act.show_image(near_factory, im_glass,im_metal, im_plastic);
 
-        Button bt_map_to_fact = findViewById(R.id.bt_map_to_fact);
+        ImageButton bt_map_to_fact = findViewById(R.id.bt_map_to_fact);
         bt_map_to_fact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MapsActivity.factory = near_factory;
-                Intent Map = new Intent(stat.this, MapsActivity.class);
+                Intent Map = new Intent(RecActivity.this, MapsActivity.class);
                 startActivity(Map);
             }
         });
@@ -166,7 +166,7 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
             @Override
             public void onClick(View v) {
                 if(near_factory.glass){
-                    Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
+                    Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
                     v.startAnimation(fadeAnimation);
                     int count = Integer.parseInt(tv_count_gl.getText().toString()) + 1;
                     tv_count_gl.setText(String.valueOf(count));
@@ -178,7 +178,7 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
             @Override
             public void onClick(View v) {
                 if(near_factory.metal) {
-                    Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
+                    Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
                     v.startAnimation(fadeAnimation);
                     int count = Integer.parseInt(tv_count_m.getText().toString()) + 1;
                     tv_count_m.setText(String.valueOf(count));
@@ -190,7 +190,7 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
             @Override
             public void onClick(View v) {
                 if(near_factory.plastic) {
-                    Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
+                    Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
                     v.startAnimation(fadeAnimation);
                     int count = Integer.parseInt(tv_count_p.getText().toString()) + 1;
                     tv_count_p.setText(String.valueOf(count));
@@ -202,7 +202,7 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
             @Override
             public void onClick(View v) {
                 if(near_factory.glass){
-                    Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
+                    Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
                     v.startAnimation(fadeAnimation);
                     int count = Integer.parseInt(tv_count_gl.getText().toString()) - 1;
                     if(count< 0){
@@ -217,7 +217,7 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
             @Override
             public void onClick(View v) {
                 if(near_factory.metal) {
-                    Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
+                    Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
                     v.startAnimation(fadeAnimation);
                     int count = Integer.parseInt(tv_count_m.getText().toString()) - 1;
                     if (count < 0) {
@@ -232,7 +232,7 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
             @Override
             public void onClick(View v) {
                 if(near_factory.plastic) {
-                    Animation fadeAnimation = AnimationUtils.loadAnimation(stat.this, R.anim.fade);
+                    Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
                     v.startAnimation(fadeAnimation);
                     int count = Integer.parseInt(tv_count_p.getText().toString()) - 1;
                     if (count < 0) {
@@ -297,9 +297,9 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
 
     public Factory_obj near_fact(){
         Factory_obj best_factory = Pass_act.factories.get(0);
-        double best_dist = MapsActivity.calcDist(best_factory.x, best_factory.y, stat.this);
+        double best_dist = MapsActivity.calcDist(best_factory.x, best_factory.y, RecActivity.this);
         for (Factory_obj factory : Pass_act.factories) {
-            double cur_dist = MapsActivity.calcDist(factory.x, factory.y, stat.this);
+            double cur_dist = MapsActivity.calcDist(factory.x, factory.y, RecActivity.this);
             if (best_dist > cur_dist){
                 best_dist = cur_dist;
                 best_factory = factory;
@@ -524,7 +524,7 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
         bt_inf_about_balls.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(stat.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(RecActivity.this);
                 builder.setMessage(String.format("Информация о баллах\n"))
                         .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
                             @Override
@@ -538,29 +538,29 @@ public class stat extends AppCompatActivity implements MyAdapter.ItemClickListen
 
 
     private void load_menu() {
-        Button bt_stat = findViewById(R.id.bt_stat);
-        bt_stat.setOnClickListener(new View.OnClickListener() {
+        ImageButton bt_rec = findViewById(R.id.bt_rec_rec);
+        bt_rec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(stat.this, stat.class);
+                Intent activity_new = new Intent(RecActivity.this, RecActivity.class);
                 startActivity(activity_new);
             }
         });
 
-        Button bt_map = findViewById(R.id.bt_map);
+        ImageButton bt_map = findViewById(R.id.bt_rec_map);
         bt_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(stat.this, MapsActivity.class);
+                Intent activity_new = new Intent(RecActivity.this, MapsActivity.class);
                 startActivity(activity_new);
             }
         });
 
-        Button bt_prof = findViewById(R.id.bt_prof);
+        ImageButton bt_prof = findViewById(R.id.bt_rec_prof);
         bt_prof.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(stat.this, ProfileActivity.class);
+                Intent activity_new = new Intent(RecActivity.this, ProfileActivity.class);
                 startActivity(activity_new);
             }
         });

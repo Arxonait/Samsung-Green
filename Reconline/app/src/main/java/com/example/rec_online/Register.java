@@ -17,7 +17,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Register extends AppCompatActivity {
-    static int data;
 
 
     @Override
@@ -36,7 +35,7 @@ public class Register extends AppCompatActivity {
         EditText number_element = (EditText) findViewById(R.id.Numberr);
 
         Button button_reg = (Button) findViewById(R.id.button_reg);
-        TextView result_element = (TextView) findViewById(R.id.Reg_result);
+
 
 
 
@@ -45,7 +44,7 @@ public class Register extends AppCompatActivity {
             public void onClick(View v) {
                 String login = String.valueOf(login_element.getText());
                 String password1 = String.valueOf(password1_element.getText());
-                String password2 = String.valueOf(password1_element.getText());
+                String password2 = String.valueOf(password2_element.getText());
                 String name = String.valueOf(name_element.getText());
                 String fam = String.valueOf(fam_element.getText());
                 String numberr = String.valueOf(number_element.getText());
@@ -56,6 +55,7 @@ public class Register extends AppCompatActivity {
                             new Thread(new Runnable() {
                                 public void run() {
                                     // выполнение сетевого запроса
+                                    System.out.println(login);
                                     User_obj user_new = new User_obj(name, fam, numberr, login, password1, false);
                                     String res = Main_server.reg(user_new);
                                     // передача результата в главный поток
@@ -64,17 +64,15 @@ public class Register extends AppCompatActivity {
                                             // обновление пользовательского интерфейса с использованием результата
                                             try {
                                                 JSONObject answer = new JSONObject(res);
-                                                if(answer.getBoolean("status")){
+                                                if(answer.getString("status").equals("true")){
                                                     Toast.makeText(getApplicationContext(), "Вы зарегестрированы",
                                                             Toast.LENGTH_SHORT).show();
                                                     Intent enter_act = new Intent(Register.this, EnterActivity.class);
                                                     startActivity(enter_act);
-
-
                                                 }
                                                 else{
-                                                    result_element.setText("Пользователь с таким логином уже существует");
-                                                    result_element.setTextColor(Color.RED);
+                                                    Toast.makeText(getApplicationContext(), "Пользователь с таким логином уже существует",
+                                                            Toast.LENGTH_SHORT).show();
                                                 }
 
                                             } catch (JSONException e) {
@@ -86,15 +84,18 @@ public class Register extends AppCompatActivity {
                             }).start();
                         }
                         else{
-                            result_element.setText("Пароль должен быть больше n символов");
+                            Toast.makeText(getApplicationContext(), "Пароль должен быть больше n символов",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                     else {
-                        result_element.setText("Пароли не совпадают");
+                        Toast.makeText(getApplicationContext(), "Пароли не совпадают",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
                 else{
-                    result_element.setText("Заполните все поля ");
+                    Toast.makeText(getApplicationContext(), "Заполните все поля",
+                            Toast.LENGTH_SHORT).show();
                 }
 
             }

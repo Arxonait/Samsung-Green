@@ -62,7 +62,7 @@ public class DB_act {
             throw new RuntimeException(e);
         }
         Statement statement = connection.createStatement();
-        String SQL = String.format("select * from users WHERE login = '%s'", json.get("login"));
+        String SQL = String.format("select * from users WHERE login = '%s'", json.get("login").toString().replace("\"", ""));
         ResultSet resultSet = statement.executeQuery(SQL);
 
         if (resultSet.next()) {

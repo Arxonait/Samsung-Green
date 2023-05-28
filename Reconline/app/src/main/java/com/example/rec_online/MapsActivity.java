@@ -5,7 +5,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,11 +13,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,12 +35,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.Manifest;
 
-import org.json.simple.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.security.auth.callback.Callback;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -60,6 +55,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView  mobile_fact;
     private TextView  work_time_fact;
     private TextView  distance_fact;
+
+    private ImageView im_glass;
+    private ImageView im_plastic;
+    private ImageView im_metal;
 
     private Map<String, Marker> markerMap;
 
@@ -183,10 +182,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-        Button plusZoom = (Button) findViewById(R.id.plus);
-        Button minusZoom = (Button) findViewById(R.id.minus);
+        ImageButton plusZoom = findViewById(R.id.plus);
+        ImageButton minusZoom = findViewById(R.id.minus);
 
-        Button myGeo = (Button) findViewById(R.id.geo);
+        ImageButton myGeo = findViewById(R.id.my_geo);
 
 
         plusZoom.setOnClickListener(new View.OnClickListener() {
@@ -238,6 +237,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mobile_fact = (TextView ) findViewById(R.id.mobile_fact);
         work_time_fact = (TextView) findViewById(R.id.time_work_fact);
         distance_fact = (TextView) findViewById(R.id.distance_fact);
+
+        im_glass = findViewById(R.id.im_map_glass);
+        im_plastic = findViewById(R.id.im_map_plastic);
+        im_metal = findViewById(R.id.im_map_metal);
 
 
 
@@ -301,6 +304,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             menu_fact.setVisibility(View.VISIBLE);
+
+            im_glass.setVisibility(View.GONE);
+            im_plastic.setVisibility(View.GONE);
+            im_metal.setVisibility(View.GONE);
+
             name_fact.setText(factort_marker.name);
             work_time_fact.setText(factort_marker.work_time);
             mobile_fact.setText(factort_marker.mobile);
@@ -318,6 +326,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             distance_fact.setText(dist_str);
+
+            if(factort_marker.glass){
+                im_glass.setVisibility(View.VISIBLE);
+            }
+            if(factort_marker.metal){
+                im_metal.setVisibility(View.VISIBLE);
+            }
+            if(factort_marker.plastic){
+                im_plastic.setVisibility(View.VISIBLE);
+            }
 
         }
         return false;
@@ -358,16 +376,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private void load_menu() {
-        Button bt_stat = findViewById(R.id.bt_stat);
-        bt_stat.setOnClickListener(new View.OnClickListener() {
+        ImageButton bt_rec = findViewById(R.id.bt_map_rec);
+        bt_rec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(MapsActivity.this, stat.class);
+                Intent activity_new = new Intent(MapsActivity.this, RecActivity.class);
                 startActivity(activity_new);
             }
         });
 
-        Button bt_map = findViewById(R.id.bt_map);
+        ImageButton bt_map = findViewById(R.id.bt_map_map);
         bt_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -376,7 +394,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        Button bt_prof = findViewById(R.id.bt_prof);
+        ImageButton bt_prof = findViewById(R.id.bt_map_prof);
         bt_prof.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

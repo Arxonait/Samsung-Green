@@ -4,18 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".stat">
+    android:background="#4CAF50"
+    tools:context=".RecActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:id="@+id/rec_menu"
+        android:layout_width="413dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_rounded_top"
+        android:elevation="100dp"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/bt_rec_rec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#00372929"
+            android:tint="#4CAF50"
+            app:srcCompat="@drawable/rec" />
+
+        <ImageButton
+            android:id="@+id/bt_rec_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#00FFFFFF"
+            android:tint="#4CAF50"
+            app:srcCompat="@drawable/map" />
+
+        <ImageButton
+            android:id="@+id/bt_rec_prof"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#00FFFFFF"
+            android:tint="#4CAF50"
+            app:srcCompat="@drawable/prof" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="375dp"
+        android:layout_height="305dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_background"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/sec_give_fact"
-            android:layout_width="409dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
             tools:ignore="MissingConstraints"
@@ -24,7 +68,7 @@
             <LinearLayout
                 android:id="@+id/metal"
                 android:layout_width="94dp"
-                android:layout_height="160dp"
+                android:layout_height="140dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:gravity="center_horizontal"
@@ -37,7 +81,8 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#00FFFFFF"
+                    android:backgroundTint="#004CAF50"
+                    android:tint="#4CAF50"
                     app:srcCompat="@drawable/green_plus" />
 
                 <TextView
@@ -63,7 +108,8 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#00FFFFFF"
+                    android:backgroundTint="#004CAF50"
+                    android:tint="#4CAF50"
                     app:srcCompat="@drawable/green_min" />
 
             </LinearLayout>
@@ -71,7 +117,7 @@
             <LinearLayout
                 android:id="@+id/plastic"
                 android:layout_width="94dp"
-                android:layout_height="160dp"
+                android:layout_height="140dp"
                 android:layout_marginTop="16dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
@@ -84,7 +130,8 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#00FFFFFF"
+                    android:backgroundTint="#004CAF50"
+                    android:tint="#4CAF50"
                     app:srcCompat="@drawable/green_plus" />
 
                 <TextView
@@ -110,7 +157,8 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#00FFFFFF"
+                    android:backgroundTint="#004CAF50"
+                    android:tint="#4CAF50"
                     app:srcCompat="@drawable/green_min" />
 
             </LinearLayout>
@@ -119,10 +167,10 @@
                 android:id="@+id/name_stat_give"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="TextView"
                 android:textColor="#000000"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.42"
                 app:layout_constraintStart_toStartOf="parent"
@@ -132,7 +180,7 @@
                 android:id="@+id/title"
                 android:layout_width="333dp"
                 android:layout_height="48dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:text="Укажите кол-во материалов, которое Вы сдали в центр"
                 android:textColor="#000000"
@@ -156,7 +204,7 @@
             <LinearLayout
                 android:id="@+id/glass"
                 android:layout_width="94dp"
-                android:layout_height="160dp"
+                android:layout_height="140dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:gravity="center_horizontal"
@@ -170,8 +218,9 @@
                     android:layout_height="48dp"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:backgroundTint="#00FFFFFF"
+                    android:backgroundTint="#004CAF50"
                     android:stateListAnimator="@null"
+                    android:tint="#4CAF50"
                     app:srcCompat="@drawable/green_plus" />
 
                 <TextView
@@ -197,16 +246,17 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#00FFFFFF"
+                    android:backgroundTint="#004CAF50"
+                    android:tint="#4CAF50"
                     app:srcCompat="@drawable/green_min" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="77dp"
-                android:layout_height="27dp"
+                android:layout_width="87dp"
+                android:layout_height="32dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="14dp"
                 android:gravity="start"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toEndOf="@+id/name_stat_give"
@@ -239,7 +289,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/sec_oper_far"
-            android:layout_width="409dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:ignore="MissingConstraints"
             tools:visibility="gone">
@@ -249,7 +299,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:text="TextView"
                 android:textColor="#000000"
                 android:textSize="20sp"
@@ -261,7 +311,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:text="TextView"
                 android:textColor="#000000"
                 android:textSize="20sp"
@@ -273,7 +323,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:text="TextView"
                 android:textColor="#000000"
                 android:textSize="20sp"
@@ -294,9 +344,10 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
-                android:layout_width="407dp"
-                android:layout_height="35dp"
-                android:layout_marginTop="24dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/mobile_stat">
@@ -309,7 +360,7 @@
                     android:id="@+id/textView10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" Растояние:"
+                    android:text=" Расстояние:"
                     android:textColor="#000000"
                     android:textSize="20sp" />
 
@@ -331,12 +382,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/bt_map_to_fact"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:text="Button" />
+                    android:background="#00FFFFFF"
+                    android:tint="#4CAF50"
+                    app:srcCompat="@drawable/to_fact" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -355,7 +409,7 @@
                     android:layout_height="wrap_content"
                     android:text="TextView"
                     android:textColor="#000000"
-                    android:textSize="20sp" />
+                    android:textSize="24sp" />
 
                 <LinearLayout
                     android:layout_width="77dp"
@@ -365,21 +419,21 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/im_far_glass"
+                        android:id="@+id/im_map_glass"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:visibility="visible"
                         app:srcCompat="@drawable/glass" />
 
                     <ImageView
-                        android:id="@+id/im_far_plastic"
+                        android:id="@+id/im_map_plastic"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         app:srcCompat="@drawable/plastic" />
 
                     <ImageView
-                        android:id="@+id/im_far_metal"
+                        android:id="@+id/im_map_metal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -391,45 +445,15 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/menu"
-        android:layout_width="413dp"
-        android:layout_height="80dp"
-        android:layout_weight="20"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-2dp">
-
-        <Button
-            android:id="@+id/bt_stat"
-            android:layout_width="wrap_content"
-            android:layout_height="80dp"
-            android:layout_weight="1"
-            android:text="Статистика" />
-
-        <Button
-            android:id="@+id/bt_map"
-            android:layout_width="wrap_content"
-            android:layout_height="80dp"
-            android:layout_weight="1"
-            android:text="Карта"
-            android:textColor="#FFFFFF" />
-
-        <Button
-            android:id="@+id/bt_prof"
-            android:layout_width="wrap_content"
-            android:layout_height="80dp"
-            android:layout_weight="1"
-            android:text="Button" />
-    </LinearLayout>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
-        android:layout_width="409dp"
+        android:layout_width="375dp"
         android:layout_height="350dp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="1dp">
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView2"
@@ -447,9 +471,10 @@
             android:id="@+id/current_ball"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:text="TextView"
             android:textColor="#000000"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
@@ -457,7 +482,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rec_inf_history"
-            android:layout_width="409dp"
+            android:layout_width="match_parent"
             android:layout_height="105dp"
             app:layout_constraintTop_toBottomOf="@+id/titleRecView"
             tools:layout_editor_absoluteX="0dp"
