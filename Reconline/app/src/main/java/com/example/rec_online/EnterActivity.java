@@ -45,6 +45,9 @@ public class EnterActivity extends AppCompatActivity {
         Button reg_button = findViewById(R.id.register);
 
 
+        enter_button.setEnabled(false);
+        reg_button.setEnabled(false);
+
         sharedPreferences = this.getSharedPreferences("Rec_online_memory", Context.MODE_PRIVATE);
 
         if (sharedPreferences.contains("login") && sharedPreferences.contains("password")) {
@@ -52,6 +55,8 @@ public class EnterActivity extends AppCompatActivity {
             enter();
         } else {
             is_new_user = true;
+            enter_button.setEnabled(true);
+            reg_button.setEnabled(true);
         }
 
 

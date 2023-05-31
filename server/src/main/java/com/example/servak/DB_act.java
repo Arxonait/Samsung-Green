@@ -139,8 +139,6 @@ public class DB_act {
         System.out.println(time);
 
 
-
-
         Connection connection;
         JSONObject answer_to_mob = new JSONObject();
 
@@ -152,8 +150,8 @@ public class DB_act {
         Statement statement = connection.createStatement();
 
         String SQL = String.format("INSERT INTO public.gift (id_user, id_fact, metal, plastic, glass, ball, status, timee) VALUES ('%s', " +
-                "'%s', '%d', '%d', '%d', '%d', '%d', '%s')", json.get("id_user").toString().replace("\"", ""),
-                json.get("id_fact").toString().replace("\"", ""), metal, plastic, glass, ball_new, 1, time );
+                        "'%s', '%d', '%d', '%d', '%d', '%d', '%s')", json.get("id_user").toString().replace("\"", ""),
+                json.get("id_fact").toString().replace("\"", ""), metal, plastic, glass, ball_new, 1, time);
         statement.executeUpdate(SQL);
 
         answer_to_mob.put("status", "true");
@@ -197,16 +195,13 @@ public class DB_act {
         }
 
 
-
         JSONObject combinedJson = new JSONObject();
         combinedJson.put("data", jsonObjects);
-        if(cont_row>0){
+        if (cont_row > 0) {
             combinedJson.put("status", "true");
-        }
-        else {
+        } else {
             combinedJson.put("status", "false");
         }
-
 
 
         result = combinedJson.toString();
@@ -243,14 +238,9 @@ public class DB_act {
             json.put("glass", totalGlass);
             json.put("metal", totalMetal);
             json.put("status", "true");
-        }
-        else {
+        } else {
             json.put("status", "false");
         }
-
-
-
-
 
 
         result = json.toString();
@@ -259,5 +249,58 @@ public class DB_act {
         statement.close();
 
         return result;
+    }
+
+
+    public static String select_mess(JsonObject jsonObject) throws SQLException {
+        String result;
+        Connection connection;
+        List<JSONObject> jsonObjects = new ArrayList<>();
+        int cont_row = 0;
+
+        try {
+            connection = DriverManager.getConnection(URL, USERNAME, PassWord);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        Statement statement = connection.createStatement();
+        String SQL = String.format("select * from messages WHERE   id_user = '%s' ORDER BY messages.id DESC", jsonObject.get("id_user"));
+        ResultSet resultSet = statement.executeQuery(SQL);
+        while (resultSet.next()) {
+            JSONObject json = new JSONObject();
+            json.put("id", resultSet.getInt("id"));
+            json.put("id_user", resultSet.getInt("id_user"));
+            json.put("id_prev_mes", resultSet.getInt("id_prev_mes"));
+            json.put("title", resultSet.getString("title"));
+            json.put("main_text", resultSet.getString("main_text"));
+
+            json.put("is_read", resultSet.getBoolean("is_read"));
+            json.put("date", resultSet.getString("date"));
+
+
+            cont_row++;
+
+
+            jsonObjects.add(json);
+        }
+
+
+        JSONObject combinedJson = new JSONObject();
+        combinedJson.put("data", jsonObjects);
+        if (cont_row > 0) {
+            combinedJson.put("status", "true");
+        } else {
+            combinedJson.put("status", "false");
+        }
+
+
+        result = combinedJson.toString();
+        System.out.println(result);
+        resultSet.close();
+        statement.close();
+
+        return result;
+
+
     }
 }

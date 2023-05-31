@@ -35,11 +35,11 @@ import org.json.simple.parser.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecActivity extends AppCompatActivity implements MyAdapter.ItemClickListener {
+public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemClickListener {
 
     private RecyclerView rec_inf_history;
-    private MyAdapter adapter;
-    //private Handler handler = new Handler(Looper.getMainLooper());
+    private Adapter_rec adapter;
+
 
 
     private List<Gift_obj> gifts_view;
@@ -171,6 +171,9 @@ public class RecActivity extends AppCompatActivity implements MyAdapter.ItemClic
                     int count = Integer.parseInt(tv_count_gl.getText().toString()) + 1;
                     tv_count_gl.setText(String.valueOf(count));
                 }
+                else {
+                    Toast.makeText(getApplicationContext(), "Для данного центра сдача этого ресурса не возможна", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -183,6 +186,9 @@ public class RecActivity extends AppCompatActivity implements MyAdapter.ItemClic
                     int count = Integer.parseInt(tv_count_m.getText().toString()) + 1;
                     tv_count_m.setText(String.valueOf(count));
                 }
+                else {
+                    Toast.makeText(getApplicationContext(), "Для данного центра сдача этого ресурса не возможна", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -194,6 +200,9 @@ public class RecActivity extends AppCompatActivity implements MyAdapter.ItemClic
                     v.startAnimation(fadeAnimation);
                     int count = Integer.parseInt(tv_count_p.getText().toString()) + 1;
                     tv_count_p.setText(String.valueOf(count));
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Для данного центра сдача этого ресурса не возможна", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -210,6 +219,9 @@ public class RecActivity extends AppCompatActivity implements MyAdapter.ItemClic
                     }
                     tv_count_gl.setText(String.valueOf(count));
                 }
+                else {
+                    Toast.makeText(getApplicationContext(), "Для данного центра сдача этого ресурса не возможна", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -225,6 +237,9 @@ public class RecActivity extends AppCompatActivity implements MyAdapter.ItemClic
                     }
                     tv_count_m.setText(String.valueOf(count));
                 }
+                else {
+                    Toast.makeText(getApplicationContext(), "Для данного центра сдача этого ресурса не возможна", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -239,6 +254,9 @@ public class RecActivity extends AppCompatActivity implements MyAdapter.ItemClic
                         count = 0;
                     }
                     tv_count_p.setText(String.valueOf(count));
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Для данного центра сдача этого ресурса не возможна", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -282,6 +300,7 @@ public class RecActivity extends AppCompatActivity implements MyAdapter.ItemClic
                             });
                         }
                     }).start();
+
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "Вы ничего не указали",
@@ -350,7 +369,7 @@ public class RecActivity extends AppCompatActivity implements MyAdapter.ItemClic
         rec_inf_history.setLayoutManager(new LinearLayoutManager(this));
 
         // Создаем и устанавливаем адаптер
-        adapter = new MyAdapter(this);
+        adapter = new Adapter_rec(this);
         rec_inf_history.setAdapter(adapter);
         rec_inf_history.setVisibility(View.INVISIBLE);
 
@@ -405,17 +424,17 @@ public class RecActivity extends AppCompatActivity implements MyAdapter.ItemClic
                                 title_rec_view.setVisibility(View.GONE);
                                 title_give.setText("Здесь будут отображаться Ваши баллы,\nНо пока что Вы ничего не сдали");
                             }
-                            else {
-                                int balls = 0;
-                                int count_gift = gifts_view.size();
-                                int rev_gift = 0;
-                                for (Gift_obj gift: gifts_view) {
-                                    gift.num_cont = count_gift - rev_gift;
-                                    rev_gift++;
-                                    if(gift.status == 11){
-                                        balls +=gift.ball;
-                                    }
+                        else {
+                            int balls = 0;
+                            int count_gift = gifts_view.size();
+                            int rev_gift = 0;
+                            for (Gift_obj gift: gifts_view) {
+                                gift.num_cont = count_gift - rev_gift;
+                                rev_gift++;
+                                if(gift.status == 11){
+                                    balls +=gift.ball;
                                 }
+                            }
 
 
 
@@ -437,87 +456,6 @@ public class RecActivity extends AppCompatActivity implements MyAdapter.ItemClic
             }
         }).start();
 
-//        new Thread(new Runnable() {
-//            public void run() {
-//                // Выполнение сетевого запроса
-//                String answer_from_server = Main_server.veiw_gift(Integer.parseInt(EnterActivity.Data_enter().id));
-//
-//                // Обновление пользовательского интерфейса с использованием результата
-//                JSONParser parser = new JSONParser();
-//                is_new_user = false;
-//                try {
-//                    JSONObject combinedJson = (JSONObject) parser.parse(answer_from_server);
-//                    if(String.valueOf(combinedJson.get("status")).equals("false")){
-//                        is_new_user = true;
-//                    }
-//                    JSONArray jsonArray = (JSONArray) combinedJson.get("data");
-//
-//                    gifts_view = new ArrayList<>();
-//
-//                    for (Object element : jsonArray) {
-//                        JSONObject jsonObject = (JSONObject) element;
-//
-//                        Gift_obj new_gift = new Gift_obj();
-//                        new_gift.parseJson(jsonObject);
-//
-//                        gifts_view.add(new_gift);
-//                    }
-//
-//
-//                    runOnUiThread(new Runnable() {
-//                        public void run() {
-//                            if(is_new_user){
-//                                current_ball.setText("0");
-//                                rec_inf_history.setVisibility(View.GONE);
-//                                title_rec_view.setVisibility(View.GONE);
-//                                title_give.setText("Здесь будут отображаться Ваши баллы,\nНо пока что Вы ничего не сдали");
-//                            }
-//                            else {
-//                                int balls = 0;
-//                                int count_gift = gifts_view.size();
-//                                int rev_gift = 0;
-//                                for (Gift_obj gift: gifts_view) {
-//                                    gift.num_cont = count_gift - rev_gift;
-//                                    rev_gift++;
-//                                    if(gift.status == 11){
-//                                        balls +=gift.ball;
-//                                    }
-//                                }
-//
-//
-//
-//                                current_ball.setText(String.valueOf(balls));
-//
-//                                if (gifts_view.size() > 2) {
-//                                    adapter.setData(gifts_view.subList(0, 10));
-//                                } else {
-//                                    adapter.setData(gifts_view);
-//                                }
-//                                title_give.setText("Ваши прошлые gift");
-//                                rec_inf_history.setVisibility(View.VISIBLE);
-//                                title_rec_view.setVisibility(View.VISIBLE);
-//                            }
-//
-//                        }
-//                    });
-//
-//                } catch (JSONException e) {
-//                    runOnUiThread(new Runnable() {
-//                        public void run() {
-//                            // Обработка ошибки
-//                        }
-//                    });
-//                } catch (ParseException e) {
-//                    runOnUiThread(new Runnable() {
-//                        public void run() {
-//                            // Обработка ошибки
-//                        }
-//                    });
-//                } catch (java.text.ParseException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//        }).start();
 
 
         Button bt_inf_about_balls = (Button) findViewById(R.id.bt_inf_about_balls);
@@ -525,7 +463,11 @@ public class RecActivity extends AppCompatActivity implements MyAdapter.ItemClic
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(RecActivity.this);
-                builder.setMessage(String.format("Информация о баллах\n"))
+                builder.setMessage(String.format("Информация о баллах\nЗа каждую единицу Вы будете получать:\n" +
+                                "Стекло - 10 баллов\nМеталл - 2 балла\nПластик - 5 баллов\n\n" +
+                                "Начисление баллов происходит не сразу, а через некоторое время, после проверки Администратора.\n" +
+                                "Вам могут отказать в начислении баллов в случае подозрительной заявки.\n" +
+                                "В будующем баллы Вы сможите обменять баллы на призы."))
                         .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -542,8 +484,9 @@ public class RecActivity extends AppCompatActivity implements MyAdapter.ItemClic
         bt_rec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(RecActivity.this, RecActivity.class);
-                startActivity(activity_new);
+                //Intent activity_new = new Intent(RecActivity.this, RecActivity.class);
+                //startActivity(activity_new);
+                load_sec_inf_ball();
             }
         });
 

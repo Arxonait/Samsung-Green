@@ -120,4 +120,19 @@ public class Main_server {
 
         return result;
     }
+
+    public static String veiw_mess(int id_user) {
+        String result;
+
+        JSONObject json = new JSONObject();
+        json.put("id_user", id_user);
+
+
+        String url = "http://10.0.2.2:8080/prof/view_mess";
+
+
+        result = to_server(url, json.toJSONString());
+
+        return result;
+    }
 }

@@ -56,6 +56,12 @@ public class HttpControllerREST extends HttpServlet {
 
 
     }
+
+    @RequestMapping("/prof/view_mess")
+    public String view_mess(@RequestBody String body) throws SQLException {
+        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
+        return DB_act.select_mess(jsonObject);
+    }
 }
 
 

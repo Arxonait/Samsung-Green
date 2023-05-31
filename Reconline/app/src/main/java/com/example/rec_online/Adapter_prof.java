@@ -10,24 +10,25 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
+public class Adapter_prof extends RecyclerView.Adapter<ViewHolder_prof> {
 
-    private List<Gift_obj> data ;
+    private List<Mes_obj> data ;
     private ItemClickListener clickListener;
 
-    public MyAdapter(ItemClickListener clickListener) {
+    public Adapter_prof(ItemClickListener clickListener) {
         this.data = new ArrayList<>();
         this.clickListener = clickListener;
     }
 
-    public void setData(List<Gift_obj> data) {
+    public void setData(List<Mes_obj> data) {
         this.data = data;
         notifyDataSetChanged();
     }
-    public void addData(Gift_obj new_gift) {
-        this.data.add(new_gift);
+    public void addData(Mes_obj new_mess) {
+        this.data.add(new_mess);
         notifyDataSetChanged();
     }
 
@@ -37,17 +38,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false);
-        return new MyViewHolder(view);
+    public ViewHolder_prof onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mes_history_item, parent, false);
+        return new ViewHolder_prof(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull ViewHolder_prof holder, @SuppressLint("RecyclerView") int position) {
+        Date time = this.data.get(position).time;
         String id = String.valueOf(data.get(position).num_cont);
-        String ball = String.valueOf(data.get(position).ball);
-        int status = data.get(position).status;
-        holder.bind(id, ball, status);
+        String title = String.valueOf(data.get(position).title);
+        boolean is_read = data.get(position).is_read;
+
+        holder.bind(id, title, is_read, time);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

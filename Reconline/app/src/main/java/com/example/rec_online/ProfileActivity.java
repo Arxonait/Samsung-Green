@@ -1,6 +1,9 @@
 package com.example.rec_online;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,11 +16,23 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class ProfileActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProfileActivity extends AppCompatActivity implements Adapter_prof.ItemClickListener {
+
+    private RecyclerView rview_prof_mes;
+    private Adapter_prof adapter;
+
+    private List<Mes_obj> mess_view;
+
+    private boolean is_new_user;
 
     private Handler handler = new Handler(Looper.getMainLooper());
     private SharedPreferences sharedPreferences;
@@ -25,11 +40,98 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
         sharedPreferences = this.getSharedPreferences("Rec_online_memory", Context.MODE_PRIVATE);
 
         load_sec_info();
 
         load_menu();
+
+
+        load_sec_history_mes();
+
+
+    }
+
+    private void load_sec_history_mes() {
+        TextView tv_title_mess = findViewById(R.id.title_mess);
+        rview_prof_mes = findViewById(R.id.rview_prof_mes);
+        rview_prof_mes.setLayoutManager(new LinearLayoutManager(this));
+
+        // Создаем и устанавливаем адаптер
+        adapter = new Adapter_prof(this);
+        rview_prof_mes.setAdapter(adapter);
+        rview_prof_mes.setVisibility(View.INVISIBLE);
+
+        // Устанавливаем слушатель нажатий на элементы адаптера
+        adapter.setClickListener(this);
+
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        new Thread(new Runnable() {
+            public void run() {
+                // выполнение сетевого запроса
+                String answer_from_server = Main_server.veiw_mess(Integer.parseInt(EnterActivity.Data_enter().id));
+
+                is_new_user = false;
+                handler.post(new Runnable() {
+                    public void run() {
+                        // обновление пользовательского интерфейса с использованием результата
+                        JSONParser parser = new JSONParser();
+                        JSONObject json;
+                        try {
+                            json = (JSONObject) parser.parse(answer_from_server);
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                        if(String.valueOf(json.get("status")).equals("false")){
+                            is_new_user = true;
+                        }
+                        JSONArray jsonArray = (JSONArray) json.get("data");
+
+                        mess_view = new ArrayList<>();
+
+                        for (Object element : jsonArray) {
+                            JSONObject jsonObject = (JSONObject) element;
+
+                            Mes_obj new_mess = new Mes_obj();
+                            try {
+                                new_mess.parseJson(jsonObject);
+                            } catch (JSONException ex) {
+                                throw new RuntimeException(ex);
+                            } catch (java.text.ParseException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            mess_view.add(new_mess);
+                        }
+
+
+
+                        if(is_new_user){
+                            rview_prof_mes.setVisibility(View.GONE);
+                            tv_title_mess.setVisibility(View.GONE);
+                            tv_title_mess.setText("Здесь будут отображаться Ваши сообщения,\nНо пока что Вы ничего не получали");
+                        }
+                        else {
+                            int total_mess = mess_view.size();
+                            int count_mess = 0;
+                            for (Mes_obj mess: mess_view) {
+                                mess.num_cont = total_mess - count_mess;
+                                count_mess++;
+                            }
+                            adapter.setData(mess_view);
+
+                            tv_title_mess.setText("Ваши сообщения");
+                            rview_prof_mes.setVisibility(View.VISIBLE);
+                            //title_rec_view.setVisibility(View.VISIBLE);
+                        }
+
+
+                    }
+                });
+            }
+        }).start();
+
 
 
     }
@@ -134,5 +236,35 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-
+    @Override
+    public void onItemClick(@Nullable View view, int position) {
+        show_mes_item(position);
+    }
+    private void show_mes_item(int position) {
+        Mes_obj gift = mess_view.get(position);
+//        int status = gift.status;
+//        String text_status;
+//
+//        if(status == 1){
+//            text_status = "На рассмотрении";
+//        }
+//        else if(status == 10) {
+//            text_status = "Отклоненно";
+//        }
+//        else {
+//            text_status = "Принято";
+//        }
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//
+//        builder.setMessage(String.format("Номер вашей сдачи: %d\nПерерабатывающий центр: %s\nСтекло - %d, Пластик - %d, Металл - %d\n" +
+//                                "Статус: %s\nБаллы: %d\nДата и время - %s", gift.num_cont, gift.name_fact,
+//                        gift.glass, gift.plastic, gift.metal, text_status, gift.ball, gift.time.toString()))
+//                .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                    }
+//                }).show();
+    }
 }

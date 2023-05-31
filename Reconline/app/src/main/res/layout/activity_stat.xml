@@ -514,7 +514,7 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/id_gift"
+                android:id="@+id/oper_id"
                 android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:text="№"
@@ -526,7 +526,7 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/gift_ball"
+                android:id="@+id/oper_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Баллы"
@@ -539,7 +539,7 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/gift_status"
+                android:id="@+id/oper_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Статус"
