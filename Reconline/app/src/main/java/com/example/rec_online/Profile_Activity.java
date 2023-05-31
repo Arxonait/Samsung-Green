@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,7 +27,7 @@ import org.json.simple.parser.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileActivity extends AppCompatActivity implements Adapter_prof.ItemClickListener {
+public class Profile_Activity extends AppCompatActivity implements Adapter_prof.ItemClickListener {
 
     private RecyclerView rview_prof_mes;
     private Adapter_prof adapter;
@@ -36,6 +38,7 @@ public class ProfileActivity extends AppCompatActivity implements Adapter_prof.I
 
     private Handler handler = new Handler(Looper.getMainLooper());
     private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +87,7 @@ public class ProfileActivity extends AppCompatActivity implements Adapter_prof.I
                         } catch (ParseException e) {
                             throw new RuntimeException(e);
                         }
-                        if(String.valueOf(json.get("status")).equals("false")){
+                        if (String.valueOf(json.get("status")).equals("false")) {
                             is_new_user = true;
                         }
                         JSONArray jsonArray = (JSONArray) json.get("data");
@@ -106,16 +109,14 @@ public class ProfileActivity extends AppCompatActivity implements Adapter_prof.I
                         }
 
 
-
-                        if(is_new_user){
+                        if (is_new_user) {
                             rview_prof_mes.setVisibility(View.GONE);
                             tv_title_mess.setVisibility(View.GONE);
                             tv_title_mess.setText("Здесь будут отображаться Ваши сообщения,\nНо пока что Вы ничего не получали");
-                        }
-                        else {
+                        } else {
                             int total_mess = mess_view.size();
                             int count_mess = 0;
-                            for (Mes_obj mess: mess_view) {
+                            for (Mes_obj mess : mess_view) {
                                 mess.num_cont = total_mess - count_mess;
                                 count_mess++;
                             }
@@ -133,7 +134,6 @@ public class ProfileActivity extends AppCompatActivity implements Adapter_prof.I
         }).start();
 
 
-
     }
 
     private void load_menu() {
@@ -141,7 +141,7 @@ public class ProfileActivity extends AppCompatActivity implements Adapter_prof.I
         bt_stat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(ProfileActivity.this, RecActivity.class);
+                Intent activity_new = new Intent(Profile_Activity.this, RecActivity.class);
                 startActivity(activity_new);
             }
         });
@@ -150,7 +150,7 @@ public class ProfileActivity extends AppCompatActivity implements Adapter_prof.I
         bt_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(ProfileActivity.this, MapsActivity.class);
+                Intent activity_new = new Intent(Profile_Activity.this, MapsActivity.class);
                 startActivity(activity_new);
             }
         });
@@ -159,7 +159,7 @@ public class ProfileActivity extends AppCompatActivity implements Adapter_prof.I
         bt_prof.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(ProfileActivity.this, ProfileActivity.class);
+                Intent activity_new = new Intent(Profile_Activity.this, Profile_Activity.class);
                 startActivity(activity_new);
             }
         });
@@ -194,77 +194,100 @@ public class ProfileActivity extends AppCompatActivity implements Adapter_prof.I
                 editor.apply(); // Применение изменений
 
 
-                Intent activity_new = new Intent(ProfileActivity.this, EnterActivity.class);
+                Intent activity_new = new Intent(Profile_Activity.this, EnterActivity.class);
                 activity_new.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Добавление флагов для очистки задачи и запуска новой активности
                 startActivity(activity_new);
             }
         });
 
-        new Thread(new Runnable() {
-            public void run() {
-                // выполнение сетевого запроса
-                final String answer = Main_server.prof_oper_rec(Integer.parseInt(EnterActivity.Data_enter().id));
-                // передача результата в главный поток
+        Button bt_admin = findViewById(R.id.bt_admin);
+        if (!EnterActivity.Data_enter().admin) {
+            bt_admin.setVisibility(View.GONE);
+        } else {
+            bt_admin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent activity_new = new Intent(Profile_Activity.this, Admin_panelActivity.class);
+                    startActivity(activity_new);
+                }
+            });
+        }
 
-                handler.post(new Runnable() {
-                    public void run() {
-                        // обновление пользовательского интерфейса с использованием результата
-                        JSONParser parser = new JSONParser();
-                        try {
-                            JSONObject json = (JSONObject) parser.parse(answer);
-                            if((json.get("status").toString().equals("true"))){
-                                tv_count_balls.setText(json.get("ball").toString());
-                                tv_glass_count.setText(json.get("glass").toString());
-                                tv_metal_count.setText(json.get("metal").toString());
-                                tv_plastic_count.setText(json.get("plastic").toString());
 
+            new Thread(new Runnable() {
+                public void run() {
+                    // выполнение сетевого запроса
+                    final String answer = Main_server.prof_oper_rec(Integer.parseInt(EnterActivity.Data_enter().id));
+                    // передача результата в главный поток
+
+                    handler.post(new Runnable() {
+                        public void run() {
+                            // обновление пользовательского интерфейса с использованием результата
+                            JSONParser parser = new JSONParser();
+                            try {
+                                JSONObject json = (JSONObject) parser.parse(answer);
+                                if ((json.get("status").toString().equals("true"))) {
+                                    tv_count_balls.setText(json.get("ball").toString());
+                                    tv_glass_count.setText(json.get("glass").toString());
+                                    tv_metal_count.setText(json.get("metal").toString());
+                                    tv_plastic_count.setText(json.get("plastic").toString());
+
+                                } else {
+                                    tv_count_balls.setText("0");
+                                    tv_glass_count.setText("0");
+                                    tv_metal_count.setText("0");
+                                    tv_plastic_count.setText("0");
+                                }
+
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
                             }
-                            else {
-                                tv_count_balls.setText("0");
-                                tv_glass_count.setText("0");
-                                tv_metal_count.setText("0");
-                                tv_plastic_count.setText("0");
-                            }
-
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
                         }
-                    }
-                });
-            }
-        }).start();
-    }
+                    });
+                }
+            }).start();
+        }
 
 
-    @Override
-    public void onItemClick(@Nullable View view, int position) {
-        show_mes_item(position);
+        @Override
+        public void onItemClick (@Nullable View view,int position){
+            show_mes_item(position);
+        }
+        private void show_mes_item ( int position){
+            Mes_obj mess = mess_view.get(position);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage(String.format("%s\n%s", mess.title, mess.main_text))
+                    .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (!mess.is_read) {
+                                new Thread(new Runnable() {
+                                    public void run() {
+                                        // выполнение сетевого запроса
+                                        String answer_from_server = Main_server.update_is_read(mess.id, true);
+                                        handler.post(new Runnable() {
+                                            public void run() {
+                                                // обновление пользовательского интерфейса с использованием результата
+                                                JSONParser parser = new JSONParser();
+                                                JSONObject json;
+                                                try {
+                                                    json = (JSONObject) parser.parse(answer_from_server);
+                                                } catch (ParseException e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                                if ((boolean) json.get("status")) {
+                                                    mess.is_read = true;
+                                                    adapter.setData(mess_view);
+                                                }
+
+                                            }
+                                        });
+                                    }
+                                }).start();
+                            }
+                        }
+                    }).show();
+        }
     }
-    private void show_mes_item(int position) {
-        Mes_obj gift = mess_view.get(position);
-//        int status = gift.status;
-//        String text_status;
-//
-//        if(status == 1){
-//            text_status = "На рассмотрении";
-//        }
-//        else if(status == 10) {
-//            text_status = "Отклоненно";
-//        }
-//        else {
-//            text_status = "Принято";
-//        }
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//
-//        builder.setMessage(String.format("Номер вашей сдачи: %d\nПерерабатывающий центр: %s\nСтекло - %d, Пластик - %d, Металл - %d\n" +
-//                                "Статус: %s\nБаллы: %d\nДата и время - %s", gift.num_cont, gift.name_fact,
-//                        gift.glass, gift.plastic, gift.metal, text_status, gift.ball, gift.time.toString()))
-//                .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//
-//                    }
-//                }).show();
-    }
-}
+

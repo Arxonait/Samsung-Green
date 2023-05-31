@@ -135,4 +135,34 @@ public class Main_server {
 
         return result;
     }
+
+    public static String update_is_read(long id, boolean is_read) {
+        String result;
+
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("id_read", is_read);
+
+
+        String url = "http://10.0.2.2:8080/prof/update_is_read";
+
+
+        result = to_server(url, json.toJSONString());
+
+        return result;
+    }
+
+    public static String admin_select_oper() {
+        String result;
+
+        JSONObject json = new JSONObject();
+
+
+        String url = "http://10.0.2.2:8080/prof/admin_select_oper";
+
+
+        result = to_server(url, json.toJSONString());
+
+        return result;
+    }
 }

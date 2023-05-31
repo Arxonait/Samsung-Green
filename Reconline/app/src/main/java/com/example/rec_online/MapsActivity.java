@@ -15,7 +15,6 @@ import android.location.LocationManager;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -398,8 +397,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         bt_prof.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(MapsActivity.this, ProfileActivity.class);
+                Intent activity_new;
+                activity_new = new Intent(MapsActivity.this, Profile_Activity.class);
                 startActivity(activity_new);
+
             }
         });
     }

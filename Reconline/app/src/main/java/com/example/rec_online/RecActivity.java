@@ -503,7 +503,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         bt_prof.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(RecActivity.this, ProfileActivity.class);
+                Intent activity_new = new Intent(RecActivity.this, Profile_Activity.class);
                 startActivity(activity_new);
             }
         });

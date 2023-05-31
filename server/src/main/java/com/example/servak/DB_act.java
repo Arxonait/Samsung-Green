@@ -271,11 +271,12 @@ public class DB_act {
             json.put("id", resultSet.getInt("id"));
             json.put("id_user", resultSet.getInt("id_user"));
             json.put("id_prev_mes", resultSet.getInt("id_prev_mes"));
+            json.put("is_read", resultSet.getBoolean("is_read"));
+            json.put("date", resultSet.getString("date"));
             json.put("title", resultSet.getString("title"));
             json.put("main_text", resultSet.getString("main_text"));
 
-            json.put("is_read", resultSet.getBoolean("is_read"));
-            json.put("date", resultSet.getString("date"));
+
 
 
             cont_row++;
@@ -295,12 +296,91 @@ public class DB_act {
 
 
         result = combinedJson.toString();
-        System.out.println(result);
+        //System.out.println(result);
         resultSet.close();
         statement.close();
 
         return result;
 
 
+    }
+
+    public static String update_is_read(JsonObject json) throws SQLException {
+        String result;
+        Connection connection;
+        JSONObject answer_to_mob = new JSONObject();
+
+        try {
+            connection = DriverManager.getConnection(URL, USERNAME, PassWord);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        String sql = "UPDATE messages SET is_read = true WHERE id = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1, Integer.parseInt(json.get("id").toString()));
+        statement.executeUpdate();
+
+
+        answer_to_mob.put("status", true);
+
+        result = answer_to_mob.toString();
+        statement.close();
+
+
+        return result;
+
+    }
+
+    public static String admin_select_oper(JsonObject json_obj) throws SQLException {
+        String result;
+        Connection connection;
+        List<JSONObject> jsonObjects = new ArrayList<>();
+        int cont_row = 0;
+
+        try {
+            connection = DriverManager.getConnection(URL, USERNAME, PassWord);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        Statement statement = connection.createStatement();
+        String SQL = String.format("select * from gift INNER JOIN factory ON factory.id = gift.id_fact WHERE status = 1 ORDER BY gift.timee DESC");
+        ResultSet resultSet = statement.executeQuery(SQL);
+        while (resultSet.next()) {
+            JSONObject json = new JSONObject();
+            json.put("id", resultSet.getInt("id"));
+            json.put("id_fact", resultSet.getInt("id_fact"));
+            json.put("name_fact", resultSet.getString("name"));
+            json.put("id_user", resultSet.getInt("id_user"));
+            json.put("ball", resultSet.getString("ball"));
+            json.put("plastic", resultSet.getString("plastic"));
+            json.put("glass", resultSet.getString("glass"));
+            json.put("metal", resultSet.getString("metal"));
+
+            json.put("status", resultSet.getString("status"));
+            json.put("time", resultSet.getString("timee"));
+
+
+            cont_row++;
+
+
+            jsonObjects.add(json);
+        }
+
+
+        JSONObject combinedJson = new JSONObject();
+        combinedJson.put("data", jsonObjects);
+        if (cont_row > 0) {
+            combinedJson.put("status", "true");
+        } else {
+            combinedJson.put("status", "false");
+        }
+
+
+        result = combinedJson.toString();
+        //System.out.println(result);
+        resultSet.close();
+        statement.close();
+
+        return result;
     }
 }

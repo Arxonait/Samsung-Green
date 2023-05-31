@@ -62,6 +62,19 @@ public class HttpControllerREST extends HttpServlet {
         JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
         return DB_act.select_mess(jsonObject);
     }
+
+    @RequestMapping("/prof/update_is_read")
+    public String update_is_read(@RequestBody String body) throws SQLException {
+        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
+        return DB_act.update_is_read(jsonObject);
+    }
+
+
+    @RequestMapping("/prof/admin_select_oper")
+    public String admin_select_oper(@RequestBody String body) throws SQLException {
+        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
+        return DB_act.admin_select_oper(jsonObject);
+    }
 }
 
 
