@@ -74,16 +74,22 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
         new Thread(new Runnable() {
             public void run() {
                 // выполнение сетевого запроса
-                String answer_from_server = Main_server.veiw_mess(Integer.parseInt(EnterActivity.Data_enter().id));
+                String answer_from_server = null;
+                try {
+                    answer_from_server = Main_server.veiw_mess(Integer.parseInt(EnterActivity.Data_enter().id));
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
 
                 is_new_user = false;
+                String finalAnswer_from_server = answer_from_server;
                 handler.post(new Runnable() {
                     public void run() {
                         // обновление пользовательского интерфейса с использованием результата
                         JSONParser parser = new JSONParser();
                         JSONObject json;
                         try {
-                            json = (JSONObject) parser.parse(answer_from_server);
+                            json = (JSONObject) parser.parse(finalAnswer_from_server);
                         } catch (ParseException e) {
                             throw new RuntimeException(e);
                         }
@@ -159,8 +165,8 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
         bt_prof.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(Profile_Activity.this, Profile_Activity.class);
-                startActivity(activity_new);
+                load_sec_info();
+                load_sec_history_mes();
             }
         });
     }
@@ -217,7 +223,12 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
             new Thread(new Runnable() {
                 public void run() {
                     // выполнение сетевого запроса
-                    final String answer = Main_server.prof_oper_rec(Integer.parseInt(EnterActivity.Data_enter().id));
+                    final String answer;
+                    try {
+                        answer = Main_server.prof_oper_rec(Integer.parseInt(EnterActivity.Data_enter().id));
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
                     // передача результата в главный поток
 
                     handler.post(new Runnable() {
@@ -256,8 +267,8 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
         private void show_mes_item ( int position){
             Mes_obj mess = mess_view.get(position);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-            builder.setMessage(String.format("%s\n%s", mess.title, mess.main_text))
+            builder.setTitle(mess.title);
+            builder.setMessage(mess.main_text)
                     .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -265,14 +276,20 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
                                 new Thread(new Runnable() {
                                     public void run() {
                                         // выполнение сетевого запроса
-                                        String answer_from_server = Main_server.update_is_read(mess.id, true);
+                                        String answer_from_server = null;
+                                        try {
+                                            answer_from_server = Main_server.update_is_read(mess.id, true);
+                                        } catch (JSONException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                        String finalAnswer_from_server = answer_from_server;
                                         handler.post(new Runnable() {
                                             public void run() {
                                                 // обновление пользовательского интерфейса с использованием результата
                                                 JSONParser parser = new JSONParser();
                                                 JSONObject json;
                                                 try {
-                                                    json = (JSONObject) parser.parse(answer_from_server);
+                                                    json = (JSONObject) parser.parse(finalAnswer_from_server);
                                                 } catch (ParseException e) {
                                                     throw new RuntimeException(e);
                                                 }
@@ -289,5 +306,10 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
                         }
                     }).show();
         }
+    protected void onResume() {
+        super.onResume();
+        load_sec_history_mes();
+        load_sec_info();
     }
+}
 

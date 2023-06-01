@@ -291,13 +291,14 @@
                 android:id="@+id/log_out"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
                 android:text="Выйти из аккаунта" />
 
             <Button
                 android:id="@+id/bt_admin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="Admin" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

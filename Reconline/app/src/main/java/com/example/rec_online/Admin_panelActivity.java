@@ -5,14 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -24,7 +25,7 @@ public class Admin_panelActivity extends AppCompatActivity implements Adapter_ad
     private RecyclerView rview_prof_oper;
     private Adapter_admin adapter;
 
-    private List<PanelItem_obj> list_oper;
+    private List<Oper_obj> list_oper;
 
     boolean empty_data = false;
 
@@ -40,6 +41,8 @@ public class Admin_panelActivity extends AppCompatActivity implements Adapter_ad
         load_sec1();
 
     }
+
+
 
     private void load_sec1() {
         //TextView tv_title_mess = findViewById(R.id.title_mess);
@@ -63,35 +66,50 @@ public class Admin_panelActivity extends AppCompatActivity implements Adapter_ad
                 handler.post(new Runnable() {
                     public void run() {
                         // обновление пользовательского интерфейса с использованием результата
-                        JSONParser parser = new JSONParser();
-                        JSONObject json;
+                        //JSONParser parser = new JSONParser();
+                        org.json.JSONObject json;
                         try {
-                            json = (JSONObject) parser.parse(answer_from_server);
-                        } catch (ParseException e) {
+                            //json = (JSONObject) parser.parse(answer_from_server);
+                            json = new JSONObject(answer_from_server);
+                        } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
-                        if (String.valueOf(json.get("status")).equals("false")) {
-                            empty_data = true;
+                        try {
+                            if (json.getString("status").equals("false")) {
+                                empty_data = true;
+                            }
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
                         }
-                        JSONArray jsonArray = (JSONArray) json.get("data");
+
+
+                        JSONArray jsonArray = null;
+                        try {
+                            jsonArray = json.getJSONArray("data");
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
 
                         list_oper = new ArrayList<>();
-
-                        for (Object element : jsonArray) {
-                            JSONObject jsonObject = (JSONObject) element;
-
-                            PanelItem_obj new_mess = new PanelItem_obj();
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            org.json.JSONObject jsonObject = null;
                             try {
-                                new_mess.parseJson(jsonObject);
+                                jsonObject = jsonArray.getJSONObject(i);
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                            Oper_obj new_oper = new Oper_obj();
+                            try {
+                                new_oper.parseJson(jsonObject);
                             } catch (JSONException ex) {
                                 throw new RuntimeException(ex);
                             } catch (java.text.ParseException ex) {
                                 throw new RuntimeException(ex);
                             }
-                            list_oper.add(new_mess);
+
+                            list_oper.add(new_oper);
                         }
-
-
                         if (empty_data) {
                             rview_prof_oper.setVisibility(View.GONE);
                             //tv_title_mess.setVisibility(View.GONE);
@@ -119,6 +137,14 @@ public class Admin_panelActivity extends AppCompatActivity implements Adapter_ad
 
     @Override
     public void onItemClick(@Nullable View view, int position) {
+        Intent activity_new = new Intent(Admin_panelActivity.this, ItemActivity.class);
+        ItemActivity.setData(list_oper.get(position));
+        startActivity(activity_new);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        load_sec1();
     }
 }

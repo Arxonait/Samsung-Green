@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,13 +27,15 @@ import android.widget.Toast;
 
 //import org.json.JSONObject;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemClickListener {
@@ -42,7 +45,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
 
 
-    private List<Gift_obj> gifts_view;
+    private List<Oper_obj> gifts_view;
     boolean is_new_user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -273,7 +276,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
                     new Thread(new Runnable() {
                         public void run() {
                             // выполнение сетевого запроса
-                            Gift_obj gift_new= new Gift_obj(EnterActivity.Data_enter().id, near_factory.id, metal, plastic, glass);
+                            Oper_obj gift_new= new Oper_obj(EnterActivity.Data_enter().id, near_factory.id, metal, plastic, glass);
                             String res = Main_server.gift(gift_new);
                             // передача результата в главный поток
                             handler.post(new Runnable() {
@@ -332,8 +335,9 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         // При нажатии на элемент показываем сообщение с кнопкой "Ок"
         show_mes_itemOf_Infhistory(position);
     }
+    @SuppressLint("DefaultLocale")
     private void show_mes_itemOf_Infhistory(int position) {
-        Gift_obj gift = gifts_view.get(position);
+        Oper_obj gift = gifts_view.get(position);
         int status = gift.status;
         String text_status;
 
@@ -349,9 +353,12 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        String time = gift.time;
+        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        //String StringTime = dateFormat.format(time);
         builder.setMessage(String.format("Номер вашей сдачи: %d\nПерерабатывающий центр: %s\nСтекло - %d, Пластик - %d, Металл - %d\n" +
                                 "Статус: %s\nБаллы: %d\nДата и время - %s", gift.num_cont, gift.name_fact,
-                        gift.glass, gift.plastic, gift.metal, text_status, gift.ball, gift.time.toString()))
+                        gift.glass, gift.plastic, gift.metal, text_status, gift.ball, time))
                 .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -381,39 +388,61 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         new Thread(new Runnable() {
             public void run() {
                 // выполнение сетевого запроса
-                String answer_from_server = Main_server.veiw_gift(Integer.parseInt(EnterActivity.Data_enter().id));
+                String answer_from_server = null;
+                try {
+                    answer_from_server = Main_server.veiw_gift(Integer.parseInt(EnterActivity.Data_enter().id));
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
 
                 is_new_user = false;
+                String finalAnswer_from_server = answer_from_server;
                 handler.post(new Runnable() {
                     public void run() {
                         // обновление пользовательского интерфейса с использованием результата
-                        JSONParser parser = new JSONParser();
-                        JSONObject combinedJson = null;
+                        //JSONParser parser = new JSONParser();
+                        org.json.JSONObject combinedJson = null;
                         try {
-                            combinedJson = (JSONObject) parser.parse(answer_from_server);
-                        } catch (ParseException e) {
+                            combinedJson = new org.json.JSONObject(finalAnswer_from_server);
+                        } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
-                        if(String.valueOf(combinedJson.get("status")).equals("false")){
-                            is_new_user = true;
+                        //combinedJson = (JSONObject) parser.parse(finalAnswer_from_server);
+
+                        try {
+                            if(combinedJson.getString("status").equals("false")){
+                                is_new_user = true;
+                            }
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
                         }
-                        JSONArray jsonArray = (JSONArray) combinedJson.get("data");
+                        JSONArray jsonArray = null;
+                        try {
+                            jsonArray = combinedJson.getJSONArray("data");
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
 
                         gifts_view = new ArrayList<>();
 
-                        for (Object element : jsonArray) {
-                            JSONObject jsonObject = (JSONObject) element;
-
-                            Gift_obj new_gift = new Gift_obj();
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            org.json.JSONObject jsonObject = null;
                             try {
-                                new_gift.parseJson(jsonObject);
+                                jsonObject = jsonArray.getJSONObject(i);
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                            Oper_obj new_oper = new Oper_obj();
+                            try {
+                                new_oper.parseJson(jsonObject);
                             } catch (JSONException ex) {
                                 throw new RuntimeException(ex);
                             } catch (java.text.ParseException ex) {
                                 throw new RuntimeException(ex);
                             }
 
-                            gifts_view.add(new_gift);
+                            gifts_view.add(new_oper);
                         }
 
 
@@ -428,7 +457,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
                             int balls = 0;
                             int count_gift = gifts_view.size();
                             int rev_gift = 0;
-                            for (Gift_obj gift: gifts_view) {
+                            for (Oper_obj gift: gifts_view) {
                                 gift.num_cont = count_gift - rev_gift;
                                 rev_gift++;
                                 if(gift.status == 11){
@@ -440,7 +469,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
                                 current_ball.setText(String.valueOf(balls));
 
-                                if (gifts_view.size() > 2) {
+                                if (gifts_view.size() > 2 && false) {
                                     adapter.setData(gifts_view.subList(0, 10));
                                 } else {
                                     adapter.setData(gifts_view);
@@ -463,7 +492,8 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(RecActivity.this);
-                builder.setMessage(String.format("Информация о баллах\nЗа каждую единицу Вы будете получать:\n" +
+                builder.setTitle("Информация о баллах");
+                builder.setMessage(String.format("За каждую единицу Вы будете получать:\n" +
                                 "Стекло - 10 баллов\nМеталл - 2 балла\nПластик - 5 баллов\n\n" +
                                 "Начисление баллов происходит не сразу, а через некоторое время, после проверки Администратора.\n" +
                                 "Вам могут отказать в начислении баллов в случае подозрительной заявки.\n" +

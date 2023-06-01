@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 import org.json.simple.JSONObject;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -134,9 +136,11 @@ public class DB_act {
         int plastic = Integer.parseInt(json.get("plastic").toString());
 
         int ball_new = glass * 10 + plastic * 5 + metal * 2;
-        Calendar calendar = Calendar.getInstance();
-        Date time = calendar.getTime();
-        System.out.println(time);
+
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        String current_time = dateFormat.format(currentDate);
+        System.out.println(current_time);
 
 
         Connection connection;
@@ -151,7 +155,7 @@ public class DB_act {
 
         String SQL = String.format("INSERT INTO public.gift (id_user, id_fact, metal, plastic, glass, ball, status, timee) VALUES ('%s', " +
                         "'%s', '%d', '%d', '%d', '%d', '%d', '%s')", json.get("id_user").toString().replace("\"", ""),
-                json.get("id_fact").toString().replace("\"", ""), metal, plastic, glass, ball_new, 1, time);
+                json.get("id_fact").toString().replace("\"", ""), metal, plastic, glass, ball_new, 1, current_time);
         statement.executeUpdate(SQL);
 
         answer_to_mob.put("status", "true");
@@ -343,21 +347,33 @@ public class DB_act {
             throw new RuntimeException(e);
         }
         Statement statement = connection.createStatement();
-        String SQL = String.format("select * from gift INNER JOIN factory ON factory.id = gift.id_fact WHERE status = 1 ORDER BY gift.timee DESC");
+        String SQL = String.format("SELECT gift.id, gift.id_fact, factory.name AS factory_name, " +
+                "gift.id_user, users.name AS user_name, login, gift.ball, gift.plastic, gift.glass, gift.metal, " +
+                "gift.status, gift.timee " +
+                "FROM gift " +
+                "INNER JOIN factory ON factory.id = gift.id_fact " +
+                "INNER JOIN users ON users.id = gift.id_user " +
+                "WHERE gift.status = 1 " +
+                "ORDER BY gift.timee DESC");
+
         ResultSet resultSet = statement.executeQuery(SQL);
         while (resultSet.next()) {
             JSONObject json = new JSONObject();
-            json.put("id", resultSet.getInt("id"));
-            json.put("id_fact", resultSet.getInt("id_fact"));
-            json.put("name_fact", resultSet.getString("name"));
-            json.put("id_user", resultSet.getInt("id_user"));
+            json.put("id", resultSet.getString("id"));
+            json.put("id_fact", resultSet.getString("id_fact"));
+            json.put("name_fact", resultSet.getString("factory_name"));
+
+            json.put("id_user", resultSet.getString("id_user"));
+            json.put("user_name", resultSet.getString("user_name"));
+            json.put("login", resultSet.getString("login"));
+
             json.put("ball", resultSet.getString("ball"));
             json.put("plastic", resultSet.getString("plastic"));
             json.put("glass", resultSet.getString("glass"));
             json.put("metal", resultSet.getString("metal"));
-
             json.put("status", resultSet.getString("status"));
             json.put("time", resultSet.getString("timee"));
+
 
 
             cont_row++;
@@ -382,5 +398,45 @@ public class DB_act {
         statement.close();
 
         return result;
+    }
+
+    public static String admin_desOper(org.json.JSONObject json) throws SQLException, ParseException {
+        String result;
+        Connection connection;
+        JSONObject answer_to_mob = new JSONObject();
+
+        try {
+            connection = DriverManager.getConnection(URL, USERNAME, PassWord);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        //System.out.println( Integer.parseInt(json.get("id").toString().replace("\"", "")));
+        String sql = "UPDATE gift SET status = ? WHERE id = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1, json.getInt("status"));
+        statement.setInt(2, Integer.parseInt(json.getString("id")));
+        statement.executeUpdate();
+
+        if(json.getInt("status") == 11){
+            CreateMess.acc_balls(json);
+        }
+        else {
+            CreateMess.ref_balls(json);
+        }
+        sql = String.format("INSERT INTO messages (id_user, id_prev_mes, date, is_read, title, main_text, type) VALUES ('%d', " +
+                        "'%d', '%s', '%b', '%s', '%s', '%s')", Integer.parseInt(json.getString("id_user")), -1,
+                json.getString("time"), false, CreateMess.title, CreateMess.main_text, "balls");
+        statement = connection.prepareStatement(sql);
+        statement.executeUpdate();
+
+
+        answer_to_mob.put("status", true);
+
+        result = answer_to_mob.toString();
+        statement.close();
+
+
+        return result;
+
     }
 }

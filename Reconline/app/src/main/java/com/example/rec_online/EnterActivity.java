@@ -5,14 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -28,8 +26,8 @@ public class EnterActivity extends AppCompatActivity {
 
     private boolean is_new_user;
 
-    private EditText login_element;
-    private EditText password_element;
+    private EditText ed_login;
+    private EditText ed_password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +37,14 @@ public class EnterActivity extends AppCompatActivity {
         setContentView(R.layout.enter_activity);
 
 
-        login_element = findViewById(R.id.login);
-        password_element = findViewById(R.id.password);
-        Button enter_button = findViewById(R.id.enter);
-        Button reg_button = findViewById(R.id.register);
+        ed_login = findViewById(R.id.login);
+        ed_password = findViewById(R.id.password);
+        Button bt_enter = findViewById(R.id.enter);
+        Button bt_reg = findViewById(R.id.register);
 
 
-        enter_button.setEnabled(false);
-        reg_button.setEnabled(false);
+        bt_enter.setEnabled(false);
+        bt_reg.setEnabled(false);
 
         sharedPreferences = this.getSharedPreferences("Rec_online_memory", Context.MODE_PRIVATE);
 
@@ -55,13 +53,13 @@ public class EnterActivity extends AppCompatActivity {
             enter();
         } else {
             is_new_user = true;
-            enter_button.setEnabled(true);
-            reg_button.setEnabled(true);
+            bt_enter.setEnabled(true);
+            bt_reg.setEnabled(true);
         }
 
 
 
-        enter_button.setOnClickListener(new View.OnClickListener() {
+        bt_enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 enter();
@@ -69,7 +67,7 @@ public class EnterActivity extends AppCompatActivity {
             }
         });
 
-        reg_button.setOnClickListener(new View.OnClickListener() {
+        bt_reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent Register = new Intent(EnterActivity.this, Register.class);
@@ -86,8 +84,8 @@ public class EnterActivity extends AppCompatActivity {
         String login;
         String password;
         if(is_new_user){
-            login = String.valueOf(login_element.getText());
-            password = String.valueOf(password_element.getText());
+            login = String.valueOf(ed_login.getText());
+            password = String.valueOf(ed_password.getText());
         }
         else{
             login = sharedPreferences.getString("login", "");

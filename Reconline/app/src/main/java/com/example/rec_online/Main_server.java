@@ -1,10 +1,14 @@
 package com.example.rec_online;
 
 
-
+import org.json.JSONObject;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
-import org.json.simple.JSONObject;
+import org.json.JSONException;
+
 
 import java.io.IOException;
 
@@ -75,7 +79,7 @@ public class Main_server {
         return result;
     }
 
-    public static String gift(Gift_obj gift_new) {
+    public static String gift(Oper_obj gift_new) {
         String result;
 
         Gson gson = new Gson();
@@ -91,7 +95,7 @@ public class Main_server {
         return result;
     }
 
-    public static String veiw_gift(int id_user) {
+    public static String veiw_gift(int id_user) throws JSONException {
         String result;
 
         JSONObject json = new JSONObject();
@@ -101,12 +105,12 @@ public class Main_server {
         String url = "http://10.0.2.2:8080/stat/view_gift";
 
 
-        result = to_server(url, json.toJSONString());
+        result = to_server(url, json.toString());
 
         return result;
     }
 
-    public static String prof_oper_rec(int id_user) {
+    public static String prof_oper_rec(int id_user) throws JSONException {
         String result;
 
         JSONObject json = new JSONObject();
@@ -116,12 +120,12 @@ public class Main_server {
         String url = "http://10.0.2.2:8080/prof/prof_oper_rec";
 
 
-        result = to_server(url, json.toJSONString());
+        result = to_server(url, json.toString());
 
         return result;
     }
 
-    public static String veiw_mess(int id_user) {
+    public static String veiw_mess(int id_user) throws JSONException {
         String result;
 
         JSONObject json = new JSONObject();
@@ -131,12 +135,12 @@ public class Main_server {
         String url = "http://10.0.2.2:8080/prof/view_mess";
 
 
-        result = to_server(url, json.toJSONString());
+        result = to_server(url, json.toString());
 
         return result;
     }
 
-    public static String update_is_read(long id, boolean is_read) {
+    public static String update_is_read(long id, boolean is_read) throws JSONException {
         String result;
 
         JSONObject json = new JSONObject();
@@ -147,7 +151,7 @@ public class Main_server {
         String url = "http://10.0.2.2:8080/prof/update_is_read";
 
 
-        result = to_server(url, json.toJSONString());
+        result = to_server(url, json.toString());
 
         return result;
     }
@@ -161,7 +165,26 @@ public class Main_server {
         String url = "http://10.0.2.2:8080/prof/admin_select_oper";
 
 
-        result = to_server(url, json.toJSONString());
+        result = to_server(url, json.toString());
+
+        return result;
+    }
+
+    public static String desOper(Oper_obj oper, String reason) throws JSONException {
+        String result;
+        Gson gson = new Gson();
+        // Преобразование объекта в JSON-строку
+        String jsonString = gson.toJson(oper);
+
+        JSONObject jsonObject = new JSONObject(jsonString);
+        jsonObject.put("reason", reason);
+        jsonString = jsonObject.toString();
+
+
+        String url = "http://10.0.2.2:8080/prof/admin_desOper";
+
+        System.out.println(jsonString);
+        result = to_server(url, jsonString);
 
         return result;
     }

@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Adapter_rec extends RecyclerView.Adapter<ViewHolder_rec> {
 
-    private List<Gift_obj> data ;
+    private List<Oper_obj> data ;
     private ItemClickListener clickListener;
 
     public Adapter_rec(ItemClickListener clickListener) {
@@ -22,11 +22,11 @@ public class Adapter_rec extends RecyclerView.Adapter<ViewHolder_rec> {
         this.clickListener = clickListener;
     }
 
-    public void setData(List<Gift_obj> data) {
+    public void setData(List<Oper_obj> data) {
         this.data = data;
         notifyDataSetChanged();
     }
-    public void addData(Gift_obj new_gift) {
+    public void addData(Oper_obj new_gift) {
         this.data.add(new_gift);
         notifyDataSetChanged();
     }

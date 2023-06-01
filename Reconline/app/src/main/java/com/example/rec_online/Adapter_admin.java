@@ -15,7 +15,7 @@ import java.util.List;
 
 public class Adapter_admin extends RecyclerView.Adapter<ViewHolder_admin> {
 
-    private List<PanelItem_obj> data ;
+    private List<Oper_obj> data ;
     private ItemClickListener clickListener;
 
     public Adapter_admin(ItemClickListener clickListener) {
@@ -23,12 +23,12 @@ public class Adapter_admin extends RecyclerView.Adapter<ViewHolder_admin> {
         this.clickListener = clickListener;
     }
 
-    public void setData(List<PanelItem_obj> data) {
+    public void setData(List<Oper_obj> data) {
         this.data = data;
         notifyDataSetChanged();
     }
-    public void addData(PanelItem_obj new_panelItem_obj) {
-        this.data.add(new_panelItem_obj);
+    public void addData(Oper_obj oper) {
+        this.data.add(oper);
         notifyDataSetChanged();
     }
 
@@ -45,12 +45,13 @@ public class Adapter_admin extends RecyclerView.Adapter<ViewHolder_admin> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder_admin holder, @SuppressLint("RecyclerView") int position) {
-        Date time = this.data.get(position).time;
+        String time = this.data.get(position).time;
         String id = String.valueOf(data.get(position).id);
-        String type = "type";
+        String user_name = String.valueOf(data.get(position).user_name);
+        String name_fact = String.valueOf(data.get(position).name_fact);
 
 
-        holder.bind(id, type, time);
+        holder.bind(id, user_name,name_fact, time);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

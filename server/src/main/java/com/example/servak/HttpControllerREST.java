@@ -2,11 +2,13 @@ package com.example.servak;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import jakarta.servlet.http.HttpServlet;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Map;
 
 
@@ -74,6 +76,12 @@ public class HttpControllerREST extends HttpServlet {
     public String admin_select_oper(@RequestBody String body) throws SQLException {
         JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
         return DB_act.admin_select_oper(jsonObject);
+    }
+
+    @RequestMapping("/prof/admin_desOper")
+    public String admin_desOper(@RequestBody String body) throws SQLException, ParseException {
+        JSONObject jsonObject = new JSONObject(body);
+        return DB_act.admin_desOper(jsonObject);
     }
 }
 
