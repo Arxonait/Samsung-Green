@@ -276,7 +276,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
                     new Thread(new Runnable() {
                         public void run() {
                             // выполнение сетевого запроса
-                            Oper_obj gift_new= new Oper_obj(EnterActivity.Data_enter().id, near_factory.id, metal, plastic, glass);
+                            Oper_obj gift_new= new Oper_obj(Integer.parseInt(EnterActivity.Data_enter().id), Integer.parseInt(near_factory.id), metal, plastic, glass);
                             String res = Main_server.gift(gift_new);
                             // передача результата в главный поток
                             handler.post(new Runnable() {
@@ -360,7 +360,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
                                 "Перерабатывающий центр: %s\n" +
                                 "Стекло - %d, Пластик - %d, Металл - %d\n" +
                                 "Статус: %s\n%s" +
-                                "Баллы: %d\nДата и время - %s", Integer.parseInt(gift.id), gift.name_fact,
+                                "Баллы: %d\nДата и время - %s", gift.id, gift.name_fact,
                         gift.glass, gift.plastic, gift.metal, text_status, text_reason, gift.ball, time))
                 .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
                     @Override

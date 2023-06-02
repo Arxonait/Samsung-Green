@@ -179,14 +179,14 @@ public class DB_act {
         ResultSet resultSet = statement.executeQuery(SQL);
         while (resultSet.next()) {
             JSONObject json = new JSONObject();
-            json.put("id", resultSet.getString("id"));
-            json.put("id_fact", resultSet.getString("id_fact"));
+            json.put("id", resultSet.getInt("id"));
+            json.put("id_fact", resultSet.getInt("id_fact"));
             json.put("name_fact", resultSet.getString("name"));
-            json.put("id_user", resultSet.getString("id_user"));
-            json.put("ball", resultSet.getString("ball"));
-            json.put("plastic", resultSet.getString("plastic"));
-            json.put("glass", resultSet.getString("glass"));
-            json.put("metal", resultSet.getString("metal"));
+            json.put("id_user", resultSet.getInt("id_user"));
+            json.put("ball", resultSet.getInt("ball"));
+            json.put("plastic", resultSet.getInt("plastic"));
+            json.put("glass", resultSet.getInt("glass"));
+            json.put("metal", resultSet.getInt("metal"));
 
             json.put("reason", resultSet.getString("reason"));
             json.put("status", resultSet.getString("status"));
@@ -416,7 +416,7 @@ public class DB_act {
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setInt(1, json.getInt("status"));
         statement.setString(2, json.getString("reason"));
-        statement.setInt(3, Integer.parseInt(json.getString("id")));
+        statement.setInt(3, json.getInt("id"));
         statement.executeUpdate();
 
         if(json.getInt("status") == 11){
@@ -426,7 +426,7 @@ public class DB_act {
             CreateMess.ref_balls(json);
         }
         sql = String.format("INSERT INTO messages (id_user, id_prev_mes, date, is_read, title, main_text, type) VALUES ('%d', " +
-                        "'%d', '%s', '%b', '%s', '%s', '%s')", Integer.parseInt(json.getString("id_user")), -1,
+                        "'%d', '%s', '%b', '%s', '%s', '%s')", json.getInt("id_user"), -1,
                 json.getString("time"), false, CreateMess.title, CreateMess.main_text, "balls");
         statement = connection.prepareStatement(sql);
         statement.executeUpdate();
