@@ -20,13 +20,17 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Main_server {
-    public static String Enter(String login, String password) {
+    public static String Enter(String login, String password) throws JSONException {
         String result;
+        JSONObject json = new JSONObject();
+        json.put("login", login);
+        json.put("password", password);
 
 
         String url = "http://10.0.2.2:8080/enter";
-        String json = "{\"login\":\"" + login + "\",\"password\":\"" + password + "\"}";
-        result = to_server(url, json);
+        //String json = "{\"login\":\"" + login + "\",\"password\":\"" + password + "\"}";
+        result = json.toString();
+        result = to_server(url, result);
 
         return result;
 
@@ -50,7 +54,8 @@ public class Main_server {
     public static String maps(){
         String result;
         String url = "http://10.0.2.2:8080/maps";
-        String json = "{\"login\":\"" + 111 + "\",\"password\":\"" + 222 + "\"}";
+        //String json = "{\"login\":\"" + 111 + "\",\"password\":\"" + 222 + "\"}";
+        String json = "";
 
         result = to_server(url, json);
 

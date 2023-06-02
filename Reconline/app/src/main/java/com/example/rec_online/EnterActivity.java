@@ -96,13 +96,19 @@ public class EnterActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 public void run() {
                     // выполнение сетевого запроса
-                    String res = Main_server.Enter(login, password);
+                    String res = null;
+                    try {
+                        res = Main_server.Enter(login, password);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
                     // передача результата в главный поток
+                    String finalRes = res;
                     handler.post(new Runnable() {
                         public void run() {
                             // обновление пользовательского интерфейса с использованием результата
                             try {
-                                JSONObject answer = new JSONObject(res);
+                                JSONObject answer = new JSONObject(finalRes);
                                 if(answer.getBoolean("status")){
                                     user_enter = new User_obj();
                                     user_enter.parseJson(answer);
