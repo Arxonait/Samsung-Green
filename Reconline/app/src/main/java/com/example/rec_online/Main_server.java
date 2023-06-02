@@ -54,8 +54,8 @@ public class Main_server {
     public static String maps(){
         String result;
         String url = "http://10.0.2.2:8080/maps";
-        //String json = "{\"login\":\"" + 111 + "\",\"password\":\"" + 222 + "\"}";
-        String json = "";
+        String json = "{\"login\":\"" + 111 + "\",\"password\":\"" + 222 + "\"}";
+        //String json = "";
 
         result = to_server(url, json);
 

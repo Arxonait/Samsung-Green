@@ -27,8 +27,9 @@ public class HttpControllerREST extends HttpServlet {
 
     @RequestMapping("/reg")
     public String reg(@RequestBody String body) throws SQLException {
-        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
-        System.out.println(1);
+        //JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
+        JSONObject jsonObject = new JSONObject(body);
+        //System.out.println(1);
         //JSONObject jsonObject = new JSONObject(body);
 
         return DB_act.reg(jsonObject);

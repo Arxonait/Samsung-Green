@@ -53,7 +53,7 @@ public class DB_act {
         return result;
     }
 
-    public static String reg(JsonObject json) throws SQLException {
+    public static String reg(org.json.JSONObject json) throws SQLException {
         String result;
         Connection connection;
         JSONObject answer_to_mob = new JSONObject();
@@ -64,7 +64,7 @@ public class DB_act {
             throw new RuntimeException(e);
         }
         Statement statement = connection.createStatement();
-        String SQL = String.format("select * from users WHERE login = '%s'", json.get("login").toString().replace("\"", ""));
+        String SQL = String.format("select * from users WHERE login = '%s'", json.getString("login"));
         ResultSet resultSet = statement.executeQuery(SQL);
 
         if (resultSet.next()) {
@@ -72,9 +72,8 @@ public class DB_act {
         } else {
             answer_to_mob.put("status", "true");
             SQL = String.format("INSERT INTO users (fam, name, mnumber, login, password, admin) VALUES ('%s','%s','%s','%s','%s',%b)",
-                    json.get("fam").toString().replace("\"", ""), json.get("name").toString().replace("\"", ""),
-                    json.get("mnumber").toString().replace("\"", ""), json.get("login").toString().replace("\"", ""),
-                    json.get("password").toString().replace("\"", ""), false);
+                    json.getString("fam"), json.getString("name"),
+                    json.getString("mnumber"), json.getString("login"), json.getString("password"), false);
             statement.executeUpdate(SQL);
         }
         result = answer_to_mob.toString();
