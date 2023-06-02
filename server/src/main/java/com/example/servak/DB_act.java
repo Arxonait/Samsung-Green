@@ -34,7 +34,7 @@ public class DB_act {
                 answer_to_mob.put("status", "true");
                 answer_to_mob.put("login", login);
                 answer_to_mob.put("password", password);
-                answer_to_mob.put("id", resultSet.getString("id"));
+                answer_to_mob.put("id", resultSet.getInt("id"));
                 answer_to_mob.put("fam", resultSet.getString("fam"));
                 answer_to_mob.put("name", resultSet.getString("name"));
                 answer_to_mob.put("mnumber", resultSet.getString("mnumber"));
@@ -71,7 +71,7 @@ public class DB_act {
             answer_to_mob.put("status", "false");
         } else {
             answer_to_mob.put("status", "true");
-            SQL = String.format("INSERT INTO public.users (fam, name, mnumber, login, password, admin) VALUES ('%s','%s','%s','%s','%s',%b)",
+            SQL = String.format("INSERT INTO users (fam, name, mnumber, login, password, admin) VALUES ('%s','%s','%s','%s','%s',%b)",
                     json.get("fam").toString().replace("\"", ""), json.get("name").toString().replace("\"", ""),
                     json.get("mnumber").toString().replace("\"", ""), json.get("login").toString().replace("\"", ""),
                     json.get("password").toString().replace("\"", ""), false);
@@ -364,7 +364,7 @@ public class DB_act {
             json.put("id_fact", resultSet.getString("id_fact"));
             json.put("name_fact", resultSet.getString("factory_name"));
 
-            json.put("id_user", resultSet.getString("id_user"));
+            json.put("id_user", resultSet.getInt("id_user"));
             json.put("user_name", resultSet.getString("user_name"));
             json.put("login", resultSet.getString("login"));
 

@@ -276,7 +276,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
                     new Thread(new Runnable() {
                         public void run() {
                             // выполнение сетевого запроса
-                            Oper_obj gift_new= new Oper_obj(Integer.parseInt(EnterActivity.Data_enter().id), Integer.parseInt(near_factory.id), metal, plastic, glass);
+                            Oper_obj gift_new= new Oper_obj(EnterActivity.Data_enter().id, Integer.parseInt(near_factory.id), metal, plastic, glass);
                             String res = Main_server.gift(gift_new);
                             // передача результата в главный поток
                             handler.post(new Runnable() {
@@ -393,7 +393,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
                 // выполнение сетевого запроса
                 String answer_from_server = null;
                 try {
-                    answer_from_server = Main_server.veiw_gift(Integer.parseInt(EnterActivity.Data_enter().id));
+                    answer_from_server = Main_server.veiw_gift(EnterActivity.Data_enter().id);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }

@@ -77,7 +77,7 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
                 // выполнение сетевого запроса
                 String answer_from_server = null;
                 try {
-                    answer_from_server = Main_server.veiw_mess(Integer.parseInt(EnterActivity.Data_enter().id));
+                    answer_from_server = Main_server.veiw_mess(EnterActivity.Data_enter().id);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -226,7 +226,7 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
                     // выполнение сетевого запроса
                     final String answer;
                     try {
-                        answer = Main_server.prof_oper_rec(Integer.parseInt(EnterActivity.Data_enter().id));
+                        answer = Main_server.prof_oper_rec(EnterActivity.Data_enter().id);
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }

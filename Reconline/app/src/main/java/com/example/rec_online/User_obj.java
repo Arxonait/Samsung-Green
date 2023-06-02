@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 public class User_obj {
 
-    String id;
+    int id;
     String name;
     String fam;
 
@@ -36,7 +36,7 @@ public class User_obj {
 
     public void parseJson(JSONObject answer) throws JSONException {
 
-        this.id = answer.getString("id");
+        this.id = answer.getInt("id");
         this.name = answer.getString("name");
         this.fam = answer.getString("fam");
         this.mnumber = answer.getString("mnumber");
