@@ -45,7 +45,7 @@ public class Adapter_prof extends RecyclerView.Adapter<ViewHolder_prof> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder_prof holder, @SuppressLint("RecyclerView") int position) {
-        Date time = this.data.get(position).time;
+        String time = this.data.get(position).time;
         String id = String.valueOf(data.get(position).num_cont);
         String title = String.valueOf(data.get(position).title);
         boolean is_read = data.get(position).is_read;

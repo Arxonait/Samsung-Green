@@ -1,6 +1,7 @@
 package com.example.rec_online;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -18,8 +20,6 @@ import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import java.text.SimpleDateFormat;
 
 public class ItemActivity extends AppCompatActivity {
 
@@ -36,12 +36,82 @@ public class ItemActivity extends AppCompatActivity {
             load_sec_desOper();
         }
         if(mess_s != null){
-
+            load_sec_ansMess();
         }
 
     }
 
+    private void load_sec_ansMess() {
+        ConstraintLayout sec_ansMess = findViewById(R.id.cl_adminItem_ansMess);
+        sec_ansMess.setVisibility(View.VISIBLE);
+
+        TextView tv_userName = findViewById(R.id.tv_ansMess_userName);
+        TextView tv_time = findViewById(R.id.tv_ansMess_time);
+        TextView tv_title = findViewById(R.id.tv_ansMess_userTitle);
+        TextView tv_userMainText = findViewById(R.id.tv_ansMess_userMainText);
+
+        tv_userName.setText(mess_s.user_name);
+        tv_title.setText(mess_s.title);
+        tv_userMainText.setText(mess_s.main_text);
+        tv_time.setText(mess_s.time);
+
+        EditText ed_adminMainText = findViewById(R.id.ed_ansMess_adminMainText);
+
+        Button bt_sendAns = findViewById(R.id.bt_ansMess_send);
+        bt_sendAns.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String adminMainText = String.valueOf(ed_adminMainText.getText());
+                if(adminMainText.length()>0){
+                    Mes_obj new_mess = new Mes_obj(EnterActivity.Data_enter().id, mess_s.title, adminMainText);
+                    new_mess.id_prev_mes = mess_s.id;
+                    new Thread(new Runnable() {
+                        public void run() {
+                            // выполнение сетевого запроса
+                            String res;
+                            res = Main_server.send_ansAdmin(new_mess);
+                            // передача результата в главный поток
+
+                            String finalRes = res;
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    //обновление пользовательского интерфейса с использованием результата
+                                    try {
+                                        JSONParser parser = new JSONParser();
+                                        JSONObject answer = (JSONObject) parser.parse(finalRes);
+                                        if(answer.get("status").toString().equals("true")){
+                                            Toast.makeText(getApplicationContext(), "Успешно",
+                                                    Toast.LENGTH_SHORT).show();
+
+                                            finish();
+
+                                        }
+                                        else{
+
+                                        }
+
+                                    } catch (ParseException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                            });
+                        }
+                    }).start();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Заполните все поля",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+
+    }
+
     private void load_sec_desOper() {
+        ConstraintLayout sec_desOper = findViewById(R.id.cl_adminItem_decOper);
+        sec_desOper.setVisibility(View.VISIBLE);
+
         TextView tv_fio = findViewById(R.id.tv_desOper_fio);
         TextView tv_login = findViewById(R.id.tv_desOper_login);
         TextView tv_name_fact = findViewById(R.id.tv_desOper_nameFact);
@@ -56,7 +126,7 @@ public class ItemActivity extends AppCompatActivity {
         tv_login.setText(oper_s.login);
         tv_name_fact.setText(oper_s.name_fact);
 
-        System.out.println(oper_s.glass);
+        //System.out.println(oper_s.glass);
         tv_glass.setText(String.valueOf(oper_s.glass));
         tv_plastic.setText(String.valueOf(oper_s.plastic));
         tv_metal.setText(String.valueOf(oper_s.metal));
@@ -167,7 +237,7 @@ public class ItemActivity extends AppCompatActivity {
         mess_s = null;
     }
 
-    public void setData(Mes_obj mess){
+    public static void setData(Mes_obj mess){
         oper_s = null;
         mess_s = mess;
     }

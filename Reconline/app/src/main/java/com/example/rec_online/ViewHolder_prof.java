@@ -6,7 +6,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class ViewHolder_prof extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -25,13 +24,13 @@ public class ViewHolder_prof extends RecyclerView.ViewHolder implements View.OnC
         itemView.setOnClickListener(this);
     }
 
-    public void bind(String id, String ball, boolean status, Date time) {
+    public void bind(String id, String ball, boolean status, String time) {
         tv_mes_id.setText(id);
         tv_mes_title.setText(ball);
         tv_mes_status.setText(String.valueOf(status));
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        String dateString = dateFormat.format(time);
-        tv_mes_date.setText(dateString);
+        //SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        //String dateString = dateFormat.format(time);
+        tv_mes_date.setText(time);
     }
 
 

@@ -276,7 +276,7 @@ public class DB_act {
             json.put("id_user", resultSet.getInt("id_user"));
             json.put("id_prev_mes", resultSet.getInt("id_prev_mes"));
             json.put("is_read", resultSet.getBoolean("is_read"));
-            json.put("date", resultSet.getString("date"));
+            json.put("time", resultSet.getString("date"));
             json.put("title", resultSet.getString("title"));
             json.put("main_text", resultSet.getString("main_text"));
             json.put("type", resultSet.getString("type"));
@@ -462,6 +462,98 @@ public class DB_act {
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.executeUpdate();
 
+
+        answer_to_mob.put("status", true);
+
+        result = answer_to_mob.toString();
+        statement.close();
+
+
+        return result;
+    }
+
+    public static String admin_select_mess(org.json.JSONObject jsonObject) throws SQLException {
+        String result;
+        Connection connection;
+        List<JSONObject> jsonObjects = new ArrayList<>();
+        int cont_row = 0;
+
+        try {
+            connection = DriverManager.getConnection(URL, USERNAME, PassWord);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        Statement statement = connection.createStatement();
+        String SQL = String.format("SELECT *" +
+                "FROM messages INNER JOIN users ON messages.id_user = users.id " +
+                "WHERE id_prev_mes = -1 and type = 'mess' " +
+                "ORDER BY date DESC");
+
+        ResultSet resultSet = statement.executeQuery(SQL);
+        while (resultSet.next()) {
+            JSONObject json = new JSONObject();
+            json.put("id", resultSet.getInt("id"));
+            json.put("id_prev_mes", resultSet.getInt("id_prev_mes"));
+
+            json.put("id_user", resultSet.getInt("id_user"));
+            json.put("user_name", resultSet.getString("login"));
+
+
+            json.put("title", resultSet.getString("title"));
+            json.put("main_text", resultSet.getString("main_text"));
+            json.put("type", resultSet.getString("type"));
+            json.put("is_read", resultSet.getBoolean("is_read"));
+            json.put("time", resultSet.getString("date"));
+
+
+            cont_row++;
+
+
+            jsonObjects.add(json);
+        }
+        JSONObject combinedJson = new JSONObject();
+        combinedJson.put("data", jsonObjects);
+        if (cont_row > 0) {
+            combinedJson.put("status", "true");
+        } else {
+            combinedJson.put("status", "false");
+        }
+
+
+        result = combinedJson.toString();
+        //System.out.println(result);
+        resultSet.close();
+        statement.close();
+
+        return result;
+    }
+
+    public static String send_ansAdmin(org.json.JSONObject json) throws SQLException {
+        String result;
+        Connection connection;
+        JSONObject answer_to_mob = new JSONObject();
+
+        try {
+            connection = DriverManager.getConnection(URL, USERNAME, PassWord);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        String current_time = dateFormat.format(currentDate);
+
+        String title = String.format("Ответ на \"%s\"", json.getString("title"));
+
+        String sql = String.format("INSERT INTO messages (id_user, id_prev_mes, date, is_read, title, main_text, type) VALUES ('%d', " +
+                        "'%d', '%s', '%b', '%s', '%s', '%s')", json.getInt("id_user"), json.getInt("id_prev_mes"),
+                current_time, false, title, json.getString("main_text"), "mess");
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.executeUpdate();
+
+        sql = String.format("UPDATE messages SET type = 'ansMess' WHERE id = %d", json.getInt("id_prev_mes"));
+        statement = connection.prepareStatement(sql);
+        statement.executeUpdate();
 
         answer_to_mob.put("status", true);
 

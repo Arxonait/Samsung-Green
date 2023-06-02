@@ -3,9 +3,6 @@ package com.example.rec_online;
 
 import org.json.JSONObject;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 
 import org.json.JSONException;
 
@@ -201,6 +198,29 @@ public class Main_server {
         String jsonString = gson.toJson(mess_new);
 
         String url = "http://10.0.2.2:8080/prof/send_mess";
+
+        result = to_server(url, jsonString);
+
+        return result;
+    }
+
+    public static String admin_select_mess() {
+        String result;
+
+        JSONObject json = new JSONObject();
+        String url = "http://10.0.2.2:8080/prof/admin_select_mess";
+        result = to_server(url, json.toString());
+
+        return result;
+    }
+
+    public static String send_ansAdmin(Mes_obj new_mess) {
+        String result;
+        Gson gson = new Gson();
+        // Преобразование объекта в JSON-строку
+        String jsonString = gson.toJson(new_mess);
+
+        String url = "http://10.0.2.2:8080/prof/send_ansAdmin";
 
         result = to_server(url, jsonString);
 

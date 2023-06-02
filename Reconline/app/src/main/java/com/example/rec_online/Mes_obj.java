@@ -1,7 +1,7 @@
 package com.example.rec_online;
 
 import org.json.JSONException;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,13 +11,14 @@ public class Mes_obj {
     public int num_cont;
     long id;
     long id_user;
+    String user_name;
     long id_prev_mes;
     String title;
     String main_text;
 
 
     boolean is_read;
-    Date time;
+    String time;
 
     String type;
 
@@ -35,20 +36,25 @@ public class Mes_obj {
     }
 
     public void parseJson(JSONObject json) throws JSONException, ParseException {
-        this.id = (long) json.get("id");
-        this.id_user = (long) json.get("id_user");
-        this.id_prev_mes = (long) json.get("id_prev_mes");
+        this.id = json.getInt("id");
+        this.id_user = json.getInt("id_user");
+        this.id_prev_mes = json.getInt("id_prev_mes");
 
-        this.title = (String) json.get("title");
-        this.main_text = (String) json.get("main_text");
-        this.type = (String) json.get("type");
-        this.is_read = (boolean) json.get("is_read");
+        this.title = json.getString("title");
+        this.main_text = json.getString("main_text");
+        this.type = json.getString("type");
+        this.is_read = json.getBoolean("is_read");
 
 
-        String timeString = (String) json.get("date");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = dateFormat.parse(timeString);
-        this.time = date;
+        String time_bd =  json.getString("time");
+        SimpleDateFormat dateFormat_bd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = dateFormat_bd.parse(time_bd);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        this.time = dateFormat.format(date);
+
+        if(!json.isNull("user_name")){
+            this.user_name = json.getString("user_name");
+        }
 
 
 

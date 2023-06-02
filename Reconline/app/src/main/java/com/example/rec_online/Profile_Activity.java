@@ -19,8 +19,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -87,24 +87,40 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
                 handler.post(new Runnable() {
                     public void run() {
                         // обновление пользовательского интерфейса с использованием результата
-                        JSONParser parser = new JSONParser();
-                        JSONObject json;
+                        //JSONParser parser = new JSONParser();
+                        org.json.JSONObject json;
                         try {
-                            json = (JSONObject) parser.parse(finalAnswer_from_server);
-                        } catch (ParseException e) {
+                            //json = (JSONObject) parser.parse(finalAnswer_from_server);
+                            json = new org.json.JSONObject(finalAnswer_from_server);
+                        } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
-                        if (String.valueOf(json.get("status")).equals("false")) {
-                            is_new_user = true;
+                        try {
+                            if (String.valueOf(json.get("status")).equals("false")) {
+                                is_new_user = true;
+                            }
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
                         }
-                        JSONArray jsonArray = (JSONArray) json.get("data");
+                        JSONArray jsonArray = null;
+                        try {
+                            jsonArray = json.getJSONArray("data");
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
 
                         mess_view = new ArrayList<>();
 
-                        for (Object element : jsonArray) {
-                            JSONObject jsonObject = (JSONObject) element;
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            org.json.JSONObject jsonObject = null;
+                            try {
+                                jsonObject = jsonArray.getJSONObject(i);
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
 
                             Mes_obj new_mess = new Mes_obj();
+
                             try {
                                 new_mess.parseJson(jsonObject);
                             } catch (JSONException ex) {
@@ -112,6 +128,7 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
                             } catch (java.text.ParseException ex) {
                                 throw new RuntimeException(ex);
                             }
+
                             mess_view.add(new_mess);
                         }
 

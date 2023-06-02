@@ -12,22 +12,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Adapter_admin extends RecyclerView.Adapter<ViewHolder_admin> {
+public class Adapter_newMess extends RecyclerView.Adapter<ViewHolder_newMess> {
 
-    private List<Oper_obj> data ;
+    private List<Mes_obj> data ;
     private ItemClickListener clickListener;
 
-    public Adapter_admin(ItemClickListener clickListener) {
+    public Adapter_newMess(ItemClickListener clickListener) {
         this.data = new ArrayList<>();
         this.clickListener = clickListener;
     }
 
-    public void setData(List<Oper_obj> data) {
+    public void setData(List<Mes_obj> data) {
         this.data = data;
         notifyDataSetChanged();
     }
-    public void addData(Oper_obj oper) {
-        this.data.add(oper);
+    public void addData(Mes_obj mess) {
+        this.data.add(mess);
         notifyDataSetChanged();
     }
 
@@ -37,26 +37,26 @@ public class Adapter_admin extends RecyclerView.Adapter<ViewHolder_admin> {
 
     @NonNull
     @Override
-    public ViewHolder_admin onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.new_oper_item, parent, false);
-        return new ViewHolder_admin(view);
+    public ViewHolder_newMess onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.new_mess_item, parent, false);
+        return new ViewHolder_newMess(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder_admin holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull ViewHolder_newMess holder, @SuppressLint("RecyclerView") int position) {
         String time = this.data.get(position).time;
         String id = String.valueOf(data.get(position).id);
-        String user_name = String.valueOf(data.get(position).user_name);
-        String name_fact = String.valueOf(data.get(position).name_fact);
+        String user_name = data.get(position).user_name;
+        String title = data.get(position).title;
 
 
-        holder.bind(id, user_name,name_fact, time);
+        holder.bind(id, user_name, title, time);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (clickListener != null)
-                    clickListener.onItemClick(v, position);
+                    clickListener.onItemClick_mess(v, position);
             }
         });
     }
@@ -69,7 +69,7 @@ public class Adapter_admin extends RecyclerView.Adapter<ViewHolder_admin> {
 
 
     public interface ItemClickListener {
-        void onItemClick(@Nullable View view, int position);
+        void onItemClick_mess(@Nullable View view, int position);
     }
 
 }

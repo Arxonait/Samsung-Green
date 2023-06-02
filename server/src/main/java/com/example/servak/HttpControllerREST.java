@@ -90,6 +90,18 @@ public class HttpControllerREST extends HttpServlet {
         JSONObject jsonObject = new JSONObject(body);
         return DB_act.send_mess(jsonObject);
     }
+
+    @RequestMapping("/prof/admin_select_mess")
+    public String admin_select_mess(@RequestBody String body) throws SQLException {
+        JSONObject jsonObject = new JSONObject(body);
+        return DB_act.admin_select_mess(jsonObject);
+    }
+
+    @RequestMapping("/prof/send_ansAdmin")
+    public String send_ansAdmin(@RequestBody String body) throws SQLException, ParseException {
+        JSONObject jsonObject = new JSONObject(body);
+        return DB_act.send_ansAdmin(jsonObject);
+    }
 }
 
 
