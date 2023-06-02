@@ -1,6 +1,4 @@
 package com.example.servak;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import jakarta.servlet.http.HttpServlet;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,11 +25,7 @@ public class HttpControllerREST extends HttpServlet {
 
     @RequestMapping("/reg")
     public String reg(@RequestBody String body) throws SQLException {
-        //JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
         JSONObject jsonObject = new JSONObject(body);
-        //System.out.println(1);
-        //JSONObject jsonObject = new JSONObject(body);
-
         return DB_act.reg(jsonObject);
     }
 
@@ -40,67 +34,67 @@ public class HttpControllerREST extends HttpServlet {
         return DB_act.factory();
     }
 
-    @RequestMapping("/stat/gift_new")
-    public String gift(@RequestBody String body) throws SQLException {
-        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
-        return DB_act.insert_gift(jsonObject);
+    @RequestMapping("/rec/oper_new")
+    public String oper(@RequestBody String body) throws SQLException {
+        JSONObject json = new JSONObject(body);
+        return DB_act.insert_oper(json);
     }
 
-    @RequestMapping("/stat/view_gift")
-    public String view_gift(@RequestBody String body) throws SQLException {
-        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
-        return DB_act.select_gift(jsonObject);
+    @RequestMapping("/rec/view_oper")
+    public String view_oper(@RequestBody String body) throws SQLException {
+        JSONObject json = new JSONObject(body);
+        return DB_act.select_oper(json);
     }
 
     @RequestMapping("/prof/prof_oper_rec")
     public String prof_oper_rec(@RequestBody String body) throws SQLException {
-        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
-        return DB_act.prof_oper_rec(jsonObject);
+        JSONObject json = new JSONObject(body);
+        return DB_act.prof_oper_rec(json);
 
 
     }
 
     @RequestMapping("/prof/view_mess")
     public String view_mess(@RequestBody String body) throws SQLException {
-        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
-        return DB_act.select_mess(jsonObject);
+        JSONObject json = new JSONObject(body);
+        return DB_act.select_mess(json);
     }
 
     @RequestMapping("/prof/update_is_read")
     public String update_is_read(@RequestBody String body) throws SQLException {
-        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
-        return DB_act.update_is_read(jsonObject);
+        JSONObject json = new JSONObject(body);
+        return DB_act.update_is_read(json);
     }
 
 
     @RequestMapping("/prof/admin_select_oper")
     public String admin_select_oper(@RequestBody String body) throws SQLException {
-        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
-        return DB_act.admin_select_oper(jsonObject);
+        JSONObject json = new JSONObject(body);
+        return DB_act.admin_select_oper(json);
     }
 
     @RequestMapping("/prof/admin_desOper")
     public String admin_desOper(@RequestBody String body) throws SQLException, ParseException {
-        JSONObject jsonObject = new JSONObject(body);
-        return DB_act.admin_desOper(jsonObject);
+        JSONObject json = new JSONObject(body);
+        return DB_act.admin_desOper(json);
     }
 
     @RequestMapping("/prof/send_mess")
     public String send_mess(@RequestBody String body) throws SQLException, ParseException {
-        JSONObject jsonObject = new JSONObject(body);
-        return DB_act.send_mess(jsonObject);
+        JSONObject json = new JSONObject(body);
+        return DB_act.send_mess(json);
     }
 
     @RequestMapping("/prof/admin_select_mess")
     public String admin_select_mess(@RequestBody String body) throws SQLException {
-        JSONObject jsonObject = new JSONObject(body);
-        return DB_act.admin_select_mess(jsonObject);
+        JSONObject json = new JSONObject(body);
+        return DB_act.admin_select_mess(json);
     }
 
     @RequestMapping("/prof/send_ansAdmin")
     public String send_ansAdmin(@RequestBody String body) throws SQLException, ParseException {
-        JSONObject jsonObject = new JSONObject(body);
-        return DB_act.send_ansAdmin(jsonObject);
+        JSONObject json = new JSONObject(body);
+        return DB_act.send_ansAdmin(json);
     }
 }
 

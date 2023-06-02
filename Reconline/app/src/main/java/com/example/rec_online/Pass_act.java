@@ -39,27 +39,37 @@ public class Pass_act {
                 handler.post(new Runnable() {
                     public void run() {
                         // обновление пользовательского интерфейса с использованием результата
-                        JSONParser parser = new JSONParser();
+                        //JSONParser parser = new JSONParser();
                         try {
-                            JSONObject combinedJson = (JSONObject) parser.parse(answer);
-                            JSONArray jsonArray = (JSONArray) combinedJson.get("data");
+                            //JSONObject combinedJson = (JSONObject) parser.parse(answer);
+                            org.json.JSONObject json = new org.json.JSONObject(answer);
+                            org.json.JSONArray jsonArray = json.getJSONArray("data");
 
-                            for (Object element : jsonArray) {
-                                JSONObject jsonObject = (JSONObject) element;
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                org.json.JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = jsonArray.getJSONObject(i);
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
 
-                                Factory_obj new_factory = new Factory_obj();
-                                new_factory.parseJson(jsonObject);
+                                Factory_obj newFact = new Factory_obj();
 
-                                factories.add(new_factory);
-                            }
+                                try {
+                                    newFact.parseJson(jsonObject);
+                                } catch (JSONException ex) {
+                                    throw new RuntimeException(ex);
+                                }
 
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        } catch (JSONException e) {
+                                factories.add(newFact);
+
+
+                        }
+                    } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
                     }
-                });
+                    });
             }
         }).start();
     }

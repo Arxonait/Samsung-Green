@@ -22,23 +22,19 @@ public class Main_server {
         JSONObject json = new JSONObject();
         json.put("login", login);
         json.put("password", password);
-
-
         String url = "http://10.0.2.2:8080/enter";
-        //String json = "{\"login\":\"" + login + "\",\"password\":\"" + password + "\"}";
         result = json.toString();
         result = to_server(url, result);
-
         return result;
 
     }
-    public static String reg(User_obj user_new){
+    public static String reg(User_obj newUser){
         String result;
 
         Gson gson = new Gson();
 
         // Преобразование объекта в JSON-строку
-        String jsonString = gson.toJson(user_new);
+        String jsonString = gson.toJson(newUser);
 
         String url = "http://10.0.2.2:8080/reg";
 
@@ -51,10 +47,12 @@ public class Main_server {
     public static String maps(){
         String result;
         String url = "http://10.0.2.2:8080/maps";
-        String json = "{\"login\":\"" + 111 + "\",\"password\":\"" + 222 + "\"}";
+        JSONObject json = new JSONObject();
+        //String json = "{\"login\":\"" + 111 + "\",\"password\":\"" + 222 + "\"}";
         //String json = "";
+        result = json.toString();
 
-        result = to_server(url, json);
+        result = to_server(url, result);
 
         return result;
     }
@@ -81,15 +79,15 @@ public class Main_server {
         return result;
     }
 
-    public static String gift(Oper_obj gift_new) {
+    public static String gift(Oper_obj newOper) {
         String result;
 
         Gson gson = new Gson();
 
         // Преобразование объекта в JSON-строку
-        String jsonString = gson.toJson(gift_new);
+        String jsonString = gson.toJson(newOper);
 
-        String url = "http://10.0.2.2:8080/stat/gift_new";
+        String url = "http://10.0.2.2:8080/rec/oper_new";
 
 
         result = to_server(url, jsonString);
@@ -104,7 +102,7 @@ public class Main_server {
         json.put("id_user", id_user);
 
 
-        String url = "http://10.0.2.2:8080/stat/view_gift";
+        String url = "http://10.0.2.2:8080/rec/view_oper";
 
 
         result = to_server(url, json.toString());

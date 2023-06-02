@@ -1,11 +1,11 @@
 package com.example.rec_online;
 
 import org.json.JSONException;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 public class Factory_obj {
 
-    String id;
+    int id;
     String name;
     String adres;
     double x;
@@ -18,20 +18,20 @@ public class Factory_obj {
     boolean plastic;
 
 
-    public void parseJson(JSONObject answer) throws JSONException {
-        this.id = (String) answer.get("id");
-        this.name = (String) answer.get("name");
-        this.adres = (String) answer.get("adres");
-        this.mobile = (String) answer.get("mobile");
+    public void parseJson(JSONObject json) throws JSONException {
+        this.id = json.getInt("id");
+        this.name = json.getString("name");
+        this.adres = json.getString("adres");
+        this.mobile = json.getString("mobile");
 
-        this.x = Double.parseDouble((String) answer.get("x"));
-        this.y = Double.parseDouble((String) answer.get("y"));
+        this.x = json.getDouble("x");
+        this.y = json.getDouble("y");
 
-        this.work_time = (String) answer.get("work_time");
+        this.work_time = json.getString("work_time");
 
-        this.glass = String.valueOf(answer.get("glass")).equals("t");
-        this.plastic = String.valueOf(answer.get("plastic")).equals("t");
-        this.metal = String.valueOf(answer.get("metal")).equals("t");
+        this.glass = json.getBoolean("glass");
+        this.plastic = json.getBoolean("plastic");
+        this.metal = json.getBoolean("metal");
 
 
     }

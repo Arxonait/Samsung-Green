@@ -162,7 +162,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             new_marker.setPosition(latLng);
             new_marker.setIcon(icon);
 
-            markerMap.put(factory.id, new_marker);
+            markerMap.put(String.valueOf(factory.id), new_marker);
 
         }
         mMap.setOnMarkerClickListener(this);

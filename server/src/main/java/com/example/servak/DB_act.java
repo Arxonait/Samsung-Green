@@ -7,7 +7,6 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -101,16 +100,16 @@ public class DB_act {
         ResultSet resultSet = statement.executeQuery(SQL);
         while (resultSet.next()) {
             JSONObject json = new JSONObject();
-            json.put("id", resultSet.getString("id"));
+            json.put("id", resultSet.getInt("id"));
             json.put("name", resultSet.getString("name"));
             json.put("adres", resultSet.getString("adres"));
-            json.put("x", resultSet.getString("x"));
-            json.put("y", resultSet.getString("y"));
+            json.put("x", resultSet.getDouble("x"));
+            json.put("y", resultSet.getDouble("y"));
             json.put("work_time", resultSet.getString("work_time"));
             json.put("mobile", resultSet.getString("mobile"));
-            json.put("glass", resultSet.getString("glass"));
-            json.put("metal", resultSet.getString("metal"));
-            json.put("plastic", resultSet.getString("plastic"));
+            json.put("glass", resultSet.getBoolean("glass"));
+            json.put("metal", resultSet.getBoolean("metal"));
+            json.put("plastic", resultSet.getBoolean("plastic"));
 
 
             jsonObjects.add(json);
@@ -128,18 +127,17 @@ public class DB_act {
     }
 
 
-    public static String insert_gift(JsonObject json) throws SQLException {
+    public static String insert_oper(org.json.JSONObject json) throws SQLException {
         String result;
-        int glass = Integer.parseInt(json.get("glass").toString());
-        int metal = Integer.parseInt(json.get("metal").toString());
-        int plastic = Integer.parseInt(json.get("plastic").toString());
+        int glass = json.getInt("glass");
+        int metal = json.getInt("metal");
+        int plastic = json.getInt("plastic");
 
         int ball_new = glass * 10 + plastic * 5 + metal * 2;
 
         Date currentDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         String current_time = dateFormat.format(currentDate);
-        System.out.println(current_time);
 
 
         Connection connection;
@@ -152,9 +150,9 @@ public class DB_act {
         }
         Statement statement = connection.createStatement();
 
-        String SQL = String.format("INSERT INTO public.gift (id_user, id_fact, metal, plastic, glass, ball, status, timee) VALUES ('%s', " +
-                        "'%s', '%d', '%d', '%d', '%d', '%d', '%s')", json.get("id_user").toString().replace("\"", ""),
-                json.get("id_fact").toString().replace("\"", ""), metal, plastic, glass, ball_new, 1, current_time);
+        String SQL = String.format("INSERT INTO operations (id_user, id_fact, metal, plastic, glass, ball, status, timee) VALUES ('%d', " +
+                        "'%d', '%d', '%d', '%d', '%d', '%d', '%s')", json.getInt("id_user"),
+                json.getInt("id_fact"), metal, plastic, glass, ball_new, 1, current_time);
         statement.executeUpdate(SQL);
 
         answer_to_mob.put("status", "true");
@@ -162,10 +160,10 @@ public class DB_act {
         return result;
     }
 
-    public static String select_gift(JsonObject jsonObject) throws SQLException {
+    public static String select_oper(org.json.JSONObject json) throws SQLException {
         String result;
         Connection connection;
-        List<JSONObject> jsonObjects = new ArrayList<>();
+        List<org.json.JSONObject> jsonObjects = new ArrayList<>();
         int cont_row = 0;
 
         try {
@@ -174,28 +172,29 @@ public class DB_act {
             throw new RuntimeException(e);
         }
         Statement statement = connection.createStatement();
-        String SQL = String.format("select * from gift INNER JOIN factory ON factory.id = gift.id_fact WHERE   id_user = '%s' ORDER BY gift.id DESC", jsonObject.get("id_user"));
+        String SQL = String.format("select * from operations INNER JOIN factory ON factory.id = operations.id_fact WHERE   id_user = '%d' ORDER BY operations.id DESC",
+                json.getInt("id_user"));
         ResultSet resultSet = statement.executeQuery(SQL);
         while (resultSet.next()) {
-            JSONObject json = new JSONObject();
-            json.put("id", resultSet.getInt("id"));
-            json.put("id_fact", resultSet.getInt("id_fact"));
-            json.put("name_fact", resultSet.getString("name"));
-            json.put("id_user", resultSet.getInt("id_user"));
-            json.put("ball", resultSet.getInt("ball"));
-            json.put("plastic", resultSet.getInt("plastic"));
-            json.put("glass", resultSet.getInt("glass"));
-            json.put("metal", resultSet.getInt("metal"));
+            org.json.JSONObject json_i = new org.json.JSONObject();
+            json_i.put("id", resultSet.getInt("id"));
+            json_i.put("id_fact", resultSet.getInt("id_fact"));
+            json_i.put("name_fact", resultSet.getString("name"));
+            json_i.put("id_user", resultSet.getInt("id_user"));
+            json_i.put("ball", resultSet.getInt("ball"));
+            json_i.put("plastic", resultSet.getInt("plastic"));
+            json_i.put("glass", resultSet.getInt("glass"));
+            json_i.put("metal", resultSet.getInt("metal"));
 
-            json.put("reason", resultSet.getString("reason"));
-            json.put("status", resultSet.getString("status"));
-            json.put("time", resultSet.getString("timee"));
+            json_i.put("reason", resultSet.getString("reason"));
+            json_i.put("status", resultSet.getString("status"));
+            json_i.put("time", resultSet.getString("timee"));
 
 
             cont_row++;
 
 
-            jsonObjects.add(json);
+            jsonObjects.add(json_i);
         }
 
 
@@ -217,10 +216,10 @@ public class DB_act {
 
     }
 
-    public static String prof_oper_rec(JsonObject jsonObject) throws SQLException {
+    public static String prof_oper_rec(org.json.JSONObject json) throws SQLException {
         String result;
         Connection connection;
-        JSONObject json = new JSONObject();
+        JSONObject json_ans = new JSONObject();
 
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PassWord);
@@ -229,7 +228,7 @@ public class DB_act {
         }
         Statement statement = connection.createStatement();
         String SQL = String.format("SELECT id_user, SUM(ball) AS totalBall, SUM(plastic) AS totalPlastic, SUM(glass) AS totalGlass, SUM(metal) AS totalMetal " +
-                "FROM gift WHERE id_user = '%s' and status = 11 GROUP BY id_user", jsonObject.get("id_user"));
+                "FROM operations WHERE id_user = '%d' and status = 11 GROUP BY id_user", json.getInt("id_user"));
         ResultSet resultSet = statement.executeQuery(SQL);
         if (resultSet.next()) {
             int totalBall = resultSet.getInt("totalBall");
@@ -237,17 +236,17 @@ public class DB_act {
             int totalGlass = resultSet.getInt("totalGlass");
             int totalMetal = resultSet.getInt("totalMetal");
 
-            json.put("ball", totalBall);
-            json.put("plastic", totalPlastic);
-            json.put("glass", totalGlass);
-            json.put("metal", totalMetal);
-            json.put("status", "true");
+            json_ans.put("ball", totalBall);
+            json_ans.put("plastic", totalPlastic);
+            json_ans.put("glass", totalGlass);
+            json_ans.put("metal", totalMetal);
+            json_ans.put("status", "true");
         } else {
-            json.put("status", "false");
+            json_ans.put("status", "false");
         }
 
 
-        result = json.toString();
+        result = json_ans.toString();
 
         resultSet.close();
         statement.close();
@@ -256,10 +255,10 @@ public class DB_act {
     }
 
 
-    public static String select_mess(JsonObject jsonObject) throws SQLException {
+    public static String select_mess(org.json.JSONObject json) throws SQLException {
         String result;
         Connection connection;
-        List<JSONObject> jsonObjects = new ArrayList<>();
+        List<org.json.JSONObject> jsonObjects = new ArrayList<>();
         int cont_row = 0;
 
         try {
@@ -268,18 +267,18 @@ public class DB_act {
             throw new RuntimeException(e);
         }
         Statement statement = connection.createStatement();
-        String SQL = String.format("select * from messages WHERE   id_user = '%s' ORDER BY messages.id DESC", jsonObject.get("id_user"));
+        String SQL = String.format("select * from messages WHERE id_user = '%s' ORDER BY messages.id DESC", json.getInt("id_user"));
         ResultSet resultSet = statement.executeQuery(SQL);
         while (resultSet.next()) {
-            JSONObject json = new JSONObject();
-            json.put("id", resultSet.getInt("id"));
-            json.put("id_user", resultSet.getInt("id_user"));
-            json.put("id_prev_mes", resultSet.getInt("id_prev_mes"));
-            json.put("is_read", resultSet.getBoolean("is_read"));
-            json.put("time", resultSet.getString("date"));
-            json.put("title", resultSet.getString("title"));
-            json.put("main_text", resultSet.getString("main_text"));
-            json.put("type", resultSet.getString("type"));
+            org.json.JSONObject json_i = new org.json.JSONObject();
+            json_i.put("id", resultSet.getInt("id"));
+            json_i.put("id_user", resultSet.getInt("id_user"));
+            json_i.put("id_prev_mes", resultSet.getInt("id_prev_mes"));
+            json_i.put("is_read", resultSet.getBoolean("is_read"));
+            json_i.put("time", resultSet.getString("date"));
+            json_i.put("title", resultSet.getString("title"));
+            json_i.put("main_text", resultSet.getString("main_text"));
+            json_i.put("type", resultSet.getString("type"));
 
 
 
@@ -287,7 +286,7 @@ public class DB_act {
             cont_row++;
 
 
-            jsonObjects.add(json);
+            jsonObjects.add(json_i);
         }
 
 
@@ -310,7 +309,7 @@ public class DB_act {
 
     }
 
-    public static String update_is_read(JsonObject json) throws SQLException {
+    public static String update_is_read(org.json.JSONObject json) throws SQLException {
         String result;
         Connection connection;
         JSONObject answer_to_mob = new JSONObject();
@@ -322,7 +321,7 @@ public class DB_act {
         }
         String sql = "UPDATE messages SET is_read = true WHERE id = ?";
         PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setInt(1, Integer.parseInt(json.get("id").toString()));
+        statement.setInt(1, json.getInt("id"));
         statement.executeUpdate();
 
 
@@ -336,10 +335,10 @@ public class DB_act {
 
     }
 
-    public static String admin_select_oper(JsonObject json_obj) throws SQLException {
+    public static String admin_select_oper(org.json.JSONObject json) throws SQLException {
         String result;
         Connection connection;
-        List<JSONObject> jsonObjects = new ArrayList<>();
+        List<org.json.JSONObject> jsonObjects = new ArrayList<>();
         int cont_row = 0;
 
         try {
@@ -348,39 +347,39 @@ public class DB_act {
             throw new RuntimeException(e);
         }
         Statement statement = connection.createStatement();
-        String SQL = String.format("SELECT gift.id, gift.id_fact, factory.name AS factory_name, " +
-                "gift.id_user, users.name AS user_name, login, gift.ball, gift.plastic, gift.glass, gift.metal, " +
-                "gift.status, gift.timee " +
-                "FROM gift " +
-                "INNER JOIN factory ON factory.id = gift.id_fact " +
-                "INNER JOIN users ON users.id = gift.id_user " +
-                "WHERE gift.status = 1 " +
-                "ORDER BY gift.timee DESC");
+        String SQL = String.format("SELECT operations.id, operations.id_fact, factory.name AS factory_name, " +
+                "operations.id_user, users.name AS user_name, login, operations.ball, operations.plastic, operations.glass, operations.metal, " +
+                "operations.status, operations.timee " +
+                "FROM operations " +
+                "INNER JOIN factory ON factory.id = operations.id_fact " +
+                "INNER JOIN users ON users.id = operations.id_user " +
+                "WHERE operations.status = 1 " +
+                "ORDER BY operations.timee DESC");
 
         ResultSet resultSet = statement.executeQuery(SQL);
         while (resultSet.next()) {
-            JSONObject json = new JSONObject();
-            json.put("id", resultSet.getString("id"));
-            json.put("id_fact", resultSet.getString("id_fact"));
-            json.put("name_fact", resultSet.getString("factory_name"));
+            org.json.JSONObject json_i = new org.json.JSONObject();
+            json_i.put("id", resultSet.getInt("id"));
+            json_i.put("id_fact", resultSet.getInt("id_fact"));
+            json_i.put("name_fact", resultSet.getString("factory_name"));
 
-            json.put("id_user", resultSet.getInt("id_user"));
-            json.put("user_name", resultSet.getString("user_name"));
-            json.put("login", resultSet.getString("login"));
+            json_i.put("id_user", resultSet.getInt("id_user"));
+            json_i.put("user_name", resultSet.getString("user_name"));
+            json_i.put("login", resultSet.getString("login"));
 
-            json.put("ball", resultSet.getString("ball"));
-            json.put("plastic", resultSet.getString("plastic"));
-            json.put("glass", resultSet.getString("glass"));
-            json.put("metal", resultSet.getString("metal"));
-            json.put("status", resultSet.getString("status"));
-            json.put("time", resultSet.getString("timee"));
+            json_i.put("ball", resultSet.getInt("ball"));
+            json_i.put("plastic", resultSet.getInt("plastic"));
+            json_i.put("glass", resultSet.getInt("glass"));
+            json_i.put("metal", resultSet.getInt("metal"));
+            json_i.put("status", resultSet.getString("status"));
+            json_i.put("time", resultSet.getString("timee"));
 
 
 
             cont_row++;
 
 
-            jsonObjects.add(json);
+            jsonObjects.add(json_i);
         }
 
 
@@ -401,7 +400,7 @@ public class DB_act {
         return result;
     }
 
-    public static String admin_desOper(org.json.JSONObject json) throws SQLException, ParseException {
+    public static String admin_desOper(org.json.JSONObject json) throws SQLException {
         String result;
         Connection connection;
         JSONObject answer_to_mob = new JSONObject();
@@ -411,7 +410,7 @@ public class DB_act {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        String sql = "UPDATE gift SET status = ?, reason = ? WHERE id = ?";
+        String sql = "UPDATE operations SET status = ?, reason = ? WHERE id = ?";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setInt(1, json.getInt("status"));
         statement.setString(2, json.getString("reason"));
@@ -475,7 +474,7 @@ public class DB_act {
     public static String admin_select_mess(org.json.JSONObject jsonObject) throws SQLException {
         String result;
         Connection connection;
-        List<JSONObject> jsonObjects = new ArrayList<>();
+        List<org.json.JSONObject> jsonObjects = new ArrayList<>();
         int cont_row = 0;
 
         try {
@@ -491,7 +490,7 @@ public class DB_act {
 
         ResultSet resultSet = statement.executeQuery(SQL);
         while (resultSet.next()) {
-            JSONObject json = new JSONObject();
+            org.json.JSONObject json = new org.json.JSONObject();
             json.put("id", resultSet.getInt("id"));
             json.put("id_prev_mes", resultSet.getInt("id_prev_mes"));
 
@@ -531,7 +530,7 @@ public class DB_act {
     public static String send_ansAdmin(org.json.JSONObject json) throws SQLException {
         String result;
         Connection connection;
-        JSONObject answer_to_mob = new JSONObject();
+        org.json.JSONObject answer_to_mob = new org.json.JSONObject();
 
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PassWord);
