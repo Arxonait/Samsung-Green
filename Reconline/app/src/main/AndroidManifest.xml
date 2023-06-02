@@ -51,7 +51,7 @@
             android:name=".MapsActivity"
             android:exported="false" />
         <activity
-            android:name=".Register"
+            android:name=".RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".EnterActivity"

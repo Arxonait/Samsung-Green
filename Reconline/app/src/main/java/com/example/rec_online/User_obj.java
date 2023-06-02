@@ -7,9 +7,9 @@ public class User_obj {
 
     int id;
     String name;
-    String fam;
+    String surname;
 
-    String mnumber;
+    String phone;
     String login;
     String password;
 
@@ -17,10 +17,10 @@ public class User_obj {
 
 
 
-    User_obj(String name, String fam, String mnumber, String login, String password, boolean admin){
+    User_obj(String name, String surname, String phone, String login, String password, boolean admin){
         this.name = name;
-        this.fam = fam;
-        this.mnumber = mnumber;
+        this.surname = surname;
+        this.phone = phone;
 
         this.login = login;
         this.password = password;
@@ -34,17 +34,17 @@ public class User_obj {
 
     }
 
-    public void parseJson(JSONObject answer) throws JSONException {
+    public void parseJson(JSONObject json) throws JSONException {
 
-        this.id = answer.getInt("id");
-        this.name = answer.getString("name");
-        this.fam = answer.getString("fam");
-        this.mnumber = answer.getString("mnumber");
+        this.id = json.getInt("id");
+        this.name = json.getString("name");
+        this.surname = json.getString("surname");
+        this.phone = json.getString("phone");
 
-        this.login = answer.getString("login");
-        this.password = answer.getString("password");
+        this.login = json.getString("login");
+        this.password = json.getString("password");
 
 
-        this.admin = answer.getBoolean("admin");
+        this.admin = json.getBoolean("admin");
     }
 }

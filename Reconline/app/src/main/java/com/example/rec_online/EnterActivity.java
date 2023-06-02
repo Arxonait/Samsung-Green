@@ -2,6 +2,7 @@ package com.example.rec_online;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,16 +30,17 @@ public class EnterActivity extends AppCompatActivity {
     private EditText ed_login;
     private EditText ed_password;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.enter_activity);
+        setContentView(R.layout.activity_enter);
 
 
-        ed_login = findViewById(R.id.login);
-        ed_password = findViewById(R.id.password);
+        ed_login = findViewById(R.id.tv_enter_login);
+        ed_password = findViewById(R.id.tv_enter_password);
         Button bt_enter = findViewById(R.id.enter);
         Button bt_reg = findViewById(R.id.register);
 
@@ -70,7 +72,7 @@ public class EnterActivity extends AppCompatActivity {
         bt_reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent Register = new Intent(EnterActivity.this, Register.class);
+                Intent Register = new Intent(EnterActivity.this, RegisterActivity.class);
                 startActivity(Register);
             }
         });
@@ -131,6 +133,7 @@ public class EnterActivity extends AppCompatActivity {
 
                                     Intent MapsActivity = new Intent(EnterActivity.this, MapsActivity.class);
                                     startActivity(MapsActivity);
+                                    finish();
                                 }
                                 else{
                                     Toast.makeText(getApplicationContext(), "Логин или пароль не верен",

@@ -197,7 +197,7 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
 
         tv_login.setText(EnterActivity.Data_enter().login);
         tv_name.setText(EnterActivity.Data_enter().name);
-        tv_fam.setText(EnterActivity.Data_enter().fam);
+        tv_fam.setText(EnterActivity.Data_enter().surname);
 
 
         TextView tv_count_balls = findViewById(R.id.prof_count_ball);

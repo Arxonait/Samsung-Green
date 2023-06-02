@@ -1,10 +1,8 @@
 package com.example.servak;
 
-import com.google.gson.JsonObject;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 import java.sql.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,9 +14,8 @@ public class DB_act {
     static final String PassWord = "1234";
 
     public static String enter(String login, String password) throws SQLException {
-        String result;
         Connection connection;
-        JSONObject answer_to_mob = new JSONObject();
+        JSONObject responce = new JSONObject();
 
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PassWord);
@@ -30,32 +27,31 @@ public class DB_act {
         ResultSet resultSet = statement.executeQuery(SQL);
         if (resultSet.next()) {
             if (resultSet.getString("password").equals(password)) {
-                answer_to_mob.put("status", "true");
-                answer_to_mob.put("login", login);
-                answer_to_mob.put("password", password);
-                answer_to_mob.put("id", resultSet.getInt("id"));
-                answer_to_mob.put("fam", resultSet.getString("fam"));
-                answer_to_mob.put("name", resultSet.getString("name"));
-                answer_to_mob.put("mnumber", resultSet.getString("mnumber"));
+                responce.put("status", true);
+                responce.put("login", login);
+                responce.put("password", password);
+                responce.put("id", resultSet.getInt("id"));
+                responce.put("surname", resultSet.getString("surname"));
+                responce.put("name", resultSet.getString("name"));
+                responce.put("phone", resultSet.getString("phone"));
 
-                answer_to_mob.put("admin", resultSet.getBoolean("admin"));
+                responce.put("admin", resultSet.getBoolean("admin"));
             } else {
-                answer_to_mob.put("status", "false");
+                responce.put("status", false);
             }
         } else {
-            answer_to_mob.put("status", "false");
+            responce.put("status", false);
         }
-        result = answer_to_mob.toString();
+
         resultSet.close();
         statement.close();
 
-        return result;
+        return responce.toString();
     }
 
-    public static String reg(org.json.JSONObject json) throws SQLException {
-        String result;
+    public static String reg(JSONObject json) throws SQLException {
         Connection connection;
-        JSONObject answer_to_mob = new JSONObject();
+        JSONObject response = new JSONObject();
 
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PassWord);
@@ -67,20 +63,19 @@ public class DB_act {
         ResultSet resultSet = statement.executeQuery(SQL);
 
         if (resultSet.next()) {
-            answer_to_mob.put("status", "false");
+            response.put("status", false);
         } else {
-            answer_to_mob.put("status", "true");
-            SQL = String.format("INSERT INTO users (fam, name, mnumber, login, password, admin) VALUES ('%s','%s','%s','%s','%s',%b)",
-                    json.getString("fam"), json.getString("name"),
-                    json.getString("mnumber"), json.getString("login"), json.getString("password"), false);
+            response.put("status", true);
+            SQL = String.format("INSERT INTO users (surname, name, phone, login, password, admin) VALUES ('%s','%s','%s','%s','%s',%b)",
+                    json.getString("surname"), json.getString("name"),
+                    json.getString("phone"), json.getString("login"), json.getString("password"), false);
             statement.executeUpdate(SQL);
         }
-        result = answer_to_mob.toString();
         resultSet.close();
         statement.close();
 
 
-        return result;
+        return response.toString();
     }
 
 

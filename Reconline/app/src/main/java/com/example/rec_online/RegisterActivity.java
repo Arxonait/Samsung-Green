@@ -3,20 +3,18 @@ package com.example.rec_online;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Register extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
 
     @Override
@@ -64,10 +62,10 @@ public class Register extends AppCompatActivity {
                                             // обновление пользовательского интерфейса с использованием результата
                                             try {
                                                 JSONObject answer = new JSONObject(res);
-                                                if(answer.getString("status").equals("true")){
+                                                if(answer.getBoolean("status")){
                                                     Toast.makeText(getApplicationContext(), "Вы зарегестрированы",
                                                             Toast.LENGTH_SHORT).show();
-                                                    Intent enter_act = new Intent(Register.this, EnterActivity.class);
+                                                    Intent enter_act = new Intent(RegisterActivity.this, EnterActivity.class);
                                                     startActivity(enter_act);
                                                 }
                                                 else{
