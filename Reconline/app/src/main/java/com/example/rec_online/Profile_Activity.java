@@ -207,6 +207,16 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
             }
         });
 
+        Button bt_send_mess = findViewById(R.id.bt_prof_sendMess);
+        bt_send_mess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent activity_new = new Intent(Profile_Activity.this, SendMessActivity.class);
+                startActivity(activity_new);
+            }
+        });
+
+
         Button bt_admin = findViewById(R.id.bt_admin);
         if (!EnterActivity.Data_enter().admin) {
             bt_admin.setVisibility(View.GONE);
@@ -270,8 +280,16 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
             Mes_obj mess = mess_view.get(position);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(mess.title);
-            builder.setMessage(mess.main_text + String.format("Если возникли вопросы, Вы можете воспользоваться обратной связью\n" +
-                            "Номер данного сообщения: %d", mess.id))
+            String add_text = "";
+            if(mess.type.equals("balls")){
+                add_text = String.format("Если возникли вопросы, Вы можете воспользоваться обратной связью\n" +
+                        "Номер данного сообщения: %d", mess.id);
+            }
+            else if (mess.id_prev_mes == -1){
+                add_text = String.format("\nСпасибо за обртаную связь. Ваше сообщение обрабатывается.\n" +
+                        "Номер данного сообщения: %d", mess.id);
+            }
+            builder.setMessage(mess.main_text + add_text)
                     .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

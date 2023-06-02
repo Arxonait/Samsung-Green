@@ -193,4 +193,17 @@ public class Main_server {
 
         return result;
     }
+
+    public static String send_mess(Mes_obj mess_new) {
+        String result;
+        Gson gson = new Gson();
+        // Преобразование объекта в JSON-строку
+        String jsonString = gson.toJson(mess_new);
+
+        String url = "http://10.0.2.2:8080/prof/send_mess";
+
+        result = to_server(url, jsonString);
+
+        return result;
+    }
 }

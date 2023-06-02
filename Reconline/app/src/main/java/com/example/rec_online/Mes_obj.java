@@ -19,34 +19,33 @@ public class Mes_obj {
     boolean is_read;
     Date time;
 
+    String type;
 
 
-//    Mes_obj(String id_user, String id_prev_mes, int metal, int plastic, int glass){
-//        this.id_user = id_user;
-//        this.id_prev_mes = id_prev_mes;
-//
-//        this.glass = glass;
-//        this.metal = metal;
-//        this.plastic = plastic;
-//
-//    }
+
+    Mes_obj(int id_user, String title, String main_text){
+        this.id_user = id_user;
+        this.title = title;
+        this.main_text = main_text;
+
+    }
 
     Mes_obj(){
 
     }
 
-    public void parseJson(JSONObject answer) throws JSONException, ParseException {
-        this.id = (long) answer.get("id");
-        this.id_user = (long) answer.get("id_user");
-        this.id_prev_mes = (long) answer.get("id_prev_mes");
+    public void parseJson(JSONObject json) throws JSONException, ParseException {
+        this.id = (long) json.get("id");
+        this.id_user = (long) json.get("id_user");
+        this.id_prev_mes = (long) json.get("id_prev_mes");
 
-        this.title = (String) answer.get("title");
-        this.main_text = (String) answer.get("main_text");
+        this.title = (String) json.get("title");
+        this.main_text = (String) json.get("main_text");
+        this.type = (String) json.get("type");
+        this.is_read = (boolean) json.get("is_read");
 
-        this.is_read = (boolean) answer.get("is_read");
 
-
-        String timeString = (String) answer.get("date");
+        String timeString = (String) json.get("date");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = dateFormat.parse(timeString);
         this.time = date;

@@ -279,6 +279,7 @@ public class DB_act {
             json.put("date", resultSet.getString("date"));
             json.put("title", resultSet.getString("title"));
             json.put("main_text", resultSet.getString("main_text"));
+            json.put("type", resultSet.getString("type"));
 
 
 
@@ -410,7 +411,6 @@ public class DB_act {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        //System.out.println( Integer.parseInt(json.get("id").toString().replace("\"", "")));
         String sql = "UPDATE gift SET status = ?, reason = ? WHERE id = ?";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setInt(1, json.getInt("status"));
@@ -439,5 +439,36 @@ public class DB_act {
 
         return result;
 
+    }
+
+    public static String send_mess(org.json.JSONObject json) throws SQLException {
+        String result;
+        Connection connection;
+        JSONObject answer_to_mob = new JSONObject();
+
+        try {
+            connection = DriverManager.getConnection(URL, USERNAME, PassWord);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        String current_time = dateFormat.format(currentDate);
+
+        String sql = String.format("INSERT INTO messages (id_user, id_prev_mes, date, is_read, title, main_text, type) VALUES ('%d', " +
+                        "'%d', '%s', '%b', '%s', '%s', '%s')", json.getInt("id_user"), -1,
+                current_time, false, json.getString("title"), json.getString("main_text"), "mess");
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.executeUpdate();
+
+
+        answer_to_mob.put("status", true);
+
+        result = answer_to_mob.toString();
+        statement.close();
+
+
+        return result;
     }
 }
