@@ -125,13 +125,15 @@ public class ItemActivity extends AppCompatActivity {
             public void run() {
                 // выполнение сетевого запроса
                 oper_s.status = status;
-                String res = null;
+                oper_s.reason = reason;
+                String res;
                 try {
-                    res = Main_server.desOper(oper_s, reason);
+                    res = Main_server.desOper(oper_s);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
                 // передача результата в главный поток
+
                 String finalRes = res;
                 handler.post(new Runnable() {
                     public void run() {

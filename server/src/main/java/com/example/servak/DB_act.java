@@ -188,6 +188,7 @@ public class DB_act {
             json.put("glass", resultSet.getString("glass"));
             json.put("metal", resultSet.getString("metal"));
 
+            json.put("reason", resultSet.getString("reason"));
             json.put("status", resultSet.getString("status"));
             json.put("time", resultSet.getString("timee"));
 
@@ -411,10 +412,11 @@ public class DB_act {
             throw new RuntimeException(e);
         }
         //System.out.println( Integer.parseInt(json.get("id").toString().replace("\"", "")));
-        String sql = "UPDATE gift SET status = ? WHERE id = ?";
+        String sql = "UPDATE gift SET status = ?, reason = ? WHERE id = ?";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setInt(1, json.getInt("status"));
-        statement.setInt(2, Integer.parseInt(json.getString("id")));
+        statement.setString(2, json.getString("reason"));
+        statement.setInt(3, Integer.parseInt(json.getString("id")));
         statement.executeUpdate();
 
         if(json.getInt("status") == 11){

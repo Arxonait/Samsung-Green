@@ -11,7 +11,7 @@ public class CreateMess {
     static String title;
     static String main_text;
 
-    public static void acc_balls(JSONObject json) throws ParseException {
+    public static void acc_balls(JSONObject json) {
 
         int new_ball = Integer.parseInt(json.get("ball").toString().replace("\"",""));
 
@@ -43,7 +43,7 @@ public class CreateMess {
                 "Металл - %d ед.\n", new_ball, current_time, name_fact, date_prev_mess, glass, plastic, metal);
     }
 
-    public static void ref_balls(JSONObject json) throws ParseException {
+    public static void ref_balls(JSONObject json) {
         String name_fact = json.getString("name_fact");
 
 

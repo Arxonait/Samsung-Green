@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -264,11 +265,13 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
         public void onItemClick (@Nullable View view,int position){
             show_mes_item(position);
         }
-        private void show_mes_item ( int position){
+        @SuppressLint("DefaultLocale")
+        private void show_mes_item (int position){
             Mes_obj mess = mess_view.get(position);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(mess.title);
-            builder.setMessage(mess.main_text)
+            builder.setMessage(mess.main_text + String.format("Если возникли вопросы, Вы можете воспользоваться обратной связью\n" +
+                            "Номер данного сообщения: %d", mess.id))
                     .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

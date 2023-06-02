@@ -9,9 +9,13 @@ import java.util.Date;
 
 public class Oper_obj {
     String login;
-    String id;
     String id_user;
     String user_name;
+
+    String reason;
+
+    String id;
+
     String name_fact;
     String id_fact;
     int ball = 0;
@@ -40,11 +44,15 @@ public class Oper_obj {
     }
 
     public void parseJson(JSONObject json) throws JSONException, ParseException {
-        this.id = (String) json.get("id");
-        this.id_user = (String) json.get("id_user");
+        this.id = json.getString("id");
+        this.id_user = json.getString("id_user");
         if(!json.isNull("user_name")){
-            this.user_name = (String) json.get("user_name");
-            this.login = (String) json.get("login");
+            this.user_name = json.getString("user_name");
+            this.login = json.getString("login");
+
+        }
+        if(!json.isNull("reason")){
+            this.reason = json.getString("reason");
         }
 
         this.name_fact = (String) json.get("name_fact");

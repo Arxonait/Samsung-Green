@@ -340,12 +340,14 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         Oper_obj gift = gifts_view.get(position);
         int status = gift.status;
         String text_status;
+        String text_reason = "";
 
         if(status == 1){
             text_status = "На рассмотрении";
         }
         else if(status == 10) {
             text_status = "Отклоненно";
+            text_reason = String.format("Причина: %s\n", gift.reason);
         }
         else {
             text_status = "Принято";
@@ -354,11 +356,12 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         String time = gift.time;
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-        //String StringTime = dateFormat.format(time);
-        builder.setMessage(String.format("Номер вашей сдачи: %d\nПерерабатывающий центр: %s\nСтекло - %d, Пластик - %d, Металл - %d\n" +
-                                "Статус: %s\nБаллы: %d\nДата и время - %s", gift.num_cont, gift.name_fact,
-                        gift.glass, gift.plastic, gift.metal, text_status, gift.ball, time))
+        builder.setMessage(String.format("Номер вашей сдачи: %d\n" +
+                                "Перерабатывающий центр: %s\n" +
+                                "Стекло - %d, Пластик - %d, Металл - %d\n" +
+                                "Статус: %s\n%s" +
+                                "Баллы: %d\nДата и время - %s", Integer.parseInt(gift.id), gift.name_fact,
+                        gift.glass, gift.plastic, gift.metal, text_status, text_reason, gift.ball, time))
                 .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

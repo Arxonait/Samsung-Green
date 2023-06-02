@@ -170,20 +170,20 @@ public class Main_server {
         return result;
     }
 
-    public static String desOper(Oper_obj oper, String reason) throws JSONException {
+    public static String desOper(Oper_obj oper) throws JSONException {
         String result;
         Gson gson = new Gson();
         // Преобразование объекта в JSON-строку
         String jsonString = gson.toJson(oper);
 
-        JSONObject jsonObject = new JSONObject(jsonString);
-        jsonObject.put("reason", reason);
-        jsonString = jsonObject.toString();
+        //JSONObject jsonObject = new JSONObject(jsonString);
+        //jsonObject.put("reason", reason);
+       //jsonString = jsonObject.toString();
 
 
         String url = "http://10.0.2.2:8080/prof/admin_desOper";
 
-        System.out.println(jsonString);
+        //System.out.println(jsonString);
         result = to_server(url, jsonString);
 
         return result;
