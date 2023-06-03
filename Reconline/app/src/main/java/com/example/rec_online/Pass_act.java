@@ -79,7 +79,7 @@ public class Pass_act {
 //        new Thread(new Runnable() {
 //            public void run() {
 //                // выполнение сетевого запроса
-//                final String answer = Main_server.prof_oper_rec(Integer.parseInt(EnterActivity.Data_enter().id));
+//                final String answer = Main_server.prof_oper_rec(Integer.parseInt(EnterActivity.get_dataEnter().id));
 //                // передача результата в главный поток
 //                handler.post(new Runnable() {
 //                    public void run() {

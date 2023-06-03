@@ -17,6 +17,28 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Main_server {
+    private static String to_server(String url, String json){
+        String result;
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = RequestBody.create(json, MediaType.parse("application/json"));
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected code " + response);
+            }
+            String responseBody = response.body().string();
+            result = responseBody;
+
+
+        } catch (IOException e) {
+            result = "server";
+        }
+        return result;
+    }
+
     public static String Enter(String login, String password) throws JSONException {
         String result;
         JSONObject json = new JSONObject();
@@ -57,27 +79,7 @@ public class Main_server {
         return result;
     }
 
-    private static String to_server(String url, String json){
-        String result;
-        OkHttpClient client = new OkHttpClient();
-        RequestBody requestBody = RequestBody.create(json, MediaType.parse("application/json"));
-        Request request = new Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build();
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException("Unexpected code " + response);
-            }
-            String responseBody = response.body().string();
-            result = responseBody;
 
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return result;
-    }
 
     public static String gift(Oper_obj newOper) {
         String result;
@@ -95,14 +97,14 @@ public class Main_server {
         return result;
     }
 
-    public static String veiw_gift(int id_user) throws JSONException {
+    public static String historyOper(int id_user) throws JSONException {
         String result;
 
         JSONObject json = new JSONObject();
         json.put("id_user", id_user);
 
 
-        String url = "http://10.0.2.2:8080/rec/view_oper";
+        String url = "http://10.0.2.2:8080/rec/historyOper";
 
 
         result = to_server(url, json.toString());

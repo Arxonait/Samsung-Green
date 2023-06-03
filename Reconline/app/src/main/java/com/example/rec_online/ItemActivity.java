@@ -63,7 +63,7 @@ public class ItemActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String adminMainText = String.valueOf(ed_adminMainText.getText());
                 if(adminMainText.length()>0){
-                    Mes_obj new_mess = new Mes_obj(EnterActivity.Data_enter().id, mess_s.title, adminMainText);
+                    Mes_obj new_mess = new Mes_obj(EnterActivity.get_dataEnter().id, mess_s.title, adminMainText);
                     new_mess.id_prev_mes = mess_s.id;
                     new Thread(new Runnable() {
                         public void run() {

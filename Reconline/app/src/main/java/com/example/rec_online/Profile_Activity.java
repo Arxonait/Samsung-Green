@@ -77,7 +77,7 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
                 // выполнение сетевого запроса
                 String answer_from_server = null;
                 try {
-                    answer_from_server = Main_server.veiw_mess(EnterActivity.Data_enter().id);
+                    answer_from_server = Main_server.veiw_mess(EnterActivity.get_dataEnter().id);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -195,9 +195,9 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
         TextView tv_name = findViewById(R.id.prof_name);
         TextView tv_fam = findViewById(R.id.prof_fam);
 
-        tv_login.setText(EnterActivity.Data_enter().login);
-        tv_name.setText(EnterActivity.Data_enter().name);
-        tv_fam.setText(EnterActivity.Data_enter().surname);
+        tv_login.setText(EnterActivity.get_dataEnter().login);
+        tv_name.setText(EnterActivity.get_dataEnter().name);
+        tv_fam.setText(EnterActivity.get_dataEnter().surname);
 
 
         TextView tv_count_balls = findViewById(R.id.prof_count_ball);
@@ -235,7 +235,7 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
 
 
         Button bt_admin = findViewById(R.id.bt_admin);
-        if (!EnterActivity.Data_enter().admin) {
+        if (!EnterActivity.get_dataEnter().admin) {
             bt_admin.setVisibility(View.GONE);
         } else {
             bt_admin.setOnClickListener(new View.OnClickListener() {
@@ -253,7 +253,7 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
                     // выполнение сетевого запроса
                     final String answer;
                     try {
-                        answer = Main_server.prof_oper_rec(EnterActivity.Data_enter().id);
+                        answer = Main_server.prof_oper_rec(EnterActivity.get_dataEnter().id);
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }

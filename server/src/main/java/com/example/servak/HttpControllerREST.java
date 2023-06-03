@@ -40,10 +40,10 @@ public class HttpControllerREST extends HttpServlet {
         return DB_act.insert_oper(json);
     }
 
-    @RequestMapping("/rec/view_oper")
-    public String view_oper(@RequestBody String body) throws SQLException {
+    @RequestMapping("/rec/historyOper")
+    public String historyOper(@RequestBody String body) throws SQLException {
         JSONObject json = new JSONObject(body);
-        return DB_act.select_oper(json);
+        return DB_act.historyOper(json);
     }
 
     @RequestMapping("/prof/prof_oper_rec")

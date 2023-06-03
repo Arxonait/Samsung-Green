@@ -2,7 +2,6 @@ package com.example.rec_online;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -35,7 +34,7 @@ public class SendMessActivity extends AppCompatActivity {
                 if (title.length() * main_text.length() > 0) {
                     new Thread(new Runnable() {
                         public void run() {
-                            Mes_obj mess_new = new Mes_obj(EnterActivity.Data_enter().id, title, main_text);
+                            Mes_obj mess_new = new Mes_obj(EnterActivity.get_dataEnter().id, title, main_text);
                             String answer_fromServer = Main_server.send_mess(mess_new);
                             // передача результата в главный поток
                             handler.post(new Runnable() {

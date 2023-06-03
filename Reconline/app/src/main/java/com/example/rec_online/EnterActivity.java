@@ -22,13 +22,15 @@ public class EnterActivity extends AppCompatActivity {
     private static User_obj user_enter;
     private Handler handler = new Handler(Looper.getMainLooper());
 
-    // Получение объекта SharedPreferences
     private SharedPreferences sharedPreferences;
 
     private boolean is_new_user;
 
-    private EditText ed_login;
-    private EditText ed_password;
+    private EditText et_login;
+    private EditText et_password;
+
+    private Button bt_enter;
+    private Button bt_reg;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -39,14 +41,13 @@ public class EnterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_enter);
 
 
-        ed_login = findViewById(R.id.tv_enter_login);
-        ed_password = findViewById(R.id.tv_enter_password);
-        Button bt_enter = findViewById(R.id.enter);
-        Button bt_reg = findViewById(R.id.register);
+        et_login = findViewById(R.id.et_enter_login);
+        et_password = findViewById(R.id.et_enter_password);
+        bt_enter = findViewById(R.id.enter);
+        bt_reg = findViewById(R.id.register);
 
 
-        bt_enter.setEnabled(false);
-        bt_reg.setEnabled(false);
+        process_load();
 
         sharedPreferences = this.getSharedPreferences("Rec_online_memory", Context.MODE_PRIVATE);
 
@@ -78,16 +79,22 @@ public class EnterActivity extends AppCompatActivity {
         });
     }
 
-    public static User_obj Data_enter(){
+    public static User_obj get_dataEnter(){
         return user_enter;
+    }
+    private void process_load(){
+        bt_enter.setEnabled(false);
+        bt_reg.setEnabled(false);
     }
 
     private void enter(){
+        process_load();
+
         String login;
         String password;
         if(is_new_user){
-            login = String.valueOf(ed_login.getText());
-            password = String.valueOf(ed_password.getText());
+            login = String.valueOf(et_login.getText());
+            password = String.valueOf(et_password.getText());
         }
         else{
             login = sharedPreferences.getString("login", "");
@@ -98,19 +105,38 @@ public class EnterActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 public void run() {
                     // выполнение сетевого запроса
-                    String res = null;
+                    String response = null;
+
+
                     try {
-                        res = Main_server.Enter(login, password);
+                        response = Main_server.Enter(login, password);
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
-                    // передача результата в главный поток
-                    String finalRes = res;
+
+
+
+                    if(response.equals("server")){
+                        handler.post(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "Отсутствует соединение с сервером",
+                                        Toast.LENGTH_SHORT).show();
+                                is_new_user = true;
+                                bt_enter.setEnabled(true);
+                                bt_reg.setEnabled(true);
+                            }
+                        });
+                        return;
+                    }
+
+
+
+                    String finalResponse = response;
                     handler.post(new Runnable() {
                         public void run() {
                             // обновление пользовательского интерфейса с использованием результата
                             try {
-                                JSONObject answer = new JSONObject(finalRes);
+                                JSONObject answer = new JSONObject(finalResponse);
                                 if(answer.getBoolean("status")){
                                     user_enter = new User_obj();
                                     user_enter.parseJson(answer);
@@ -126,8 +152,6 @@ public class EnterActivity extends AppCompatActivity {
                                         // Применение изменений
                                         editor.apply();
                                     }
-
-
 
                                     Pass_act.main();
 

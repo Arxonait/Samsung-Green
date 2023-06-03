@@ -2,6 +2,7 @@ package com.example.rec_online;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,21 +17,21 @@ import org.json.JSONObject;
 
 public class RegisterActivity extends AppCompatActivity {
 
-
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         Handler handler = new Handler(Looper.getMainLooper());
 
-        EditText login_element = (EditText) findViewById(R.id.login_reg);
-        EditText password1_element = (EditText) findViewById(R.id.pass1_reg);
-        EditText password2_element = (EditText) findViewById(R.id.pass2_reg);
+        EditText login_element = (EditText) findViewById(R.id.et_reg_login);
+        EditText password1_element = (EditText) findViewById(R.id.et_reg_pass1);
+        EditText password2_element = (EditText) findViewById(R.id.et_reg_pass2);
 
 
-        EditText name_element = (EditText) findViewById(R.id.userName);
-        EditText fam_element = (EditText) findViewById(R.id.userFam);
-        EditText number_element = (EditText) findViewById(R.id.Numberr);
+        EditText name_element = (EditText) findViewById(R.id.et_reg_name);
+        EditText surname_element = (EditText) findViewById(R.id.et_reg_surname);
+        EditText phone_element = (EditText) findViewById(R.id.et_reg_phone);
 
         Button button_reg = (Button) findViewById(R.id.button_reg);
 
@@ -44,29 +45,30 @@ public class RegisterActivity extends AppCompatActivity {
                 String password1 = String.valueOf(password1_element.getText());
                 String password2 = String.valueOf(password2_element.getText());
                 String name = String.valueOf(name_element.getText());
-                String fam = String.valueOf(fam_element.getText());
-                String numberr = String.valueOf(number_element.getText());
+                String surname = String.valueOf(surname_element.getText());
+                String phone = String.valueOf(phone_element.getText());
 
-                if(login.length() * password1.length() * password2.length() *  name.length() * fam.length() * numberr.length() > 0){
+                if(login.length() * password1.length() * password2.length() *  name.length() *
+                        surname.length() * phone.length() > 0){
                     if(password1.equals(password2)){
                         if (password1.length() > 0){
                             new Thread(new Runnable() {
                                 public void run() {
                                     // выполнение сетевого запроса
-                                    //System.out.println(login);
-                                    User_obj user_new = new User_obj(name, fam, numberr, login, password1, false);
-                                    String res = Main_server.reg(user_new);
+                                    User_obj newUser = new User_obj(name, surname, phone, login, password1, false);
+                                    String response = Main_server.reg(newUser);
                                     // передача результата в главный поток
                                     handler.post(new Runnable() {
                                         public void run() {
                                             // обновление пользовательского интерфейса с использованием результата
                                             try {
-                                                JSONObject answer = new JSONObject(res);
+                                                JSONObject answer = new JSONObject(response);
                                                 if(answer.getBoolean("status")){
                                                     Toast.makeText(getApplicationContext(), "Вы зарегестрированы",
                                                             Toast.LENGTH_SHORT).show();
                                                     Intent enter_act = new Intent(RegisterActivity.this, EnterActivity.class);
                                                     startActivity(enter_act);
+                                                    finish();
                                                 }
                                                 else{
                                                     Toast.makeText(getApplicationContext(), "Пользователь с таким логином уже существует",

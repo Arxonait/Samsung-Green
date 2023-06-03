@@ -286,15 +286,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public boolean onMarkerClick(Marker marker) {
         // Обработка события нажатия на маркер
-        Factory_obj factort_marker = null;
+        Factory_obj factory_marker = null;
         if(!marker.getId().equals(marker_geo_id)){
             for (Map.Entry<String, Marker> entry : markerMap.entrySet()) {
                 Marker marker_cur = entry.getValue();
                 if(marker.getId().equals(marker_cur.getId())){
-                    String fact_id = entry.getKey();
+                    int fact_id = Integer.parseInt(entry.getKey());
                     for(Factory_obj fact_cur : Pass_act.factories){
-                        if(fact_id.equals(fact_cur.id)){
-                            factort_marker = fact_cur;
+                        if(fact_id == fact_cur.id){
+                            factory_marker = fact_cur;
                             break;
                         }
                     }
@@ -307,12 +307,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             im_glass.setVisibility(View.GONE);
             im_plastic.setVisibility(View.GONE);
             im_metal.setVisibility(View.GONE);
-
-            name_fact.setText(factort_marker.name);
-            work_time_fact.setText(factort_marker.work_time);
-            mobile_fact.setText(factort_marker.mobile);
-            adres_fact.setText(factort_marker.adres);
-            double dist = calcDist(factort_marker.x, factort_marker.y, MapsActivity.this);
+            name_fact.setText(factory_marker.name);
+            work_time_fact.setText(factory_marker.work_time);
+            mobile_fact.setText(factory_marker.mobile);
+            adres_fact.setText(factory_marker.adres);
+            double dist = calcDist(factory_marker.x, factory_marker.y, MapsActivity.this);
             String dist_str;
             if(dist < 1300){
                 dist = Math.round(dist*10)/10.0;
@@ -326,13 +325,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             distance_fact.setText(dist_str);
 
-            if(factort_marker.glass){
+            if(factory_marker.glass){
                 im_glass.setVisibility(View.VISIBLE);
             }
-            if(factort_marker.metal){
+            if(factory_marker.metal){
                 im_metal.setVisibility(View.VISIBLE);
             }
-            if(factort_marker.plastic){
+            if(factory_marker.plastic){
                 im_plastic.setVisibility(View.VISIBLE);
             }
 

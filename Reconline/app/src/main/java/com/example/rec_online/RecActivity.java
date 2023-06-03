@@ -33,9 +33,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemClickListener {
@@ -45,12 +43,12 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
 
 
-    private List<Oper_obj> gifts_view;
-    boolean is_new_user;
+    private List<Oper_obj> list_oper;
+    boolean is_newUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stat);
+        setContentView(R.layout.activity_rec);
 
         load_sec_inf_ball();
 
@@ -70,7 +68,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
     }
 
-    private void load_sec_oper_far(Factory_obj near_factory, double near_dist){
+    private void load_sec_oper_far(Factory_obj nearFactory, double nearDist){
 
         TextView name_stat =  findViewById(R.id.name_stat);
         TextView adres_stat=  findViewById(R.id.adres_stat);
@@ -85,28 +83,28 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         ImageView im_metal = findViewById(R.id.im_map_metal);
         ImageView im_plastic = findViewById(R.id.im_map_plastic);
 
-        name_stat.setText(near_factory.name);
-        adres_stat.setText(near_factory.adres);
-        mobile_stat.setText(near_factory.mobile);
-        work_time_stat.setText(near_factory.work_time);
+        name_stat.setText(nearFactory.name);
+        adres_stat.setText(nearFactory.adres);
+        mobile_stat.setText(nearFactory.mobile);
+        work_time_stat.setText(nearFactory.work_time);
         String dist_str;
-        if(near_dist < 1300){
-            near_dist = Math.round(near_dist*10)/10.0;
-            dist_str = String.format(near_dist + " м");
+        if(nearDist < 1300){
+            nearDist = Math.round(nearDist *10)/10.0;
+            dist_str = String.format(nearDist + " м");
         }
         else{
-            near_dist = near_dist/1000;
-            near_dist = Math.round(near_dist*10)/10.0;
-            dist_str = String.format(near_dist +  " км");
+            nearDist = nearDist /1000;
+            nearDist = Math.round(nearDist *10)/10.0;
+            dist_str = String.format(nearDist +  " км");
         }
         distance_stat.setText(dist_str);
-        Pass_act.show_image(near_factory, im_glass,im_metal, im_plastic);
+        Pass_act.show_image(nearFactory, im_glass,im_metal, im_plastic);
 
         ImageButton bt_map_to_fact = findViewById(R.id.bt_map_to_fact);
         bt_map_to_fact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MapsActivity.factory = near_factory;
+                MapsActivity.factory = nearFactory;
                 Intent Map = new Intent(RecActivity.this, MapsActivity.class);
                 startActivity(Map);
             }
@@ -276,7 +274,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
                     new Thread(new Runnable() {
                         public void run() {
                             // выполнение сетевого запроса
-                            Oper_obj gift_new = new Oper_obj(EnterActivity.Data_enter().id, near_factory.id, metal, plastic, glass);
+                            Oper_obj gift_new = new Oper_obj(EnterActivity.get_dataEnter().id, near_factory.id, metal, plastic, glass);
                             String res = Main_server.gift(gift_new);
                             // передача результата в главный поток
                             handler.post(new Runnable() {
@@ -333,12 +331,12 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
     public void onItemClick(@Nullable View view, int position) {
         // При нажатии на элемент показываем сообщение с кнопкой "Ок"
-        show_mes_itemOf_Infhistory(position);
+        show_mes_itemOf_infHistory(position);
     }
     @SuppressLint("DefaultLocale")
-    private void show_mes_itemOf_Infhistory(int position) {
-        Oper_obj gift = gifts_view.get(position);
-        int status = gift.status;
+    private void show_mes_itemOf_infHistory(int position) {
+        Oper_obj oper = list_oper.get(position);
+        int status = oper.status;
         String text_status;
         String text_reason = "";
 
@@ -347,7 +345,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         }
         else if(status == 10) {
             text_status = "Отклоненно";
-            text_reason = String.format("Причина: %s\n", gift.reason);
+            text_reason = String.format("Причина: %s\n", oper.reason);
         }
         else {
             text_status = "Принято";
@@ -355,13 +353,13 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        String time = gift.time;
+        String time = oper.time;
         builder.setMessage(String.format("Номер вашей сдачи: %d\n" +
                                 "Перерабатывающий центр: %s\n" +
                                 "Стекло - %d, Пластик - %d, Металл - %d\n" +
                                 "Статус: %s\n%s" +
-                                "Баллы: %d\nДата и время - %s", gift.id, gift.name_fact,
-                        gift.glass, gift.plastic, gift.metal, text_status, text_reason, gift.ball, time))
+                                "Баллы: %d\nДата и время - %s", oper.id, oper.name_fact,
+                        oper.glass, oper.plastic, oper.metal, text_status, text_reason, oper.ball, time))
                 .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -372,10 +370,10 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
 
     private void load_sec_inf_ball() {
-        rec_inf_history = findViewById(R.id.rec_inf_history);
-        TextView title_give = findViewById(R.id.title_give);
-        TextView current_ball = findViewById(R.id.current_ball);
-        LinearLayout title_rec_view = findViewById(R.id.titleRecView);
+        rec_inf_history = findViewById(R.id.rview_recInfo_history);
+        TextView tv_title = findViewById(R.id.tv_recInfo_title);
+        TextView current_ball = findViewById(R.id.tv_recInfo_currBalls);
+        LinearLayout sec_titleHistory = findViewById(R.id.sec_recInfo_titleHistory);
         rec_inf_history.setLayoutManager(new LinearLayoutManager(this));
 
         // Создаем и устанавливаем адаптер
@@ -393,74 +391,59 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
                 // выполнение сетевого запроса
                 String answer_from_server = null;
                 try {
-                    answer_from_server = Main_server.veiw_gift(EnterActivity.Data_enter().id);
+                    answer_from_server = Main_server.historyOper(EnterActivity.get_dataEnter().id);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
 
-                is_new_user = false;
+                is_newUser = false;
                 String finalAnswer_from_server = answer_from_server;
                 handler.post(new Runnable() {
                     public void run() {
-                        // обновление пользовательского интерфейса с использованием результата
-                        //JSONParser parser = new JSONParser();
-                        org.json.JSONObject combinedJson = null;
+                        org.json.JSONObject combinedJson;
+                        JSONArray jsonArray;
                         try {
                             combinedJson = new org.json.JSONObject(finalAnswer_from_server);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                        //combinedJson = (JSONObject) parser.parse(finalAnswer_from_server);
-
-                        try {
-                            if(combinedJson.getString("status").equals("false")){
-                                is_new_user = true;
+                            if(!combinedJson.getBoolean("status")){
+                                is_newUser = true;
                             }
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                        JSONArray jsonArray = null;
-                        try {
                             jsonArray = combinedJson.getJSONArray("data");
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
 
-                        gifts_view = new ArrayList<>();
+
+
+                        list_oper = new ArrayList<>();
 
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            org.json.JSONObject jsonObject = null;
+                            org.json.JSONObject jsonObject;
+                            Oper_obj newOper;
                             try {
                                 jsonObject = jsonArray.getJSONObject(i);
-                            } catch (JSONException e) {
+                                newOper = new Oper_obj();
+                                newOper.parseJson(jsonObject);
+                            } catch (JSONException | java.text.ParseException e) {
                                 throw new RuntimeException(e);
                             }
 
-                            Oper_obj new_oper = new Oper_obj();
-                            try {
-                                new_oper.parseJson(jsonObject);
-                            } catch (JSONException ex) {
-                                throw new RuntimeException(ex);
-                            } catch (java.text.ParseException ex) {
-                                throw new RuntimeException(ex);
-                            }
 
-                            gifts_view.add(new_oper);
+                            list_oper.add(newOper);
                         }
 
 
 
-                        if(is_new_user){
+                        if(is_newUser){
                                 current_ball.setText("0");
                                 rec_inf_history.setVisibility(View.GONE);
-                                title_rec_view.setVisibility(View.GONE);
-                                title_give.setText("Здесь будут отображаться Ваши баллы,\nНо пока что Вы ничего не сдали");
+                                sec_titleHistory.setVisibility(View.GONE);
+                                tv_title.setText("Здесь будут отображаться Ваши баллы,\nНо пока что Вы ничего не сдали");
                             }
                         else {
                             int balls = 0;
-                            int count_gift = gifts_view.size();
+                            int count_gift = list_oper.size();
                             int rev_gift = 0;
-                            for (Oper_obj gift: gifts_view) {
+                            for (Oper_obj gift: list_oper) {
                                 gift.num_cont = count_gift - rev_gift;
                                 rev_gift++;
                                 if(gift.status == 11){
@@ -472,14 +455,14 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
                                 current_ball.setText(String.valueOf(balls));
 
-                                if (gifts_view.size() > 2 && false) {
-                                    adapter.setData(gifts_view.subList(0, 10));
+                                if (list_oper.size() > 2 && false) {
+                                    adapter.setData(list_oper.subList(0, 10));
                                 } else {
-                                    adapter.setData(gifts_view);
+                                    adapter.setData(list_oper);
                                 }
-                                title_give.setText("Ваши прошлые gift");
+                                tv_title.setText("Ваши прошлые gift");
                                 rec_inf_history.setVisibility(View.VISIBLE);
-                                title_rec_view.setVisibility(View.VISIBLE);
+                                sec_titleHistory.setVisibility(View.VISIBLE);
                             }
 
 
@@ -490,7 +473,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
 
 
-        Button bt_inf_about_balls = (Button) findViewById(R.id.bt_inf_about_balls);
+        Button bt_inf_about_balls = (Button) findViewById(R.id.bt_recInfo_info);
         bt_inf_about_balls.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

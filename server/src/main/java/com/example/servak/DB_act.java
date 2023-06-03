@@ -155,7 +155,7 @@ public class DB_act {
         return result;
     }
 
-    public static String select_oper(org.json.JSONObject json) throws SQLException {
+    public static String historyOper(org.json.JSONObject json) throws SQLException {
         String result;
         Connection connection;
         List<org.json.JSONObject> jsonObjects = new ArrayList<>();
@@ -182,7 +182,7 @@ public class DB_act {
             json_i.put("metal", resultSet.getInt("metal"));
 
             json_i.put("reason", resultSet.getString("reason"));
-            json_i.put("status", resultSet.getString("status"));
+            json_i.put("status", resultSet.getInt("status"));
             json_i.put("time", resultSet.getString("timee"));
 
 
@@ -196,9 +196,9 @@ public class DB_act {
         JSONObject combinedJson = new JSONObject();
         combinedJson.put("data", jsonObjects);
         if (cont_row > 0) {
-            combinedJson.put("status", "true");
+            combinedJson.put("status", true);
         } else {
-            combinedJson.put("status", "false");
+            combinedJson.put("status", false);
         }
 
 
