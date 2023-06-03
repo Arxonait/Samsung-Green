@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Adapter_prof extends RecyclerView.Adapter<ViewHolder_prof> {
@@ -39,18 +38,24 @@ public class Adapter_prof extends RecyclerView.Adapter<ViewHolder_prof> {
     @NonNull
     @Override
     public ViewHolder_prof onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mes_history_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_prof_mess, parent, false);
         return new ViewHolder_prof(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder_prof holder, @SuppressLint("RecyclerView") int position) {
         String time = this.data.get(position).time;
-        String id = String.valueOf(data.get(position).num_cont);
+        String id = String.valueOf(data.get(position).id);
         String title = String.valueOf(data.get(position).title);
         boolean is_read = data.get(position).is_read;
+        String text;
+        if(is_read){
+            text = "Прочитано";
+        }else {
+            text = "Новое";
+        }
 
-        holder.bind(id, title, is_read, time);
+        holder.bind(id, title, text, time);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

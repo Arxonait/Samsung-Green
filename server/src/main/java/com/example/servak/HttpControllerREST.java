@@ -29,8 +29,8 @@ public class HttpControllerREST extends HttpServlet {
         return DB_act.reg(jsonObject);
     }
 
-    @RequestMapping("/maps")
-    public String maps(@RequestBody String body) throws SQLException {
+    @RequestMapping("/factories")
+    public String factories(@RequestBody String body) throws SQLException {
         return DB_act.factory();
     }
 
@@ -46,24 +46,24 @@ public class HttpControllerREST extends HttpServlet {
         return DB_act.historyOper(json);
     }
 
-    @RequestMapping("/prof/prof_oper_rec")
-    public String prof_oper_rec(@RequestBody String body) throws SQLException {
+    @RequestMapping("/prof/profSummaryStat")
+    public String profSummaryStat(@RequestBody String body) throws SQLException {
         JSONObject json = new JSONObject(body);
-        return DB_act.prof_oper_rec(json);
+        return DB_act.profSummaryStat(json);
 
 
     }
 
-    @RequestMapping("/prof/view_mess")
-    public String view_mess(@RequestBody String body) throws SQLException {
+    @RequestMapping("/prof/historyMess")
+    public String historyMess(@RequestBody String body) throws SQLException {
         JSONObject json = new JSONObject(body);
-        return DB_act.select_mess(json);
+        return DB_act.historyMess(json);
     }
 
-    @RequestMapping("/prof/update_is_read")
-    public String update_is_read(@RequestBody String body) throws SQLException {
+    @RequestMapping("/prof/update_isRead")
+    public String update_isRead(@RequestBody String body) throws SQLException {
         JSONObject json = new JSONObject(body);
-        return DB_act.update_is_read(json);
+        return DB_act.update_isRead(json);
     }
 
 

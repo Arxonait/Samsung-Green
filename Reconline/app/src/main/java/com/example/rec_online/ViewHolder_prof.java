@@ -24,12 +24,10 @@ public class ViewHolder_prof extends RecyclerView.ViewHolder implements View.OnC
         itemView.setOnClickListener(this);
     }
 
-    public void bind(String id, String ball, boolean status, String time) {
+    public void bind(String id, String ball, String text, String time) {
         tv_mes_id.setText(id);
         tv_mes_title.setText(ball);
-        tv_mes_status.setText(String.valueOf(status));
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        //String dateString = dateFormat.format(time);
+        tv_mes_status.setText(text);
         tv_mes_date.setText(time);
     }
 

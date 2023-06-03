@@ -47,26 +47,34 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         setContentView(R.layout.activity_rec);
 
         load_sec_infBall();
+        load_sec_oper();
 
+
+
+
+        load_menu();
+
+
+    }
+
+    private void load_sec_oper(){
         Factory_obj near_factory = near_fact();
         double near_dist = MapsActivity.calcDist(near_factory.x, near_factory.y, RecActivity.this);
-
-
         if(near_dist > 150){
             load_sec_operFar(near_factory, near_dist);
         }
         else {
             load_sec_newOper(near_factory);
         }
-        load_menu();
-
-
     }
 
     private void load_sec_operFar(Factory_obj nearFactory, double nearDist){
 
         ConstraintLayout sec_operFar = findViewById(R.id.sec_operFar);
         sec_operFar.setVisibility(View.VISIBLE);
+        ConstraintLayout sec_newOper = findViewById(R.id.sec_newOper);
+        sec_newOper.setVisibility(View.GONE);
+
 
         TextView tv_nameFact =  findViewById(R.id.name_stat);
         TextView tv_address =  findViewById(R.id.tv_operFar_address);
@@ -81,8 +89,8 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         ImageView im_plastic = findViewById(R.id.im_map_plastic);
 
         tv_nameFact.setText(nearFactory.name);
-        tv_address.setText(nearFactory.adres);
-        tv_phone.setText(nearFactory.mobile);
+        tv_address.setText(nearFactory.address);
+        tv_phone.setText(nearFactory.phone);
         tv_workTime.setText(nearFactory.work_time);
 
         String dist_str;
@@ -111,42 +119,44 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
 
     private void load_sec_newOper(Factory_obj nearFactory){
-        ConstraintLayout sec_give_fact = findViewById(R.id.sec_newOper);
-        sec_give_fact.setVisibility(View.VISIBLE);
+        ConstraintLayout sec_newOper = findViewById(R.id.sec_newOper);
+        sec_newOper.setVisibility(View.VISIBLE);
+        ConstraintLayout sec_operFar = findViewById(R.id.sec_operFar);
+        sec_operFar.setVisibility(View.GONE);
 
         TextView nameFact =  findViewById(R.id.tv_newOper_nameFact);
         TextView tv_count_gl =  findViewById(R.id.count_gl);
         TextView tv_count_m =  findViewById(R.id.count_m);
         TextView tv_count_p =  findViewById(R.id.count_p);
-        ImageButton p_gl = (ImageButton) findViewById(R.id.p_gl);
-        ImageButton m_gl = (ImageButton) findViewById(R.id.m_gl);
-        ImageButton m_m = (ImageButton) findViewById(R.id.m_m);
-        ImageButton p_m = (ImageButton) findViewById(R.id.p_m);
-        ImageButton p_p = (ImageButton) findViewById(R.id.p_p);
-        ImageButton m_p = (ImageButton) findViewById(R.id.m_p);
-        Button bt_give = (Button) findViewById(R.id.bt_newOper_give);
+        ImageButton p_gl = findViewById(R.id.p_gl);
+        ImageButton m_gl = findViewById(R.id.m_gl);
+        ImageButton m_m = findViewById(R.id.m_m);
+        ImageButton p_m = findViewById(R.id.p_m);
+        ImageButton p_p = findViewById(R.id.p_p);
+        ImageButton m_p = findViewById(R.id.m_p);
+        Button bt_give = findViewById(R.id.bt_newOper_give);
 
 
 
-        ImageView plastic_i = (ImageView) findViewById(R.id.plastic_i);
-        ImageView metal_i = (ImageView) findViewById(R.id.metal_i);
-        ImageView glass_i = (ImageView) findViewById(R.id.glass_i);
+        ImageView plastic_i = findViewById(R.id.plastic_i);
+        ImageView metal_i = findViewById(R.id.metal_i);
+        ImageView glass_i = findViewById(R.id.glass_i);
 
 
 
 
         int color = Color.parseColor("#808080");
-        if(!nearFactory.glass){
+        if(!nearFactory.isGlass){
             glass_i.setVisibility(View.GONE);
             p_gl.setColorFilter(color, PorterDuff.Mode.SRC_IN);
             m_gl.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         }
-        if(!nearFactory.metal){
+        if(!nearFactory.isMetal){
             metal_i.setVisibility(View.GONE);
             p_m.setColorFilter(color, PorterDuff.Mode.SRC_IN);
             m_m.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         }
-        if(!nearFactory.plastic){
+        if(!nearFactory.isPlastic){
             plastic_i.setVisibility(View.GONE);
             p_p.setColorFilter(color, PorterDuff.Mode.SRC_IN);
             m_p.setColorFilter(color, PorterDuff.Mode.SRC_IN);
@@ -159,99 +169,42 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         p_gl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(nearFactory.glass){
-                    Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
-                    v.startAnimation(fadeAnimation);
-                    int count = Integer.parseInt(tv_count_gl.getText().toString()) + 1;
-                    tv_count_gl.setText(String.valueOf(count));
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Для данного центра сдача этого ресурса не возможна", Toast.LENGTH_SHORT).show();
-                }
+                plus_count(v, tv_count_gl, nearFactory.isGlass);
             }
         });
 
         p_m.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(nearFactory.metal) {
-                    Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
-                    v.startAnimation(fadeAnimation);
-                    int count = Integer.parseInt(tv_count_m.getText().toString()) + 1;
-                    tv_count_m.setText(String.valueOf(count));
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Для данного центра сдача этого ресурса не возможна", Toast.LENGTH_SHORT).show();
-                }
+                plus_count(v, tv_count_m, nearFactory.isMetal);
             }
         });
 
         p_p.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(nearFactory.plastic) {
-                    Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
-                    v.startAnimation(fadeAnimation);
-                    int count = Integer.parseInt(tv_count_p.getText().toString()) + 1;
-                    tv_count_p.setText(String.valueOf(count));
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Для данного центра сдача этого ресурса не возможна", Toast.LENGTH_SHORT).show();
-                }
+                plus_count(v, tv_count_p, nearFactory.isPlastic);
             }
         });
 
         m_gl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(nearFactory.glass){
-                    Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
-                    v.startAnimation(fadeAnimation);
-                    int count = Integer.parseInt(tv_count_gl.getText().toString()) - 1;
-                    if(count< 0){
-                        count = 0;
-                    }
-                    tv_count_gl.setText(String.valueOf(count));
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Для данного центра сдача этого ресурса не возможна", Toast.LENGTH_SHORT).show();
-                }
+                minus_count(v,tv_count_gl, nearFactory.isGlass);
             }
         });
 
         m_m.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(nearFactory.metal) {
-                    Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
-                    v.startAnimation(fadeAnimation);
-                    int count = Integer.parseInt(tv_count_m.getText().toString()) - 1;
-                    if (count < 0) {
-                        count = 0;
-                    }
-                    tv_count_m.setText(String.valueOf(count));
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Для данного центра сдача этого ресурса не возможна", Toast.LENGTH_SHORT).show();
-                }
+                minus_count(v,tv_count_m, nearFactory.isMetal);
             }
         });
 
         m_p.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(nearFactory.plastic) {
-                    Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
-                    v.startAnimation(fadeAnimation);
-                    int count = Integer.parseInt(tv_count_p.getText().toString()) - 1;
-                    if (count < 0) {
-                        count = 0;
-                    }
-                    tv_count_p.setText(String.valueOf(count));
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Для данного центра сдача этого ресурса не возможна", Toast.LENGTH_SHORT).show();
-                }
+                minus_count(v,tv_count_p, nearFactory.isPlastic);
             }
         });
 
@@ -302,6 +255,32 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
                 }
             }
         });
+    }
+
+    private void plus_count(View view, TextView textView, boolean isMaterial){
+        if(isMaterial) {
+            Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
+            view.startAnimation(fadeAnimation);
+            int count = Integer.parseInt(textView.getText().toString()) + 1;
+            textView.setText(String.valueOf(count));
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Для данного центра сдача этого ресурса не возможна", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void minus_count(View view, TextView textView, boolean isMaterial){
+        if(isMaterial) {
+            Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
+            view.startAnimation(fadeAnimation);
+            int count = Integer.parseInt(textView.getText().toString()) - 1;
+            if (count < 0) {
+                count = 0;
+            }
+            textView.setText(String.valueOf(count));
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Для данного центра сдача этого ресурса не возможна", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public Factory_obj near_fact(){
@@ -418,7 +397,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
                                 current_ball.setText("0");
                                 rec_inf_history.setVisibility(View.GONE);
                                 sec_titleHistory.setVisibility(View.GONE);
-                                tv_title.setText("Здесь будут отображаться Ваши баллы,\nНо пока что Вы ничего не сдали");
+                                tv_title.setText("Здесь будут отображаться Ваши баллы.\nНо пока, что Вы ничего не сдали");
                             }
 
                         } catch (JSONException e) {
@@ -431,7 +410,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
 
 
-        Button bt_inf_about_balls = (Button) findViewById(R.id.bt_recInfo_info);
+        Button bt_inf_about_balls = findViewById(R.id.bt_recInfo_info);
         bt_inf_about_balls.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -459,6 +438,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
             @Override
             public void onClick(View v) {
                 load_sec_infBall();
+                load_sec_oper();
             }
         });
 

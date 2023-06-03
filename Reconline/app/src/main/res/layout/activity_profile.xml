@@ -112,6 +112,31 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/linearLayout4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView12"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="Имя"
+                        android:textColor="#000000"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/prof_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView"
+                        android:textColor="#000000"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/linearLayout3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -137,39 +162,17 @@
                         android:textSize="20sp" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/linearLayout4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textView12"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:text="Имя"
-                        android:textColor="#000000"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/prof_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="TextView"
-                        android:textColor="#000000"
-                        android:textSize="20sp" />
-                </LinearLayout>
             </LinearLayout>
 
-            <Button
+            <ImageButton
                 android:id="@+id/log_out"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_marginRight="8dp"
                 android:layout_weight="0.2"
-                android:text="Button" />
+                android:backgroundTint="#00FFFFFF"
+                android:tint="#FF1100"
+                app:srcCompat="@drawable/logout" />
 
         </LinearLayout>
 
@@ -310,13 +313,13 @@
                 android:id="@+id/bt_prof_sendMess"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
                 android:text="Обратная связь" />
 
             <Button
                 android:id="@+id/bt_admin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:text="Admin" />
         </LinearLayout>
 
@@ -334,10 +337,11 @@
         app:layout_constraintTop_toBottomOf="@+id/sec_profile_info">
 
         <TextView
-            android:id="@+id/title_mess"
+            android:id="@+id/tv_historyMess_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:gravity="center"
             android:text="Заголовок"
             android:textColor="#000000"
             android:textSize="20sp"
@@ -356,7 +360,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title_mess" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_historyMess_title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

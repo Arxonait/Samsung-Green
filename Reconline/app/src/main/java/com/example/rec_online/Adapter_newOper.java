@@ -12,12 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Adapter_admin extends RecyclerView.Adapter<ViewHolder_admin> {
+public class Adapter_newOper extends RecyclerView.Adapter<ViewHolder_newOper> {
 
     private List<Oper_obj> data ;
     private ItemClickListener clickListener;
 
-    public Adapter_admin(ItemClickListener clickListener) {
+    public Adapter_newOper(ItemClickListener clickListener) {
         this.data = new ArrayList<>();
         this.clickListener = clickListener;
     }
@@ -26,10 +26,7 @@ public class Adapter_admin extends RecyclerView.Adapter<ViewHolder_admin> {
         this.data = data;
         notifyDataSetChanged();
     }
-    public void addData(Oper_obj oper) {
-        this.data.add(oper);
-        notifyDataSetChanged();
-    }
+
 
     public void setClickListener(ItemClickListener clickListener) {
         this.clickListener = clickListener;
@@ -37,13 +34,13 @@ public class Adapter_admin extends RecyclerView.Adapter<ViewHolder_admin> {
 
     @NonNull
     @Override
-    public ViewHolder_admin onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.new_oper_item, parent, false);
-        return new ViewHolder_admin(view);
+    public ViewHolder_newOper onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_admin_oper, parent, false);
+        return new ViewHolder_newOper(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder_admin holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull ViewHolder_newOper holder, @SuppressLint("RecyclerView") int position) {
         String time = this.data.get(position).time;
         String id = String.valueOf(data.get(position).id);
         String user_name = String.valueOf(data.get(position).user_name);

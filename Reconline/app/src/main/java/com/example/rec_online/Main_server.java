@@ -66,12 +66,11 @@ public class Main_server {
         return result;
     }
 
-    public static String maps(){
+    public static String factories(){
         String result;
-        String url = "http://10.0.2.2:8080/maps";
+        String url = "http://10.0.2.2:8080/factories";
+
         JSONObject json = new JSONObject();
-        //String json = "{\"login\":\"" + 111 + "\",\"password\":\"" + 222 + "\"}";
-        //String json = "";
         result = json.toString();
 
         result = to_server(url, result);
@@ -108,14 +107,14 @@ public class Main_server {
         return result;
     }
 
-    public static String prof_oper_rec(int id_user) throws JSONException {
+    public static String profSummaryStat(int id_user) throws JSONException {
         String result;
 
         JSONObject json = new JSONObject();
         json.put("id_user", id_user);
 
 
-        String url = "http://10.0.2.2:8080/prof/prof_oper_rec";
+        String url = "http://10.0.2.2:8080/prof/profSummaryStat";
 
 
         result = to_server(url, json.toString());
@@ -123,14 +122,14 @@ public class Main_server {
         return result;
     }
 
-    public static String veiw_mess(int id_user) throws JSONException {
+    public static String historyMess(int id_user) throws JSONException {
         String result;
 
         JSONObject json = new JSONObject();
         json.put("id_user", id_user);
 
 
-        String url = "http://10.0.2.2:8080/prof/view_mess";
+        String url = "http://10.0.2.2:8080/prof/historyMess";
 
 
         result = to_server(url, json.toString());
@@ -138,7 +137,7 @@ public class Main_server {
         return result;
     }
 
-    public static String update_is_read(long id, boolean is_read) throws JSONException {
+    public static String update_isRead(long id, boolean is_read) throws JSONException {
         String result;
 
         JSONObject json = new JSONObject();
@@ -146,7 +145,7 @@ public class Main_server {
         json.put("id_read", is_read);
 
 
-        String url = "http://10.0.2.2:8080/prof/update_is_read";
+        String url = "http://10.0.2.2:8080/prof/update_isRead";
 
 
         result = to_server(url, json.toString());
@@ -171,17 +170,12 @@ public class Main_server {
     public static String desOper(Oper_obj oper) throws JSONException {
         String result;
         Gson gson = new Gson();
-        // Преобразование объекта в JSON-строку
         String jsonString = gson.toJson(oper);
 
-        //JSONObject jsonObject = new JSONObject(jsonString);
-        //jsonObject.put("reason", reason);
-       //jsonString = jsonObject.toString();
 
 
         String url = "http://10.0.2.2:8080/prof/admin_desOper";
 
-        //System.out.println(jsonString);
         result = to_server(url, jsonString);
 
         return result;

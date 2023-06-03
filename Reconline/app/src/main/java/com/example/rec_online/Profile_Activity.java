@@ -21,9 +21,8 @@ import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONObject;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,32 +32,26 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
     private RecyclerView rview_prof_mes;
     private Adapter_prof adapter;
 
-    private List<Mes_obj> mess_view;
+    private List<Mes_obj> list_mess;
 
-    private boolean is_new_user;
 
-    private Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
         sharedPreferences = this.getSharedPreferences("Rec_online_memory", Context.MODE_PRIVATE);
-
         load_sec_info();
-
         load_menu();
-
-
         load_sec_history_mes();
 
 
     }
 
     private void load_sec_history_mes() {
-        TextView tv_title_mess = findViewById(R.id.title_mess);
+        TextView tv_title_mess = findViewById(R.id.tv_historyMess_title);
         rview_prof_mes = findViewById(R.id.rview_prof_mes);
         rview_prof_mes.setLayoutManager(new LinearLayoutManager(this));
 
@@ -75,83 +68,42 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
         new Thread(new Runnable() {
             public void run() {
                 // выполнение сетевого запроса
-                String answer_from_server = null;
+                final String response;
                 try {
-                    answer_from_server = Main_server.veiw_mess(EnterActivity.get_dataEnter().id);
+                    response = Main_server.historyMess(EnterActivity.get_dataEnter().id);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
 
-                is_new_user = false;
-                String finalAnswer_from_server = answer_from_server;
                 handler.post(new Runnable() {
                     public void run() {
                         // обновление пользовательского интерфейса с использованием результата
-                        //JSONParser parser = new JSONParser();
-                        org.json.JSONObject json;
+                        list_mess = new ArrayList<>();
                         try {
-                            //json = (JSONObject) parser.parse(finalAnswer_from_server);
-                            json = new org.json.JSONObject(finalAnswer_from_server);
-                        } catch (JSONException e) {
+                           JSONObject jsonRes = new JSONObject(response);
+                           JSONObject json;
+                            if (jsonRes.getBoolean("status")) {
+                                JSONArray jsonArray = jsonRes.getJSONArray("data");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    json = jsonArray.getJSONObject(i);
+                                    Mes_obj new_mess = new Mes_obj();
+                                    new_mess.parseJson(json);
+                                    list_mess.add(new_mess);
+                                }
+                                adapter.setData(list_mess);
+
+                                tv_title_mess.setText("Ваши сообщения");
+                                rview_prof_mes.setVisibility(View.VISIBLE);
+                                //title_rec_view.setVisibility(View.VISIBLE);
+                            }
+                            else {
+                                rview_prof_mes.setVisibility(View.GONE);
+                                tv_title_mess.setText("Здесь будут отображаться Ваши сообщения.\nНо пока, что Вы ничего не получали");
+                            }
+
+                        } catch (JSONException | java.text.ParseException e) {
                             throw new RuntimeException(e);
                         }
-                        try {
-                            if (String.valueOf(json.get("status")).equals("false")) {
-                                is_new_user = true;
-                            }
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                        JSONArray jsonArray = null;
-                        try {
-                            jsonArray = json.getJSONArray("data");
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-
-                        mess_view = new ArrayList<>();
-
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            org.json.JSONObject jsonObject = null;
-                            try {
-                                jsonObject = jsonArray.getJSONObject(i);
-                            } catch (JSONException e) {
-                                throw new RuntimeException(e);
-                            }
-
-                            Mes_obj new_mess = new Mes_obj();
-
-                            try {
-                                new_mess.parseJson(jsonObject);
-                            } catch (JSONException ex) {
-                                throw new RuntimeException(ex);
-                            } catch (java.text.ParseException ex) {
-                                throw new RuntimeException(ex);
-                            }
-
-                            mess_view.add(new_mess);
-                        }
-
-
-                        if (is_new_user) {
-                            rview_prof_mes.setVisibility(View.GONE);
-                            tv_title_mess.setVisibility(View.GONE);
-                            tv_title_mess.setText("Здесь будут отображаться Ваши сообщения,\nНо пока что Вы ничего не получали");
-                        } else {
-                            int total_mess = mess_view.size();
-                            int count_mess = 0;
-                            for (Mes_obj mess : mess_view) {
-                                mess.num_cont = total_mess - count_mess;
-                                count_mess++;
-                            }
-                            adapter.setData(mess_view);
-
-                            tv_title_mess.setText("Ваши сообщения");
-                            rview_prof_mes.setVisibility(View.VISIBLE);
-                            //title_rec_view.setVisibility(View.VISIBLE);
-                        }
-
-
                     }
                 });
             }
@@ -206,7 +158,7 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
         TextView tv_metal_count = findViewById(R.id.count_m);
 
 
-        Button bt_log_out = findViewById(R.id.log_out);
+        ImageButton bt_log_out = findViewById(R.id.log_out);
         bt_log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,8 +171,8 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
 
 
                 Intent activity_new = new Intent(Profile_Activity.this, EnterActivity.class);
-                activity_new.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Добавление флагов для очистки задачи и запуска новой активности
                 startActivity(activity_new);
+                finish();
             }
         });
 
@@ -237,7 +189,8 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
         Button bt_admin = findViewById(R.id.bt_admin);
         if (!EnterActivity.get_dataEnter().admin) {
             bt_admin.setVisibility(View.GONE);
-        } else {
+        }
+        else {
             bt_admin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -248,28 +201,27 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
         }
 
 
-            new Thread(new Runnable() {
-                public void run() {
+        new Thread(new Runnable() {
+            public void run() {
                     // выполнение сетевого запроса
-                    final String answer;
-                    try {
-                        answer = Main_server.prof_oper_rec(EnterActivity.get_dataEnter().id);
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                    // передача результата в главный поток
+                String response;
+                try {
+                    response = Main_server.profSummaryStat(EnterActivity.get_dataEnter().id);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+                // передача результата в главный поток
 
                     handler.post(new Runnable() {
                         public void run() {
                             // обновление пользовательского интерфейса с использованием результата
-                            JSONParser parser = new JSONParser();
                             try {
-                                JSONObject json = (JSONObject) parser.parse(answer);
-                                if ((json.get("status").toString().equals("true"))) {
-                                    tv_count_balls.setText(json.get("ball").toString());
-                                    tv_glass_count.setText(json.get("glass").toString());
-                                    tv_metal_count.setText(json.get("metal").toString());
-                                    tv_plastic_count.setText(json.get("plastic").toString());
+                                JSONObject json = new JSONObject(response);
+                                if (json.getBoolean("status")) {
+                                    tv_count_balls.setText(json.getString("ball"));
+                                    tv_glass_count.setText(json.getString("glass"));
+                                    tv_metal_count.setText(json.getString("metal"));
+                                    tv_plastic_count.setText(json.getString("plastic"));
 
                                 } else {
                                     tv_count_balls.setText("0");
@@ -277,8 +229,7 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
                                     tv_metal_count.setText("0");
                                     tv_plastic_count.setText("0");
                                 }
-
-                            } catch (ParseException e) {
+                            } catch (JSONException e) {
                                 throw new RuntimeException(e);
                             }
                         }
@@ -294,7 +245,7 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
         }
         @SuppressLint("DefaultLocale")
         private void show_mes_item (int position){
-            Mes_obj mess = mess_view.get(position);
+            Mes_obj mess = list_mess.get(position);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(mess.title);
             String add_text = "";
@@ -303,7 +254,7 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
                         "Номер данного сообщения: %d", mess.id);
             }
             else if (mess.id_prev_mes == -1){
-                add_text = String.format("\nСпасибо за обртаную связь. Ваше сообщение обрабатывается.\n" +
+                add_text = String.format("\n\nСпасибо за обртаную связь. Ваше сообщение обрабатывается.\n" +
                         "Номер данного сообщения: %d", mess.id);
             }
             builder.setMessage(mess.main_text + add_text)
@@ -314,26 +265,24 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
                                 new Thread(new Runnable() {
                                     public void run() {
                                         // выполнение сетевого запроса
-                                        String answer_from_server = null;
+                                        final String response;
                                         try {
-                                            answer_from_server = Main_server.update_is_read(mess.id, true);
+                                            response = Main_server.update_isRead(mess.id, true);
                                         } catch (JSONException e) {
                                             throw new RuntimeException(e);
                                         }
-                                        String finalAnswer_from_server = answer_from_server;
                                         handler.post(new Runnable() {
                                             public void run() {
                                                 // обновление пользовательского интерфейса с использованием результата
-                                                JSONParser parser = new JSONParser();
                                                 JSONObject json;
                                                 try {
-                                                    json = (JSONObject) parser.parse(finalAnswer_from_server);
-                                                } catch (ParseException e) {
+                                                    json = new JSONObject(response);
+                                                    if ( json.getBoolean("status")) {
+                                                        mess.is_read = true;
+                                                        adapter.setData(list_mess);
+                                                    }
+                                                } catch (JSONException e) {
                                                     throw new RuntimeException(e);
-                                                }
-                                                if ((boolean) json.get("status")) {
-                                                    mess.is_read = true;
-                                                    adapter.setData(mess_view);
                                                 }
 
                                             }

@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="8dp"
         android:layout_weight="0.45"
+        android:gravity="center"
         android:orientation="vertical"
         android:padding="8dp">
 
@@ -19,16 +20,23 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Новые операции" />
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="Новые операции"
+            android:textColor="#000000"
+            android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/textView9"
+            android:id="@+id/tv_admPan_empDataOper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="#000000"
+            android:textSize="20sp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rview_prof_oper"
+            android:id="@+id/rview_admPan_oper"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
@@ -44,16 +52,23 @@
             android:id="@+id/textView15"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Новые сообщения" />
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="Новые сообщения"
+            android:textColor="#000000"
+            android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/textView17"
+            android:id="@+id/tv_admPan_empDataMess"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="#000000"
+            android:textSize="20sp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rview_admonPanel_newMess"
+            android:id="@+id/rview_admPan_mess"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>

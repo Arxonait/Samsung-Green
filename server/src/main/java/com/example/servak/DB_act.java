@@ -81,7 +81,6 @@ public class DB_act {
 
     public static String factory() throws SQLException {
         List<JSONObject> jsonObjects = new ArrayList<>();
-        String result;
         Connection connection;
 
 
@@ -91,7 +90,7 @@ public class DB_act {
             throw new RuntimeException(e);
         }
         Statement statement = connection.createStatement();
-        String SQL = String.format("select * from factory");
+        String SQL = "select * from factory";
         ResultSet resultSet = statement.executeQuery(SQL);
         while (resultSet.next()) {
             JSONObject json = new JSONObject();
@@ -110,15 +109,15 @@ public class DB_act {
             jsonObjects.add(json);
         }
 
-        JSONObject combinedJson = new JSONObject();
-        combinedJson.put("data", jsonObjects);
+        JSONObject combJson = new JSONObject();
+        combJson.put("data", jsonObjects);
 
 
-        result = combinedJson.toString();
+
         resultSet.close();
         statement.close();
 
-        return result;
+        return combJson.toString();
     }
 
 
@@ -192,21 +191,20 @@ public class DB_act {
         }
 
 
-        JSONObject combinedJson = new JSONObject();
-        combinedJson.put("data", jsonObjects);
-        combinedJson.put("status", cont_row > 0);
+        JSONObject combJson = new JSONObject();
+        combJson.put("data", jsonObjects);
+        combJson.put("status", cont_row > 0);
 
         resultSet.close();
         statement.close();
 
-        return combinedJson.toString();
+        return combJson.toString();
 
     }
 
-    public static String prof_oper_rec(org.json.JSONObject json) throws SQLException {
-        String result;
+    public static String profSummaryStat(org.json.JSONObject json) throws SQLException {
         Connection connection;
-        JSONObject json_ans = new JSONObject();
+        JSONObject answer_to_mob = new JSONObject();
 
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PassWord);
@@ -223,27 +221,24 @@ public class DB_act {
             int totalGlass = resultSet.getInt("totalGlass");
             int totalMetal = resultSet.getInt("totalMetal");
 
-            json_ans.put("ball", totalBall);
-            json_ans.put("plastic", totalPlastic);
-            json_ans.put("glass", totalGlass);
-            json_ans.put("metal", totalMetal);
-            json_ans.put("status", true);
+            answer_to_mob.put("ball", totalBall);
+            answer_to_mob.put("plastic", totalPlastic);
+            answer_to_mob.put("glass", totalGlass);
+            answer_to_mob.put("metal", totalMetal);
+            answer_to_mob.put("status", true);
         } else {
-            json_ans.put("status", false);
+            answer_to_mob.put("status", false);
         }
 
-
-        result = json_ans.toString();
 
         resultSet.close();
         statement.close();
 
-        return result;
+        return answer_to_mob.toString();
     }
 
 
-    public static String select_mess(org.json.JSONObject json) throws SQLException {
-        String result;
+    public static String historyMess(org.json.JSONObject json) throws SQLException {
         Connection connection;
         List<org.json.JSONObject> jsonObjects = new ArrayList<>();
         int cont_row = 0;
@@ -254,7 +249,7 @@ public class DB_act {
             throw new RuntimeException(e);
         }
         Statement statement = connection.createStatement();
-        String SQL = String.format("select * from messages WHERE id_user = '%s' ORDER BY messages.id DESC", json.getInt("id_user"));
+        String SQL = String.format("select * from messages WHERE id_user = '%s' and type != 'ansMess' ORDER BY messages.id DESC", json.getInt("id_user"));
         ResultSet resultSet = statement.executeQuery(SQL);
         while (resultSet.next()) {
             org.json.JSONObject json_i = new org.json.JSONObject();
@@ -277,27 +272,20 @@ public class DB_act {
         }
 
 
-        JSONObject combinedJson = new JSONObject();
-        combinedJson.put("data", jsonObjects);
-        if (cont_row > 0) {
-            combinedJson.put("status", "true");
-        } else {
-            combinedJson.put("status", "false");
-        }
+        JSONObject combJson = new JSONObject();
+        combJson.put("data", jsonObjects);
+        combJson.put("status", cont_row > 0);
 
 
-        result = combinedJson.toString();
-        //System.out.println(result);
         resultSet.close();
         statement.close();
 
-        return result;
+        return combJson.toString();
 
 
     }
 
-    public static String update_is_read(org.json.JSONObject json) throws SQLException {
-        String result;
+    public static String update_isRead(org.json.JSONObject json) throws SQLException {
         Connection connection;
         JSONObject answer_to_mob = new JSONObject();
 
@@ -314,11 +302,10 @@ public class DB_act {
 
         answer_to_mob.put("status", true);
 
-        result = answer_to_mob.toString();
         statement.close();
 
 
-        return result;
+        return answer_to_mob.toString();
 
     }
 

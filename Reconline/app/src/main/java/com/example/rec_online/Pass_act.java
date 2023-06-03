@@ -1,18 +1,11 @@
 package com.example.rec_online;
 
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.json.JSONException;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +27,7 @@ public class Pass_act {
         new Thread(new Runnable() {
             public void run() {
                 // выполнение сетевого запроса
-                String answer = Main_server.maps();
+                String answer = Main_server.factories();
                 // передача результата в главный поток
                 handler.post(new Runnable() {
                     public void run() {
@@ -107,13 +100,13 @@ public class Pass_act {
 
 
     public static void show_image(Factory_obj near_factory, ImageView glass_i, ImageView metal_i, ImageView plastic_i){
-        if(!near_factory.glass){
+        if(!near_factory.isGlass){
             glass_i.setVisibility(View.GONE);
         }
-        if(!near_factory.metal){
+        if(!near_factory.isMetal){
             metal_i.setVisibility(View.GONE);
         }
-        if(!near_factory.plastic){
+        if(!near_factory.isPlastic){
             plastic_i.setVisibility(View.GONE);
         }
     }

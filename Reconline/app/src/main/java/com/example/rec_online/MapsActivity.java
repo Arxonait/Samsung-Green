@@ -168,19 +168,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMarkerClickListener(this);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         ImageButton plusZoom = findViewById(R.id.plus);
         ImageButton minusZoom = findViewById(R.id.minus);
 
@@ -309,8 +296,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             im_metal.setVisibility(View.GONE);
             name_fact.setText(factory_marker.name);
             work_time_fact.setText(factory_marker.work_time);
-            mobile_fact.setText(factory_marker.mobile);
-            adres_fact.setText(factory_marker.adres);
+            mobile_fact.setText(factory_marker.phone);
+            adres_fact.setText(factory_marker.address);
             double dist = calcDist(factory_marker.x, factory_marker.y, MapsActivity.this);
             String dist_str;
             if(dist < 1300){
@@ -325,13 +312,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             distance_fact.setText(dist_str);
 
-            if(factory_marker.glass){
+            if(factory_marker.isGlass){
                 im_glass.setVisibility(View.VISIBLE);
             }
-            if(factory_marker.metal){
+            if(factory_marker.isMetal){
                 im_metal.setVisibility(View.VISIBLE);
             }
-            if(factory_marker.plastic){
+            if(factory_marker.isPlastic){
                 im_plastic.setVisibility(View.VISIBLE);
             }
 

@@ -126,7 +126,7 @@ public class ItemActivity extends AppCompatActivity {
         tv_login.setText(oper_s.login);
         tv_name_fact.setText(oper_s.name_fact);
 
-        //System.out.println(oper_s.glass);
+
         tv_glass.setText(String.valueOf(oper_s.glass));
         tv_plastic.setText(String.valueOf(oper_s.plastic));
         tv_metal.setText(String.valueOf(oper_s.metal));

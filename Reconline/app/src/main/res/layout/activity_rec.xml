@@ -67,64 +67,15 @@
             tools:visibility="gone">
 
             <LinearLayout
-                android:id="@+id/metal"
-                android:layout_width="94dp"
-                android:layout_height="140dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_newOper_nameFact">
-
-                <ImageButton
-                    android:id="@+id/p_m"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="#004CAF50"
-                    android:tint="#4CAF50"
-                    app:srcCompat="@drawable/green_plus" />
-
-                <TextView
-                    android:id="@+id/t_m"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Металл"
-                    android:textColor="#000000"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/count_m"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="0"
-                    android:textColor="#000000"
-                    android:textSize="20sp" />
-
-                <ImageButton
-                    android:id="@+id/m_m"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="#004CAF50"
-                    android:tint="#4CAF50"
-                    app:srcCompat="@drawable/green_min" />
-
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/plastic"
                 android:layout_width="94dp"
                 android:layout_height="140dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_newOper_nameFact">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout12">
 
                 <ImageButton
                     android:id="@+id/p_p"
@@ -164,18 +115,53 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_newOper_nameFact"
+            <LinearLayout
+                android:id="@+id/linearLayout12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="TextView"
-                android:textColor="#000000"
-                android:textSize="24sp"
+                android:gravity="center"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.42"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title" />
+                app:layout_constraintTop_toBottomOf="@+id/title">
+
+                <TextView
+                    android:id="@+id/tv_newOper_nameFact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:textColor="#000000"
+                    android:textSize="24sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/glass_i"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        app:srcCompat="@drawable/glass" />
+
+                    <ImageView
+                        android:id="@+id/plastic_i"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/plastic" />
+
+                    <ImageView
+                        android:id="@+id/metal_i"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        app:srcCompat="@drawable/metal" />
+                </LinearLayout>
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/title"
@@ -184,11 +170,60 @@
                 android:gravity="center"
                 android:text="Укажите кол-во материалов, которое Вы сдали в центр"
                 android:textColor="#000000"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.491"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/metal"
+                android:layout_width="94dp"
+                android:layout_height="140dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout12">
+
+                <ImageButton
+                    android:id="@+id/p_m"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#004CAF50"
+                    android:tint="#4CAF50"
+                    app:srcCompat="@drawable/green_plus" />
+
+                <TextView
+                    android:id="@+id/t_m"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Металл"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/count_m"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+
+                <ImageButton
+                    android:id="@+id/m_m"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#004CAF50"
+                    android:tint="#4CAF50"
+                    app:srcCompat="@drawable/green_min" />
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/bt_newOper_give"
@@ -197,7 +232,6 @@
                 android:layout_marginTop="8dp"
                 android:text="Сдать"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/plastic" />
 
@@ -206,11 +240,11 @@
                 android:layout_width="94dp"
                 android:layout_height="140dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_newOper_nameFact">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout12">
 
                 <ImageButton
                     android:id="@+id/p_gl"
@@ -252,47 +286,13 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="87dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="14dp"
-                android:gravity="start"
-                android:orientation="horizontal"
-                app:layout_constraintStart_toEndOf="@+id/tv_newOper_nameFact"
-                app:layout_constraintTop_toBottomOf="@+id/title">
-
-                <ImageView
-                    android:id="@+id/glass_i"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible"
-                    app:srcCompat="@drawable/glass" />
-
-                <ImageView
-                    android:id="@+id/plastic_i"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/plastic" />
-
-                <ImageView
-                    android:id="@+id/metal_i"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:visibility="visible"
-                    app:srcCompat="@drawable/metal" />
-            </LinearLayout>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/sec_operFar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:ignore="MissingConstraints"
-            tools:visibility="visible">
+            tools:ignore="MissingConstraints">
 
             <TextView
                 android:id="@+id/tv_operFar_phone"
@@ -301,20 +301,9 @@
                 android:layout_marginTop="8dp"
                 android:text="TextView"
                 android:textColor="#000000"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_operFar_address" />
-
-            <TextView
-                android:id="@+id/tv_operFar_timeWork"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="TextView"
-                android:textColor="#000000"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
             <TextView
                 android:id="@+id/tv_operFar_address"
@@ -323,9 +312,9 @@
                 android:layout_marginTop="8dp"
                 android:text="TextView"
                 android:textColor="#000000"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_operFar_timeWork" />
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout13" />
 
             <TextView
                 android:id="@+id/textView11"
@@ -343,11 +332,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
                 android:gravity="center"
                 android:orientation="horizontal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_operFar_phone">
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
                     android:id="@+id/textView10"
@@ -406,9 +395,9 @@
 
                 <LinearLayout
                     android:layout_width="77dp"
-                    android:layout_height="27dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="start"
-                    android:gravity="start"
+                    android:gravity="bottom|start"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -422,17 +411,44 @@
                         android:id="@+id/im_map_plastic"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:visibility="visible"
                         app:srcCompat="@drawable/plastic" />
 
                     <ImageView
                         android:id="@+id/im_map_metal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:visibility="visible"
                         app:srcCompat="@drawable/metal" />
                 </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="1"
+                    android:text="ПН-ПТ"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_operFar_timeWork"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -487,9 +503,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:gravity="center"
             android:text="Ваши прошлые gift"
             android:textColor="#000000"
-            android:textSize="20sp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_recInfo_currBalls" />
@@ -543,12 +560,11 @@
             android:id="@+id/bt_recInfo_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:text="О баллах"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rview_recInfo_history" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -5,18 +5,16 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.SimpleDateFormat;
-
-public class ViewHolder_admin extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class ViewHolder_newOper extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private TextView tv_item_id;
 
     private TextView tv_item_user;
     private TextView tv_item_fact;
     private TextView tv_item_date;
-    private Adapter_admin.ItemClickListener clickListener;
+    private Adapter_newOper.ItemClickListener clickListener;
 
-    public ViewHolder_admin(View itemView) {
+    public ViewHolder_newOper(View itemView) {
         super(itemView);
         tv_item_id = itemView.findViewById(R.id.item_id);
         tv_item_user = itemView.findViewById(R.id.item_user);
@@ -33,7 +31,7 @@ public class ViewHolder_admin extends RecyclerView.ViewHolder implements View.On
     }
 
 
-    public void setClickListener(Adapter_admin.ItemClickListener clickListener) {
+    public void setClickListener(Adapter_newOper.ItemClickListener clickListener) {
         this.clickListener = clickListener;
     }
 
