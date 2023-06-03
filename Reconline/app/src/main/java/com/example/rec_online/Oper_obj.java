@@ -24,9 +24,9 @@ public class Oper_obj {
     int metal;
     int plastic;
 
-    int status = 1;
+    int codeStatus = 1;
     String time;
-    int num_cont;
+
 
 
     Oper_obj(int id_user, int id_fact, int metal, int plastic, int glass){
@@ -56,7 +56,7 @@ public class Oper_obj {
         }
 
         this.name_fact =  json.getString("name_fact");
-        this.status = json.getInt("status");
+        this.codeStatus = json.getInt("codeStatus");
 
         this.ball = json.getInt("ball");
 

@@ -122,7 +122,7 @@ public class DB_act {
     }
 
 
-    public static String insert_oper(org.json.JSONObject json) throws SQLException {
+    public static String newOper(org.json.JSONObject json) throws SQLException {
         String result;
         int glass = json.getInt("glass");
         int metal = json.getInt("metal");
@@ -145,18 +145,17 @@ public class DB_act {
         }
         Statement statement = connection.createStatement();
 
-        String SQL = String.format("INSERT INTO operations (id_user, id_fact, metal, plastic, glass, ball, status, timee) VALUES ('%d', " +
+        String SQL = String.format("INSERT INTO operations (id_user, id_fact, metal, plastic, glass, ball, codestatus, timeoper) VALUES ('%d', " +
                         "'%d', '%d', '%d', '%d', '%d', '%d', '%s')", json.getInt("id_user"),
                 json.getInt("id_fact"), metal, plastic, glass, ball_new, 1, current_time);
         statement.executeUpdate(SQL);
 
-        answer_to_mob.put("status", "true");
+        answer_to_mob.put("status", true);
         result = answer_to_mob.toString();
         return result;
     }
 
     public static String historyOper(org.json.JSONObject json) throws SQLException {
-        String result;
         Connection connection;
         List<org.json.JSONObject> jsonObjects = new ArrayList<>();
         int cont_row = 0;
@@ -167,7 +166,7 @@ public class DB_act {
             throw new RuntimeException(e);
         }
         Statement statement = connection.createStatement();
-        String SQL = String.format("select * from operations INNER JOIN factory ON factory.id = operations.id_fact WHERE   id_user = '%d' ORDER BY operations.id DESC",
+        String SQL = String.format("select * from operations INNER JOIN factory ON factory.id = operations.id_fact WHERE id_user = '%d' ORDER BY operations.id DESC",
                 json.getInt("id_user"));
         ResultSet resultSet = statement.executeQuery(SQL);
         while (resultSet.next()) {
@@ -182,8 +181,8 @@ public class DB_act {
             json_i.put("metal", resultSet.getInt("metal"));
 
             json_i.put("reason", resultSet.getString("reason"));
-            json_i.put("status", resultSet.getInt("status"));
-            json_i.put("time", resultSet.getString("timee"));
+            json_i.put("codeStatus", resultSet.getInt("codestatus"));
+            json_i.put("time", resultSet.getString("timeoper"));
 
 
             cont_row++;
@@ -195,19 +194,12 @@ public class DB_act {
 
         JSONObject combinedJson = new JSONObject();
         combinedJson.put("data", jsonObjects);
-        if (cont_row > 0) {
-            combinedJson.put("status", true);
-        } else {
-            combinedJson.put("status", false);
-        }
+        combinedJson.put("status", cont_row > 0);
 
-
-        result = combinedJson.toString();
-        //System.out.println(result);
         resultSet.close();
         statement.close();
 
-        return result;
+        return combinedJson.toString();
 
     }
 
@@ -223,7 +215,7 @@ public class DB_act {
         }
         Statement statement = connection.createStatement();
         String SQL = String.format("SELECT id_user, SUM(ball) AS totalBall, SUM(plastic) AS totalPlastic, SUM(glass) AS totalGlass, SUM(metal) AS totalMetal " +
-                "FROM operations WHERE id_user = '%d' and status = 11 GROUP BY id_user", json.getInt("id_user"));
+                "FROM operations WHERE id_user = '%d' and codestatus = 11 GROUP BY id_user", json.getInt("id_user"));
         ResultSet resultSet = statement.executeQuery(SQL);
         if (resultSet.next()) {
             int totalBall = resultSet.getInt("totalBall");
@@ -235,9 +227,9 @@ public class DB_act {
             json_ans.put("plastic", totalPlastic);
             json_ans.put("glass", totalGlass);
             json_ans.put("metal", totalMetal);
-            json_ans.put("status", "true");
+            json_ans.put("status", true);
         } else {
-            json_ans.put("status", "false");
+            json_ans.put("status", false);
         }
 
 
@@ -344,12 +336,12 @@ public class DB_act {
         Statement statement = connection.createStatement();
         String SQL = String.format("SELECT operations.id, operations.id_fact, factory.name AS factory_name, " +
                 "operations.id_user, users.name AS user_name, login, operations.ball, operations.plastic, operations.glass, operations.metal, " +
-                "operations.status, operations.timee " +
+                "operations.codestatus, operations.timeoper " +
                 "FROM operations " +
                 "INNER JOIN factory ON factory.id = operations.id_fact " +
                 "INNER JOIN users ON users.id = operations.id_user " +
-                "WHERE operations.status = 1 " +
-                "ORDER BY operations.timee DESC");
+                "WHERE operations.codestatus = 1 " +
+                "ORDER BY operations.timeoper DESC");
 
         ResultSet resultSet = statement.executeQuery(SQL);
         while (resultSet.next()) {
@@ -366,8 +358,8 @@ public class DB_act {
             json_i.put("plastic", resultSet.getInt("plastic"));
             json_i.put("glass", resultSet.getInt("glass"));
             json_i.put("metal", resultSet.getInt("metal"));
-            json_i.put("status", resultSet.getString("status"));
-            json_i.put("time", resultSet.getString("timee"));
+            json_i.put("codeStatus", resultSet.getString("codestatus"));
+            json_i.put("time", resultSet.getString("timeoper"));
 
 
 
@@ -405,14 +397,14 @@ public class DB_act {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        String sql = "UPDATE operations SET status = ?, reason = ? WHERE id = ?";
+        String sql = "UPDATE operations SET codestatus = ?, reason = ? WHERE id = ?";
         PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setInt(1, json.getInt("status"));
+        statement.setInt(1, json.getInt("codeStatus"));
         statement.setString(2, json.getString("reason"));
         statement.setInt(3, json.getInt("id"));
         statement.executeUpdate();
 
-        if(json.getInt("status") == 11){
+        if(json.getInt("codeStatus") == 11){
             CreateMess.acc_balls(json);
         }
         else {

@@ -34,10 +34,10 @@ public class HttpControllerREST extends HttpServlet {
         return DB_act.factory();
     }
 
-    @RequestMapping("/rec/oper_new")
-    public String oper(@RequestBody String body) throws SQLException {
+    @RequestMapping("/rec/newOper")
+    public String newOper(@RequestBody String body) throws SQLException {
         JSONObject json = new JSONObject(body);
-        return DB_act.insert_oper(json);
+        return DB_act.newOper(json);
     }
 
     @RequestMapping("/rec/historyOper")

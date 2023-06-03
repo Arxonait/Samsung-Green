@@ -8,15 +8,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Space
-            android:layout_width="10dp"
-            android:layout_height="wrap_content" />
-
         <TextView
             android:id="@+id/oper_id"
-            android:layout_width="25dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="id"
+            android:text="1000"
             android:textColor="#000000"
             android:textSize="20sp" />
 
@@ -39,7 +35,7 @@
             android:layout_height="wrap_content"
             android:text="TextView"
             android:textColor="#000000"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

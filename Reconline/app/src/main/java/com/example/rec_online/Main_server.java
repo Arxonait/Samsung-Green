@@ -81,19 +81,15 @@ public class Main_server {
 
 
 
-    public static String gift(Oper_obj newOper) {
+    public static String newOper(Oper_obj newOper) {
         String result;
 
         Gson gson = new Gson();
-
         // Преобразование объекта в JSON-строку
         String jsonString = gson.toJson(newOper);
-
-        String url = "http://10.0.2.2:8080/rec/oper_new";
-
+        String url = "http://10.0.2.2:8080/rec/newOper";
 
         result = to_server(url, jsonString);
-
         return result;
     }
 

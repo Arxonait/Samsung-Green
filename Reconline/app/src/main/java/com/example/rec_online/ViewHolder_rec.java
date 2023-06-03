@@ -8,22 +8,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ViewHolder_rec extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private TextView id_gift;
-    private TextView gift_status;
-    private TextView gift_ball;
+    private TextView id_oper;
+    private TextView oper_status;
+    private TextView oper_ball;
     private Adapter_rec.ItemClickListener clickListener;
 
     public ViewHolder_rec(View itemView) {
         super(itemView);
-        id_gift = itemView.findViewById(R.id.oper_id);
-        gift_ball = itemView.findViewById(R.id.oper_title);
-        gift_status = itemView.findViewById(R.id.oper_status);
+        id_oper = itemView.findViewById(R.id.oper_id);
+        oper_ball = itemView.findViewById(R.id.oper_title);
+        oper_status = itemView.findViewById(R.id.oper_status);
         itemView.setOnClickListener(this);
     }
 
     public void bind(String id, String ball, int status) {
-        id_gift.setText(id);
-        gift_ball.setText(ball);
+        id_oper.setText(id);
+        oper_ball.setText(ball);
 
         String text_status;
         int color;
@@ -39,8 +39,8 @@ public class ViewHolder_rec extends RecyclerView.ViewHolder implements View.OnCl
             text_status = "Принято";
             color = Color.GREEN;
         }
-        gift_status.setText(text_status);
-        gift_status.setTextColor(color);
+        oper_status.setText(text_status);
+        oper_status.setTextColor(color);
     }
 
 

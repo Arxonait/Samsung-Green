@@ -44,9 +44,9 @@ public class Adapter_rec extends RecyclerView.Adapter<ViewHolder_rec> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder_rec holder, @SuppressLint("RecyclerView") int position) {
-        String id = String.valueOf(data.get(position).num_cont);
+        String id = String.valueOf(data.get(position).id);
         String ball = String.valueOf(data.get(position).ball);
-        int status = data.get(position).status;
+        int status = data.get(position).codeStatus;
         holder.bind(id, ball, status);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

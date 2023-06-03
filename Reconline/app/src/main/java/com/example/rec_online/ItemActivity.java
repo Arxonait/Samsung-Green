@@ -189,12 +189,12 @@ public class ItemActivity extends AppCompatActivity {
         String reason = "";
         createTread(status, reason);
     }
-    private void createTread(int status, String reason)  {
+    private void createTread(int codeStatus, String reason)  {
 
         new Thread(new Runnable() {
             public void run() {
                 // выполнение сетевого запроса
-                oper_s.status = status;
+                oper_s.codeStatus = codeStatus;
                 oper_s.reason = reason;
                 String res;
                 try {

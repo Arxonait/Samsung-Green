@@ -25,13 +25,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import org.json.JSONObject;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,56 +38,56 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
     private RecyclerView rec_inf_history;
     private Adapter_rec adapter;
-
-
-
     private List<Oper_obj> list_oper;
-    boolean is_newUser;
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rec);
 
-        load_sec_inf_ball();
+        load_sec_infBall();
 
         Factory_obj near_factory = near_fact();
         double near_dist = MapsActivity.calcDist(near_factory.x, near_factory.y, RecActivity.this);
 
 
-        if(near_dist> 150){
-            load_sec_oper_far(near_factory, near_dist);
+        if(near_dist > 150){
+            load_sec_operFar(near_factory, near_dist);
         }
         else {
-            load_sec_oper_pass(near_factory);
+            load_sec_newOper(near_factory);
         }
-
         load_menu();
 
 
     }
 
-    private void load_sec_oper_far(Factory_obj nearFactory, double nearDist){
+    private void load_sec_operFar(Factory_obj nearFactory, double nearDist){
 
-        TextView name_stat =  findViewById(R.id.name_stat);
-        TextView adres_stat=  findViewById(R.id.adres_stat);
-        TextView mobile_stat =  findViewById(R.id.mobile_stat);
-        TextView work_time_stat =  findViewById(R.id.time_work_stat);
-        TextView distance_stat =  findViewById(R.id.dist_stat);
+        ConstraintLayout sec_operFar = findViewById(R.id.sec_operFar);
+        sec_operFar.setVisibility(View.VISIBLE);
 
-        ConstraintLayout sec_oper_far = findViewById(R.id.sec_oper_far);
-        sec_oper_far.setVisibility(View.VISIBLE);
+        TextView tv_nameFact =  findViewById(R.id.name_stat);
+        TextView tv_address =  findViewById(R.id.tv_operFar_address);
+        TextView tv_phone =  findViewById(R.id.tv_operFar_phone);
+        TextView tv_workTime =  findViewById(R.id.tv_operFar_timeWork);
+        TextView tv_distance =  findViewById(R.id.tv_operFar_distance);
+
+
 
         ImageView im_glass = findViewById(R.id.im_map_glass);
         ImageView im_metal = findViewById(R.id.im_map_metal);
         ImageView im_plastic = findViewById(R.id.im_map_plastic);
 
-        name_stat.setText(nearFactory.name);
-        adres_stat.setText(nearFactory.adres);
-        mobile_stat.setText(nearFactory.mobile);
-        work_time_stat.setText(nearFactory.work_time);
+        tv_nameFact.setText(nearFactory.name);
+        tv_address.setText(nearFactory.adres);
+        tv_phone.setText(nearFactory.mobile);
+        tv_workTime.setText(nearFactory.work_time);
+
         String dist_str;
         if(nearDist < 1300){
-            nearDist = Math.round(nearDist *10)/10.0;
+            nearDist = Math.round(nearDist * 10)/10.0;
             dist_str = String.format(nearDist + " м");
         }
         else{
@@ -97,7 +95,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
             nearDist = Math.round(nearDist *10)/10.0;
             dist_str = String.format(nearDist +  " км");
         }
-        distance_stat.setText(dist_str);
+        tv_distance.setText(dist_str);
         Pass_act.show_image(nearFactory, im_glass,im_metal, im_plastic);
 
         ImageButton bt_map_to_fact = findViewById(R.id.bt_map_to_fact);
@@ -109,13 +107,14 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
                 startActivity(Map);
             }
         });
-
-
     }
 
 
-    private void load_sec_oper_pass(Factory_obj near_factory){
-        TextView name_give =  findViewById(R.id.name_stat_give);
+    private void load_sec_newOper(Factory_obj nearFactory){
+        ConstraintLayout sec_give_fact = findViewById(R.id.sec_newOper);
+        sec_give_fact.setVisibility(View.VISIBLE);
+
+        TextView nameFact =  findViewById(R.id.tv_newOper_nameFact);
         TextView tv_count_gl =  findViewById(R.id.count_gl);
         TextView tv_count_m =  findViewById(R.id.count_m);
         TextView tv_count_p =  findViewById(R.id.count_p);
@@ -125,8 +124,8 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         ImageButton p_m = (ImageButton) findViewById(R.id.p_m);
         ImageButton p_p = (ImageButton) findViewById(R.id.p_p);
         ImageButton m_p = (ImageButton) findViewById(R.id.m_p);
-        Button bt_give = (Button) findViewById(R.id.give);
-        ConstraintLayout sec_give_fact = findViewById(R.id.sec_give_fact);
+        Button bt_give = (Button) findViewById(R.id.bt_newOper_give);
+
 
 
         ImageView plastic_i = (ImageView) findViewById(R.id.plastic_i);
@@ -137,36 +136,30 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
 
         int color = Color.parseColor("#808080");
-        if(!near_factory.glass){
+        if(!nearFactory.glass){
             glass_i.setVisibility(View.GONE);
             p_gl.setColorFilter(color, PorterDuff.Mode.SRC_IN);
             m_gl.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         }
-        if(!near_factory.metal){
+        if(!nearFactory.metal){
             metal_i.setVisibility(View.GONE);
             p_m.setColorFilter(color, PorterDuff.Mode.SRC_IN);
             m_m.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         }
-        if(!near_factory.plastic){
+        if(!nearFactory.plastic){
             plastic_i.setVisibility(View.GONE);
             p_p.setColorFilter(color, PorterDuff.Mode.SRC_IN);
             m_p.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         }
 
 
-        sec_give_fact.setVisibility(View.VISIBLE);
-        tv_count_gl.setText("0");
-        tv_count_m.setText("0");
-        tv_count_p.setText("0");
-
-
-        name_give.setText(near_factory.name);
+        nameFact.setText(nearFactory.name);
 
 
         p_gl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(near_factory.glass){
+                if(nearFactory.glass){
                     Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
                     v.startAnimation(fadeAnimation);
                     int count = Integer.parseInt(tv_count_gl.getText().toString()) + 1;
@@ -181,7 +174,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         p_m.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(near_factory.metal) {
+                if(nearFactory.metal) {
                     Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
                     v.startAnimation(fadeAnimation);
                     int count = Integer.parseInt(tv_count_m.getText().toString()) + 1;
@@ -196,7 +189,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         p_p.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(near_factory.plastic) {
+                if(nearFactory.plastic) {
                     Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
                     v.startAnimation(fadeAnimation);
                     int count = Integer.parseInt(tv_count_p.getText().toString()) + 1;
@@ -211,7 +204,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         m_gl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(near_factory.glass){
+                if(nearFactory.glass){
                     Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
                     v.startAnimation(fadeAnimation);
                     int count = Integer.parseInt(tv_count_gl.getText().toString()) - 1;
@@ -229,7 +222,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         m_m.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(near_factory.metal) {
+                if(nearFactory.metal) {
                     Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
                     v.startAnimation(fadeAnimation);
                     int count = Integer.parseInt(tv_count_m.getText().toString()) - 1;
@@ -247,7 +240,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         m_p.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(near_factory.plastic) {
+                if(nearFactory.plastic) {
                     Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
                     v.startAnimation(fadeAnimation);
                     int count = Integer.parseInt(tv_count_p.getText().toString()) - 1;
@@ -270,47 +263,43 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
                 int metal = Integer.parseInt(tv_count_m.getText().toString());
                 int plastic = Integer.parseInt(tv_count_p.getText().toString());
                 if(glass + metal + plastic > 0) {
-                    Handler handler = new Handler(Looper.getMainLooper());
                     new Thread(new Runnable() {
                         public void run() {
                             // выполнение сетевого запроса
-                            Oper_obj gift_new = new Oper_obj(EnterActivity.get_dataEnter().id, near_factory.id, metal, plastic, glass);
-                            String res = Main_server.gift(gift_new);
+                            Oper_obj newOper = new Oper_obj(EnterActivity.get_dataEnter().id,
+                                    nearFactory.id, metal, plastic, glass);
+                            String response = Main_server.newOper(newOper);
                             // передача результата в главный поток
                             handler.post(new Runnable() {
                                 public void run() {
-                                    load_sec_inf_ball();
-
                                      //обновление пользовательского интерфейса с использованием результата
                                     try {
-
-                                        JSONParser parser = new JSONParser();
-                                        JSONObject answer = (JSONObject) parser.parse(res);
-                                        if(answer.get("status").toString().equals("true")){
+                                        org.json.JSONObject json = new JSONObject(response);
+                                        if(json.getBoolean("status")){
                                             Toast.makeText(getApplicationContext(), "Отправлено на проверку",
                                                     Toast.LENGTH_SHORT).show();
+                                            load_sec_infBall();
                                         }
                                         else{
 
                                         }
 
-                                    } catch (ParseException e) {
+                                    } catch (JSONException e) {
                                         throw new RuntimeException(e);
                                     }
                                 }
                             });
                         }
                     }).start();
+                    tv_count_gl.setText("0");
+                    tv_count_p.setText("0");
+                    tv_count_m.setText("0");
 
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "Вы ничего не указали",
                             Toast.LENGTH_SHORT).show();
                 }
-                tv_count_gl.setText("0");
-                tv_count_p.setText("0");
-                tv_count_m.setText("0");
-
             }
         });
     }
@@ -330,13 +319,12 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
     }
 
     public void onItemClick(@Nullable View view, int position) {
-        // При нажатии на элемент показываем сообщение с кнопкой "Ок"
         show_mes_itemOf_infHistory(position);
     }
     @SuppressLint("DefaultLocale")
     private void show_mes_itemOf_infHistory(int position) {
         Oper_obj oper = list_oper.get(position);
-        int status = oper.status;
+        int status = oper.codeStatus;
         String text_status;
         String text_reason = "";
 
@@ -352,14 +340,12 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        String time = oper.time;
         builder.setMessage(String.format("Номер вашей сдачи: %d\n" +
                                 "Перерабатывающий центр: %s\n" +
                                 "Стекло - %d, Пластик - %d, Металл - %d\n" +
                                 "Статус: %s\n%s" +
                                 "Баллы: %d\nДата и время - %s", oper.id, oper.name_fact,
-                        oper.glass, oper.plastic, oper.metal, text_status, text_reason, oper.ball, time))
+                        oper.glass, oper.plastic, oper.metal, text_status, text_reason, oper.ball, oper.time))
                 .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -369,7 +355,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
     }
 
 
-    private void load_sec_inf_ball() {
+    private void load_sec_infBall() {
         rec_inf_history = findViewById(R.id.rview_recInfo_history);
         TextView tv_title = findViewById(R.id.tv_recInfo_title);
         TextView current_ball = findViewById(R.id.tv_recInfo_currBalls);
@@ -384,88 +370,60 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         // Устанавливаем слушатель нажатий на элементы адаптера
         adapter.setClickListener(this);
 
-        Handler handler = new Handler(Looper.getMainLooper());
-
         new Thread(new Runnable() {
             public void run() {
                 // выполнение сетевого запроса
-                String answer_from_server = null;
+                String response;
                 try {
-                    answer_from_server = Main_server.historyOper(EnterActivity.get_dataEnter().id);
+                    response = Main_server.historyOper(EnterActivity.get_dataEnter().id);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
-
-                is_newUser = false;
-                String finalAnswer_from_server = answer_from_server;
+                String finalAnswer_response = response;
                 handler.post(new Runnable() {
                     public void run() {
-                        org.json.JSONObject combinedJson;
+                        JSONObject combinedJson;
                         JSONArray jsonArray;
+                        list_oper  = new ArrayList<>();
                         try {
-                            combinedJson = new org.json.JSONObject(finalAnswer_from_server);
-                            if(!combinedJson.getBoolean("status")){
-                                is_newUser = true;
+                            combinedJson = new JSONObject(finalAnswer_response);
+                            if(combinedJson.getBoolean("status")){
+                                jsonArray = combinedJson.getJSONArray("data");
+                                JSONObject jsonObject;
+                                Oper_obj newOper;
+                                int balls = 0;
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    try {
+                                        newOper = new Oper_obj();
+                                        jsonObject = jsonArray.getJSONObject(i);
+                                        newOper.parseJson(jsonObject);
+                                        if(newOper.codeStatus == 11){
+                                            balls += newOper.ball;
+                                        }
+                                        list_oper.add(newOper);
+                                    } catch (JSONException | java.text.ParseException e) {
+                                        throw new RuntimeException(e);
+                                    }
+
+                                }
+                                current_ball.setText(String.valueOf(balls));
+
+                                adapter.setData(list_oper);
+
+                                tv_title.setText("Ваши прошлые операции");
+                                rec_inf_history.setVisibility(View.VISIBLE);
+                                sec_titleHistory.setVisibility(View.VISIBLE);
                             }
-                            jsonArray = combinedJson.getJSONArray("data");
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-
-
-
-                        list_oper = new ArrayList<>();
-
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            org.json.JSONObject jsonObject;
-                            Oper_obj newOper;
-                            try {
-                                jsonObject = jsonArray.getJSONObject(i);
-                                newOper = new Oper_obj();
-                                newOper.parseJson(jsonObject);
-                            } catch (JSONException | java.text.ParseException e) {
-                                throw new RuntimeException(e);
-                            }
-
-
-                            list_oper.add(newOper);
-                        }
-
-
-
-                        if(is_newUser){
+                            else {
                                 current_ball.setText("0");
                                 rec_inf_history.setVisibility(View.GONE);
                                 sec_titleHistory.setVisibility(View.GONE);
                                 tv_title.setText("Здесь будут отображаться Ваши баллы,\nНо пока что Вы ничего не сдали");
                             }
-                        else {
-                            int balls = 0;
-                            int count_gift = list_oper.size();
-                            int rev_gift = 0;
-                            for (Oper_obj gift: list_oper) {
-                                gift.num_cont = count_gift - rev_gift;
-                                rev_gift++;
-                                if(gift.status == 11){
-                                    balls +=gift.ball;
-                                }
-                            }
 
-
-
-                                current_ball.setText(String.valueOf(balls));
-
-                                if (list_oper.size() > 2 && false) {
-                                    adapter.setData(list_oper.subList(0, 10));
-                                } else {
-                                    adapter.setData(list_oper);
-                                }
-                                tv_title.setText("Ваши прошлые gift");
-                                rec_inf_history.setVisibility(View.VISIBLE);
-                                sec_titleHistory.setVisibility(View.VISIBLE);
-                            }
-
-
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
             }
@@ -500,9 +458,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         bt_rec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent activity_new = new Intent(RecActivity.this, RecActivity.class);
-                //startActivity(activity_new);
-                load_sec_inf_ball();
+                load_sec_infBall();
             }
         });
 
