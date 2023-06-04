@@ -5,15 +5,15 @@ import org.json.JSONObject;
 
 public class User_obj {
 
-    int id;
-    String name;
-    String surname;
+    public int id;
+    public String name;
+    public String surname;
 
-    String phone;
-    String login;
-    String password;
+    public String phone;
+    public String login;
+    public String password;
 
-    boolean admin;
+    public boolean admin;
 
 
 

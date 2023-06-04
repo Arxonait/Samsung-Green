@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -27,7 +29,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Profile_Activity extends AppCompatActivity implements Adapter_prof.ItemClickListener {
+public class ProfileActivity extends AppCompatActivity implements Adapter_prof.ItemClickListener {
 
     private RecyclerView rview_prof_mes;
     private Adapter_prof adapter;
@@ -94,7 +96,6 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
 
                                 tv_title_mess.setText("Ваши сообщения");
                                 rview_prof_mes.setVisibility(View.VISIBLE);
-                                //title_rec_view.setVisibility(View.VISIBLE);
                             }
                             else {
                                 rview_prof_mes.setVisibility(View.GONE);
@@ -117,7 +118,9 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
         bt_stat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(Profile_Activity.this, RecActivity.class);
+                Animation fadeAnimation = AnimationUtils.loadAnimation(ProfileActivity.this, R.anim.fade);
+                v.startAnimation(fadeAnimation);
+                Intent activity_new = new Intent(ProfileActivity.this, RecActivity.class);
                 startActivity(activity_new);
             }
         });
@@ -126,7 +129,9 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
         bt_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(Profile_Activity.this, MapsActivity.class);
+                Animation fadeAnimation = AnimationUtils.loadAnimation(ProfileActivity.this, R.anim.fade);
+                v.startAnimation(fadeAnimation);
+                Intent activity_new = new Intent(ProfileActivity.this, MapsActivity.class);
                 startActivity(activity_new);
             }
         });
@@ -135,6 +140,8 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
         bt_prof.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation fadeAnimation = AnimationUtils.loadAnimation(ProfileActivity.this, R.anim.fade);
+                v.startAnimation(fadeAnimation);
                 load_sec_info();
                 load_sec_history_mes();
             }
@@ -158,7 +165,7 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
         TextView tv_metal_count = findViewById(R.id.count_m);
 
 
-        ImageButton bt_log_out = findViewById(R.id.log_out);
+        Button bt_log_out = findViewById(R.id.log_out);
         bt_log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,7 +177,7 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
                 editor.apply(); // Применение изменений
 
 
-                Intent activity_new = new Intent(Profile_Activity.this, EnterActivity.class);
+                Intent activity_new = new Intent(ProfileActivity.this, EnterActivity.class);
                 startActivity(activity_new);
                 finish();
             }
@@ -180,7 +187,7 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
         bt_send_mess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(Profile_Activity.this, SendMessActivity.class);
+                Intent activity_new = new Intent(ProfileActivity.this, SendMessActivity.class);
                 startActivity(activity_new);
             }
         });
@@ -194,7 +201,7 @@ public class Profile_Activity extends AppCompatActivity implements Adapter_prof.
             bt_admin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent activity_new = new Intent(Profile_Activity.this, Admin_panelActivity.class);
+                    Intent activity_new = new Intent(ProfileActivity.this, Admin_panelActivity.class);
                     startActivity(activity_new);
                 }
             });

@@ -8,10 +8,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Mes_obj {
-    long id;
-    long id_user;
+    public int id;
+    public int id_user;
     String user_name;
-    long id_prev_mes;
+    public int id_prev_mes;
     String title;
     String main_text;
 

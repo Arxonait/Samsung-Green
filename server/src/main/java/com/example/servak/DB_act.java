@@ -121,7 +121,7 @@ public class DB_act {
     }
 
 
-    public static String newOper(org.json.JSONObject json) throws SQLException {
+    public static String newOper(JSONObject json) throws SQLException {
         String result;
         int glass = json.getInt("glass");
         int metal = json.getInt("metal");
@@ -154,9 +154,9 @@ public class DB_act {
         return result;
     }
 
-    public static String historyOper(org.json.JSONObject json) throws SQLException {
+    public static String historyOper(JSONObject json) throws SQLException {
         Connection connection;
-        List<org.json.JSONObject> jsonObjects = new ArrayList<>();
+        List<JSONObject> jsonObjects = new ArrayList<>();
         int cont_row = 0;
 
         try {
@@ -202,7 +202,7 @@ public class DB_act {
 
     }
 
-    public static String profSummaryStat(org.json.JSONObject json) throws SQLException {
+    public static String profSummaryStat(JSONObject json) throws SQLException {
         Connection connection;
         JSONObject answer_to_mob = new JSONObject();
 
@@ -238,9 +238,9 @@ public class DB_act {
     }
 
 
-    public static String historyMess(org.json.JSONObject json) throws SQLException {
+    public static String historyMess(JSONObject json) throws SQLException {
         Connection connection;
-        List<org.json.JSONObject> jsonObjects = new ArrayList<>();
+        List<JSONObject> jsonObjects = new ArrayList<>();
         int cont_row = 0;
 
         try {
@@ -285,7 +285,7 @@ public class DB_act {
 
     }
 
-    public static String update_isRead(org.json.JSONObject json) throws SQLException {
+    public static String update_isRead(JSONObject json) throws SQLException {
         Connection connection;
         JSONObject answer_to_mob = new JSONObject();
 
@@ -309,10 +309,9 @@ public class DB_act {
 
     }
 
-    public static String admin_select_oper(org.json.JSONObject json) throws SQLException {
-        String result;
+    public static String admin_select_oper(JSONObject json) throws SQLException {
         Connection connection;
-        List<org.json.JSONObject> jsonObjects = new ArrayList<>();
+        List<JSONObject> jsonObjects = new ArrayList<>();
         int cont_row = 0;
 
         try {
@@ -332,7 +331,7 @@ public class DB_act {
 
         ResultSet resultSet = statement.executeQuery(SQL);
         while (resultSet.next()) {
-            org.json.JSONObject json_i = new org.json.JSONObject();
+            JSONObject json_i = new JSONObject();
             json_i.put("id", resultSet.getInt("id"));
             json_i.put("id_fact", resultSet.getInt("id_fact"));
             json_i.put("name_fact", resultSet.getString("factory_name"));
@@ -357,25 +356,22 @@ public class DB_act {
         }
 
 
-        JSONObject combinedJson = new JSONObject();
-        combinedJson.put("data", jsonObjects);
+        JSONObject combJson = new JSONObject();
+        combJson.put("data", jsonObjects);
         if (cont_row > 0) {
-            combinedJson.put("status", "true");
+            combJson.put("status", "true");
         } else {
-            combinedJson.put("status", "false");
+            combJson.put("status", "false");
         }
 
 
-        result = combinedJson.toString();
-        //System.out.println(result);
         resultSet.close();
         statement.close();
 
-        return result;
+        return combJson.toString();
     }
 
-    public static String admin_desOper(org.json.JSONObject json) throws SQLException {
-        String result;
+    public static String admin_desOper(JSONObject json) throws SQLException {
         Connection connection;
         JSONObject answer_to_mob = new JSONObject();
 
@@ -406,16 +402,14 @@ public class DB_act {
 
         answer_to_mob.put("status", true);
 
-        result = answer_to_mob.toString();
         statement.close();
 
 
-        return result;
+        return answer_to_mob.toString();
 
     }
 
-    public static String send_mess(org.json.JSONObject json) throws SQLException {
-        String result;
+    public static String send_mess(JSONObject json) throws SQLException {
         Connection connection;
         JSONObject answer_to_mob = new JSONObject();
 
@@ -438,17 +432,15 @@ public class DB_act {
 
         answer_to_mob.put("status", true);
 
-        result = answer_to_mob.toString();
         statement.close();
 
 
-        return result;
+        return answer_to_mob.toString();
     }
 
-    public static String admin_select_mess(org.json.JSONObject jsonObject) throws SQLException {
-        String result;
+    public static String admin_select_mess(JSONObject jsonObject) throws SQLException {
         Connection connection;
-        List<org.json.JSONObject> jsonObjects = new ArrayList<>();
+        List<JSONObject> jsonObjects = new ArrayList<>();
         int cont_row = 0;
 
         try {
@@ -484,27 +476,25 @@ public class DB_act {
 
             jsonObjects.add(json);
         }
-        JSONObject combinedJson = new JSONObject();
-        combinedJson.put("data", jsonObjects);
+        JSONObject combJson = new JSONObject();
+        combJson.put("data", jsonObjects);
         if (cont_row > 0) {
-            combinedJson.put("status", "true");
+            combJson.put("status", "true");
         } else {
-            combinedJson.put("status", "false");
+            combJson.put("status", "false");
         }
 
 
-        result = combinedJson.toString();
-        //System.out.println(result);
+
         resultSet.close();
         statement.close();
 
-        return result;
+        return combJson.toString();
     }
 
-    public static String send_ansAdmin(org.json.JSONObject json) throws SQLException {
-        String result;
+    public static String send_ansAdmin(JSONObject json) throws SQLException {
         Connection connection;
-        org.json.JSONObject answer_to_mob = new org.json.JSONObject();
+        JSONObject answer_to_mob = new JSONObject();
 
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PassWord);
@@ -530,10 +520,10 @@ public class DB_act {
 
         answer_to_mob.put("status", true);
 
-        result = answer_to_mob.toString();
+
         statement.close();
 
 
-        return result;
+        return answer_to_mob.toString();
     }
 }

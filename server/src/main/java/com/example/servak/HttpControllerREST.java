@@ -74,13 +74,13 @@ public class HttpControllerREST extends HttpServlet {
     }
 
     @RequestMapping("/prof/admin_desOper")
-    public String admin_desOper(@RequestBody String body) throws SQLException, ParseException {
+    public String admin_desOper(@RequestBody String body) throws SQLException {
         JSONObject json = new JSONObject(body);
         return DB_act.admin_desOper(json);
     }
 
     @RequestMapping("/prof/send_mess")
-    public String send_mess(@RequestBody String body) throws SQLException, ParseException {
+    public String send_mess(@RequestBody String body) throws SQLException {
         JSONObject json = new JSONObject(body);
         return DB_act.send_mess(json);
     }
@@ -92,7 +92,7 @@ public class HttpControllerREST extends HttpServlet {
     }
 
     @RequestMapping("/prof/send_ansAdmin")
-    public String send_ansAdmin(@RequestBody String body) throws SQLException, ParseException {
+    public String send_ansAdmin(@RequestBody String body) throws SQLException {
         JSONObject json = new JSONObject(body);
         return DB_act.send_ansAdmin(json);
     }

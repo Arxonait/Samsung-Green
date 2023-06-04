@@ -8,24 +8,24 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Oper_obj {
-    String login;
-    int id_user;
-    String user_name;
+    public String login;
+    public int id_user;
+    public String user_name;
 
-    String reason;
+    public String reason;
 
-    int id;
+    public int id;
 
-    String name_fact;
-    int id_fact;
-    int ball = 0;
+    public String name_fact;
+    public int id_fact;
+    public int ball = 0;
 
-    int glass;
-    int metal;
-    int plastic;
+    public int glass;
+    public int metal;
+    public int plastic;
 
-    int codeStatus = 1;
-    String time;
+    public int codeStatus = 1;
+    public String time;
 
 
 

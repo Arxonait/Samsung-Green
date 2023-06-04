@@ -110,6 +110,8 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         bt_map_to_fact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
+                v.startAnimation(fadeAnimation);
                 MapsActivity.factory = nearFactory;
                 Intent Map = new Intent(RecActivity.this, MapsActivity.class);
                 startActivity(Map);
@@ -283,7 +285,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         }
     }
 
-    public Factory_obj near_fact(){
+    private Factory_obj near_fact(){
         Factory_obj best_factory = Pass_act.factories.get(0);
         double best_dist = MapsActivity.calcDist(best_factory.x, best_factory.y, RecActivity.this);
         for (Factory_obj factory : Pass_act.factories) {
@@ -437,6 +439,8 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         bt_rec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
+                v.startAnimation(fadeAnimation);
                 load_sec_infBall();
                 load_sec_oper();
             }
@@ -446,6 +450,8 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         bt_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
+                v.startAnimation(fadeAnimation);
                 Intent activity_new = new Intent(RecActivity.this, MapsActivity.class);
                 startActivity(activity_new);
             }
@@ -455,7 +461,9 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         bt_prof.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(RecActivity.this, Profile_Activity.class);
+                Animation fadeAnimation = AnimationUtils.loadAnimation(RecActivity.this, R.anim.fade);
+                v.startAnimation(fadeAnimation);
+                Intent activity_new = new Intent(RecActivity.this, ProfileActivity.class);
                 startActivity(activity_new);
             }
         });

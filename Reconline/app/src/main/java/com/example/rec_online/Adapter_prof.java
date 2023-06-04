@@ -26,10 +26,7 @@ public class Adapter_prof extends RecyclerView.Adapter<ViewHolder_prof> {
         this.data = data;
         notifyDataSetChanged();
     }
-    public void addData(Mes_obj new_mess) {
-        this.data.add(new_mess);
-        notifyDataSetChanged();
-    }
+
 
     public void setClickListener(ItemClickListener clickListener) {
         this.clickListener = clickListener;

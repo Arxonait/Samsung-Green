@@ -26,10 +26,7 @@ public class Adapter_rec extends RecyclerView.Adapter<ViewHolder_rec> {
         this.data = data;
         notifyDataSetChanged();
     }
-    public void addData(Oper_obj new_gift) {
-        this.data.add(new_gift);
-        notifyDataSetChanged();
-    }
+
 
     public void setClickListener(ItemClickListener clickListener) {
         this.clickListener = clickListener;

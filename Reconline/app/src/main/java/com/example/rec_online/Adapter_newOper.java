@@ -35,7 +35,7 @@ public class Adapter_newOper extends RecyclerView.Adapter<ViewHolder_newOper> {
     @NonNull
     @Override
     public ViewHolder_newOper onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_admin_oper, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_admin_oper_mess, parent, false);
         return new ViewHolder_newOper(view);
     }
 
@@ -43,11 +43,11 @@ public class Adapter_newOper extends RecyclerView.Adapter<ViewHolder_newOper> {
     public void onBindViewHolder(@NonNull ViewHolder_newOper holder, @SuppressLint("RecyclerView") int position) {
         String time = this.data.get(position).time;
         String id = String.valueOf(data.get(position).id);
-        String user_name = String.valueOf(data.get(position).user_name);
+        String login = String.valueOf(data.get(position).login);
         String name_fact = String.valueOf(data.get(position).name_fact);
 
 
-        holder.bind(id, user_name,name_fact, time);
+        holder.bind(id, login,name_fact, time);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

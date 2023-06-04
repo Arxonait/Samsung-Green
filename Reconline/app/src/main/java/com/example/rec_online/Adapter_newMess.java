@@ -26,10 +26,7 @@ public class Adapter_newMess extends RecyclerView.Adapter<ViewHolder_newMess> {
         this.data = data;
         notifyDataSetChanged();
     }
-    public void addData(Mes_obj mess) {
-        this.data.add(mess);
-        notifyDataSetChanged();
-    }
+
 
     public void setClickListener(ItemClickListener clickListener) {
         this.clickListener = clickListener;
@@ -38,7 +35,7 @@ public class Adapter_newMess extends RecyclerView.Adapter<ViewHolder_newMess> {
     @NonNull
     @Override
     public ViewHolder_newMess onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.new_mess_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_admin_oper_mess, parent, false);
         return new ViewHolder_newMess(view);
     }
 

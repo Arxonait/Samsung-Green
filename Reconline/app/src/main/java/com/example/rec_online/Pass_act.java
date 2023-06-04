@@ -5,7 +5,9 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,7 @@ public class Pass_act {
     public static List<Factory_obj> factories = new ArrayList<>();
 
 
-    private static Handler handler = new Handler(Looper.getMainLooper());
+    private static final Handler handler = new Handler(Looper.getMainLooper());
 
     public static void main() {
         factory();
@@ -27,38 +29,24 @@ public class Pass_act {
         new Thread(new Runnable() {
             public void run() {
                 // выполнение сетевого запроса
-                String answer = Main_server.factories();
+                String response = Main_server.factories();
                 // передача результата в главный поток
                 handler.post(new Runnable() {
                     public void run() {
                         // обновление пользовательского интерфейса с использованием результата
-                        //JSONParser parser = new JSONParser();
                         try {
-                            //JSONObject combinedJson = (JSONObject) parser.parse(answer);
-                            org.json.JSONObject json = new org.json.JSONObject(answer);
-                            org.json.JSONArray jsonArray = json.getJSONArray("data");
+                            JSONObject json = new JSONObject(response);
+                            JSONArray jsonArray = json.getJSONArray("data");
 
                             for (int i = 0; i < jsonArray.length(); i++) {
-                                org.json.JSONObject jsonObject = null;
-                                try {
-                                    jsonObject = jsonArray.getJSONObject(i);
-                                } catch (JSONException e) {
-                                    throw new RuntimeException(e);
-                                }
-
+                                JSONObject jsonObject;
+                                jsonObject = jsonArray.getJSONObject(i);
                                 Factory_obj newFact = new Factory_obj();
-
-                                try {
-                                    newFact.parseJson(jsonObject);
-                                } catch (JSONException ex) {
-                                    throw new RuntimeException(ex);
-                                }
-
+                                newFact.parseJson(jsonObject);
                                 factories.add(newFact);
-
-
+                            }
                         }
-                    } catch (JSONException e) {
+                        catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
                     }
@@ -68,33 +56,6 @@ public class Pass_act {
     }
 
 
-//    public static void prof_oper_rec(final PassActCallback callback) {
-//        new Thread(new Runnable() {
-//            public void run() {
-//                // выполнение сетевого запроса
-//                final String answer = Main_server.prof_oper_rec(Integer.parseInt(EnterActivity.get_dataEnter().id));
-//                // передача результата в главный поток
-//                handler.post(new Runnable() {
-//                    public void run() {
-//                        // обновление пользовательского интерфейса с использованием результата
-//                        JSONParser parser = new JSONParser();
-//                        try {
-//                            json = (JSONObject) parser.parse(answer);
-//                            // вызываем метод обратного вызова и передаем результат
-//                            callback.onPassActComplete(json);
-//                        } catch (ParseException e) {
-//                            throw new RuntimeException(e);
-//                        }
-//                    }
-//                });
-//            }
-//        }).start();
-//    }
-
-
-//    public interface PassActCallback {
-//        void onPassActComplete(JSONObject result);
-//    }
 
 
 

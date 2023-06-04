@@ -15,6 +15,8 @@ import android.location.LocationManager;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -65,11 +67,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static Factory_obj factory = null;
 
 
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +90,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (isCreate_device_marker) {
                     try {
                         marker_geo = mMap.addMarker(new MarkerOptions().position(latLng).title("Вы здесь"));
-                        if(factory !=null){
+                        if(factory != null){
                             start_location();
                         }
                         else {
@@ -113,6 +110,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
 
             }
+
+
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -177,6 +176,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         plusZoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation fadeAnimation = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.fade);
+                v.startAnimation(fadeAnimation);
                 float currentZoom = mMap.getCameraPosition().zoom;
                 float newZoom = currentZoom + 1.0f; // Увеличение зума на 1
 
@@ -189,6 +190,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         minusZoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation fadeAnimation = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.fade);
+                v.startAnimation(fadeAnimation);
                 float currentZoom = mMap.getCameraPosition().zoom;
                 float newZoom = currentZoom - 1.0f;
 
@@ -201,6 +204,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         myGeo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation fadeAnimation = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.fade);
+                v.startAnimation(fadeAnimation);
                 moveToMyLocation();
             }
         });
@@ -218,11 +223,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 menu_fact.setVisibility(View.INVISIBLE);
             }
         });
-        name_fact = (TextView ) findViewById(R.id.name_fact);
-        adres_fact = (TextView ) findViewById(R.id.adres_fact);
-        mobile_fact = (TextView ) findViewById(R.id.mobile_fact);
-        work_time_fact = (TextView) findViewById(R.id.time_work_fact);
-        distance_fact = (TextView) findViewById(R.id.distance_fact);
+        name_fact = findViewById(R.id.name_fact);
+        adres_fact = findViewById(R.id.adres_fact);
+        mobile_fact = findViewById(R.id.mobile_fact);
+        work_time_fact = findViewById(R.id.time_work_fact);
+        distance_fact = findViewById(R.id.distance_fact);
 
         im_glass = findViewById(R.id.im_map_glass);
         im_plastic = findViewById(R.id.im_map_plastic);
@@ -351,7 +356,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    public static void start_location(){
+    private static void start_location(){
         LatLng latLng = new LatLng(factory.x, factory.y);
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15.0f);
         mMap.animateCamera(cameraUpdate);
@@ -365,6 +370,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         bt_rec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation fadeAnimation = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.fade);
+                v.startAnimation(fadeAnimation);
                 Intent activity_new = new Intent(MapsActivity.this, RecActivity.class);
                 startActivity(activity_new);
             }
@@ -374,8 +381,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         bt_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new = new Intent(MapsActivity.this, MapsActivity.class);
-                startActivity(activity_new);
+                Animation fadeAnimation = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.fade);
+                v.startAnimation(fadeAnimation);
+                //Intent activity_new = new Intent(MapsActivity.this, MapsActivity.class);
+                //startActivity(activity_new);
             }
         });
 
@@ -383,8 +392,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         bt_prof.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_new;
-                activity_new = new Intent(MapsActivity.this, Profile_Activity.class);
+                Animation fadeAnimation = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.fade);
+                v.startAnimation(fadeAnimation);
+                Intent activity_new = new Intent(MapsActivity.this, ProfileActivity.class);
                 startActivity(activity_new);
 
             }

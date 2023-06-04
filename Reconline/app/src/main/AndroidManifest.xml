@@ -27,7 +27,7 @@
             android:name=".Admin_panelActivity"
             android:exported="false" />
         <activity
-            android:name=".Profile_Activity"
+            android:name=".ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".RecActivity"

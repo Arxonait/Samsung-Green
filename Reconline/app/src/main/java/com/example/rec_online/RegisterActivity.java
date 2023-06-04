@@ -24,16 +24,16 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         Handler handler = new Handler(Looper.getMainLooper());
 
-        EditText login_element = (EditText) findViewById(R.id.et_reg_login);
-        EditText password1_element = (EditText) findViewById(R.id.et_reg_pass1);
-        EditText password2_element = (EditText) findViewById(R.id.et_reg_pass2);
+        EditText login_element = findViewById(R.id.et_reg_login);
+        EditText password1_element = findViewById(R.id.et_reg_pass1);
+        EditText password2_element = findViewById(R.id.et_reg_pass2);
 
 
-        EditText name_element = (EditText) findViewById(R.id.et_reg_name);
-        EditText surname_element = (EditText) findViewById(R.id.et_reg_surname);
-        EditText phone_element = (EditText) findViewById(R.id.et_reg_phone);
+        EditText name_element = findViewById(R.id.et_reg_name);
+        EditText surname_element = findViewById(R.id.et_reg_surname);
+        EditText phone_element = findViewById(R.id.et_reg_phone);
 
-        Button button_reg = (Button) findViewById(R.id.button_reg);
+        Button button_reg = findViewById(R.id.button_reg);
 
 
 

@@ -30,7 +30,6 @@ public class Admin_panelActivity extends AppCompatActivity implements Adapter_ne
     private List<Oper_obj> list_oper;
     private List<Mes_obj> list_mess;
 
-    boolean empty_data = false;
 
 
 

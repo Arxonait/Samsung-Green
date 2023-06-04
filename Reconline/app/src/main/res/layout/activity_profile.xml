@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4CAF50"
-    tools:context=".Profile_Activity">
+    tools:context=".ProfileActivity">
 
     <LinearLayout
         android:id="@+id/map_menu"
@@ -164,15 +164,16 @@
 
             </LinearLayout>
 
-            <ImageButton
+            <Button
                 android:id="@+id/log_out"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="95dp"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
                 android:layout_weight="0.2"
-                android:backgroundTint="#00FFFFFF"
-                android:tint="#FF1100"
-                app:srcCompat="@drawable/logout" />
+                android:backgroundTint="#B82727"
+                android:text="Выйти из приложения"
+                android:textSize="10sp"
+                app:iconTint="#000000" />
 
         </LinearLayout>
 
@@ -313,6 +314,7 @@
                 android:id="@+id/bt_prof_sendMess"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#4CAF50"
                 android:text="Обратная связь" />
 
             <Button

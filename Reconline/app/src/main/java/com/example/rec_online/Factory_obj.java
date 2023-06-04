@@ -5,17 +5,17 @@ import org.json.JSONObject;
 
 public class Factory_obj {
 
-    int id;
-    String name;
-    String address;
-    double x;
-    double y;
-    String work_time;
-    String phone;
+    public int id;
+    public String name;
+    public String address;
+    public double x;
+    public double y;
+    public String work_time;
+    public String phone;
 
-    boolean isGlass;
-    boolean isMetal;
-    boolean isPlastic;
+    public boolean isGlass;
+    public boolean isMetal;
+    public boolean isPlastic;
 
 
     public void parseJson(JSONObject json) throws JSONException {

@@ -4,15 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ServakApplication {
+public class ServerApplication {
 
     public static void main(String[] args) {
-
-         SpringApplication.run(ServakApplication.class, args);
-    }
-
-    public class user{
-        String rr = "";
+         SpringApplication.run(ServerApplication.class, args);
     }
 }
 

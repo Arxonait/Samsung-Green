@@ -17,7 +17,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Main_server {
-    private static String to_server(String url, String json){
+    protected static String to_server(String url, String json){
         String result;
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = RequestBody.create(json, MediaType.parse("application/json"));

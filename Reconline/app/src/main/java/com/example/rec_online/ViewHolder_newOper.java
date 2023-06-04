@@ -10,7 +10,7 @@ public class ViewHolder_newOper extends RecyclerView.ViewHolder implements View.
     private TextView tv_item_id;
 
     private TextView tv_item_user;
-    private TextView tv_item_fact;
+    private TextView tv_item_text;
     private TextView tv_item_date;
     private Adapter_newOper.ItemClickListener clickListener;
 
@@ -18,15 +18,15 @@ public class ViewHolder_newOper extends RecyclerView.ViewHolder implements View.
         super(itemView);
         tv_item_id = itemView.findViewById(R.id.item_id);
         tv_item_user = itemView.findViewById(R.id.item_user);
-        tv_item_fact= itemView.findViewById(R.id.item_fact);
+        tv_item_text = itemView.findViewById(R.id.item_text);
         tv_item_date = itemView.findViewById(R.id.item_date);
         itemView.setOnClickListener(this);
     }
 
-    public void bind(String id, String name_user, String name_fact, String time) {
+    public void bind(String id, String login, String text, String time) {
         tv_item_id.setText(id);
-        tv_item_user.setText(name_user);
-        tv_item_fact.setText(name_fact);
+        tv_item_user.setText(login);
+        tv_item_text.setText(text);
         tv_item_date.setText(time);
     }
 

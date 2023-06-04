@@ -25,7 +25,7 @@ public class ItemActivity extends AppCompatActivity {
 
     private static Oper_obj oper_s = null;
     private static Mes_obj mess_s = null;
-    Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +151,8 @@ public class ItemActivity extends AppCompatActivity {
         bt_cansel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String[] Reasons = {"Вариант 1", "Вариант 2", "Вариант 3"};
+                final String[] Reasons = {"Неверно указанны данные сдачи", "Отсутствует информация о сдачи у центра переработки",
+                        "Повторная попытка сдать"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(ItemActivity.this);
                 builder.setTitle("Причина отмены");
                 final RadioGroup radioGroup = new RadioGroup(ItemActivity.this);

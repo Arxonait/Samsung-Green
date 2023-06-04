@@ -20,7 +20,7 @@ import org.json.JSONObject;
 public class EnterActivity extends AppCompatActivity {
 
     private static User_obj user_enter;
-    private Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     private SharedPreferences sharedPreferences;
 
@@ -47,7 +47,7 @@ public class EnterActivity extends AppCompatActivity {
         bt_reg = findViewById(R.id.register);
 
 
-        process_load();
+        process_load(false);
 
         sharedPreferences = this.getSharedPreferences("Rec_online_memory", Context.MODE_PRIVATE);
 
@@ -56,8 +56,7 @@ public class EnterActivity extends AppCompatActivity {
             enter();
         } else {
             is_new_user = true;
-            bt_enter.setEnabled(true);
-            bt_reg.setEnabled(true);
+            process_load(true);
         }
 
 
@@ -82,13 +81,13 @@ public class EnterActivity extends AppCompatActivity {
     public static User_obj get_dataEnter(){
         return user_enter;
     }
-    private void process_load(){
-        bt_enter.setEnabled(false);
-        bt_reg.setEnabled(false);
+    private void process_load(boolean bl){
+        bt_enter.setEnabled(bl);
+        bt_reg.setEnabled(bl);
     }
 
     private void enter(){
-        process_load();
+        process_load(false);
 
         String login;
         String password;
@@ -105,7 +104,7 @@ public class EnterActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 public void run() {
                     // выполнение сетевого запроса
-                    String response = null;
+                    String response;
 
 
                     try {
@@ -122,8 +121,7 @@ public class EnterActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "Отсутствует соединение с сервером",
                                         Toast.LENGTH_SHORT).show();
                                 is_new_user = true;
-                                bt_enter.setEnabled(true);
-                                bt_reg.setEnabled(true);
+                                process_load(true);
                             }
                         });
                         return;
@@ -162,6 +160,7 @@ public class EnterActivity extends AppCompatActivity {
                                 else{
                                     Toast.makeText(getApplicationContext(), "Логин или пароль не верен",
                                             Toast.LENGTH_SHORT).show();
+                                    process_load(true);
                                 }
 
                             } catch (JSONException e) {
@@ -175,7 +174,9 @@ public class EnterActivity extends AppCompatActivity {
         else{
             Toast.makeText(getApplicationContext(), "Заполните все поля",
                     Toast.LENGTH_SHORT).show();
+            process_load(true);
         }
+
     }
 
 }
