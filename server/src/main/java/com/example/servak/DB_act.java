@@ -20,6 +20,17 @@ public class DB_act {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        Statement sequenceStatement = connection.createStatement();
+        String sequenceSQL = "CREATE SEQUENCE IF NOT EXISTS factory_id_seq";
+        sequenceStatement.executeUpdate(sequenceSQL);
+        sequenceSQL = "CREATE SEQUENCE IF NOT EXISTS users_id_seq";
+        sequenceStatement.executeUpdate(sequenceSQL);
+        sequenceSQL = "CREATE SEQUENCE IF NOT EXISTS gift_id_seq";
+        sequenceStatement.executeUpdate(sequenceSQL);
+        sequenceSQL = "CREATE SEQUENCE IF NOT EXISTS messages_id_seq";
+        sequenceStatement.executeUpdate(sequenceSQL);
+
         Statement statement = connection.createStatement();
         String SQL = String.format("CREATE TABLE IF NOT EXISTS public.factory\n" +
                 "(\n" +
@@ -38,6 +49,22 @@ public class DB_act {
                 "\n" +
                 "TABLESPACE pg_default;");
         int resultSet = statement.executeUpdate(SQL);
+
+        SQL = String.format("CREATE TABLE IF NOT EXISTS public.users\n" +
+                "(\n" +
+                "    id integer NOT NULL DEFAULT nextval('users_id_seq'::regclass),\n" +
+                "    surname text COLLATE pg_catalog.\"default\",\n" +
+                "    name text COLLATE pg_catalog.\"default\",\n" +
+                "    phone text COLLATE pg_catalog.\"default\",\n" +
+                "    login text COLLATE pg_catalog.\"default\",\n" +
+                "    password text COLLATE pg_catalog.\"default\",\n" +
+                "    admin boolean DEFAULT false,\n" +
+                "    CONSTRAINT users_pkey PRIMARY KEY (id)\n" +
+                ")\n" +
+                "\n" +
+                "TABLESPACE pg_default;");
+
+        resultSet = statement.executeUpdate(SQL);
 
         SQL = String.format("CREATE TABLE IF NOT EXISTS public.messages\n" +
                 "(\n" +
@@ -89,21 +116,7 @@ public class DB_act {
 
         resultSet = statement.executeUpdate(SQL);
 
-        SQL = String.format("CREATE TABLE IF NOT EXISTS public.users\n" +
-                "(\n" +
-                "    id integer NOT NULL DEFAULT nextval('users_id_seq'::regclass),\n" +
-                "    surname text COLLATE pg_catalog.\"default\",\n" +
-                "    name text COLLATE pg_catalog.\"default\",\n" +
-                "    phone text COLLATE pg_catalog.\"default\",\n" +
-                "    login text COLLATE pg_catalog.\"default\",\n" +
-                "    password text COLLATE pg_catalog.\"default\",\n" +
-                "    admin boolean DEFAULT false,\n" +
-                "    CONSTRAINT users_pkey PRIMARY KEY (id)\n" +
-                ")\n" +
-                "\n" +
-                "TABLESPACE pg_default;");
 
-        resultSet = statement.executeUpdate(SQL);
 
     }
 
