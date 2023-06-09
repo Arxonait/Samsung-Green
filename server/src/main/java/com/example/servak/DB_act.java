@@ -15,7 +15,7 @@ public class DB_act {
 
     public static String enter(String login, String password) throws SQLException {
         Connection connection;
-        JSONObject responce = new JSONObject();
+        JSONObject response = new JSONObject();
 
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PassWord);
@@ -27,26 +27,26 @@ public class DB_act {
         ResultSet resultSet = statement.executeQuery(SQL);
         if (resultSet.next()) {
             if (resultSet.getString("password").equals(password)) {
-                responce.put("status", true);
-                responce.put("login", login);
-                responce.put("password", password);
-                responce.put("id", resultSet.getInt("id"));
-                responce.put("surname", resultSet.getString("surname"));
-                responce.put("name", resultSet.getString("name"));
-                responce.put("phone", resultSet.getString("phone"));
+                response.put("status", true);
+                response.put("login", login);
+                response.put("password", password);
+                response.put("id", resultSet.getInt("id"));
+                response.put("surname", resultSet.getString("surname"));
+                response.put("name", resultSet.getString("name"));
+                response.put("phone", resultSet.getString("phone"));
 
-                responce.put("admin", resultSet.getBoolean("admin"));
+                response.put("admin", resultSet.getBoolean("admin"));
             } else {
-                responce.put("status", false);
+                response.put("status", false);
             }
         } else {
-            responce.put("status", false);
+            response.put("status", false);
         }
 
         resultSet.close();
         statement.close();
 
-        return responce.toString();
+        return response.toString();
     }
 
     public static String reg(JSONObject json) throws SQLException {
@@ -257,7 +257,7 @@ public class DB_act {
             json_i.put("id_user", resultSet.getInt("id_user"));
             json_i.put("id_prev_mes", resultSet.getInt("id_prev_mes"));
             json_i.put("is_read", resultSet.getBoolean("is_read"));
-            json_i.put("time", resultSet.getString("date"));
+            json_i.put("time", resultSet.getString("timemess"));
             json_i.put("title", resultSet.getString("title"));
             json_i.put("main_text", resultSet.getString("main_text"));
             json_i.put("type", resultSet.getString("type"));
@@ -393,7 +393,7 @@ public class DB_act {
         else {
             CreateMess.ref_balls(json);
         }
-        sql = String.format("INSERT INTO messages (id_user, id_prev_mes, date, is_read, title, main_text, type) VALUES ('%d', " +
+        sql = String.format("INSERT INTO messages (id_user, id_prev_mes, timemess, is_read, title, main_text, type) VALUES ('%d', " +
                         "'%d', '%s', '%b', '%s', '%s', '%s')", json.getInt("id_user"), -1,
                 json.getString("time"), false, CreateMess.title, CreateMess.main_text, "balls");
         statement = connection.prepareStatement(sql);
@@ -423,7 +423,7 @@ public class DB_act {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         String current_time = dateFormat.format(currentDate);
 
-        String sql = String.format("INSERT INTO messages (id_user, id_prev_mes, date, is_read, title, main_text, type) VALUES ('%d', " +
+        String sql = String.format("INSERT INTO messages (id_user, id_prev_mes, timemess, is_read, title, main_text, type) VALUES ('%d', " +
                         "'%d', '%s', '%b', '%s', '%s', '%s')", json.getInt("id_user"), -1,
                 current_time, false, json.getString("title"), json.getString("main_text"), "mess");
         PreparedStatement statement = connection.prepareStatement(sql);
@@ -452,7 +452,7 @@ public class DB_act {
         String SQL = String.format("SELECT *" +
                 "FROM messages INNER JOIN users ON messages.id_user = users.id " +
                 "WHERE id_prev_mes = -1 and type = 'mess' " +
-                "ORDER BY date DESC");
+                "ORDER BY timemess DESC");
 
         ResultSet resultSet = statement.executeQuery(SQL);
         while (resultSet.next()) {
@@ -468,7 +468,7 @@ public class DB_act {
             json.put("main_text", resultSet.getString("main_text"));
             json.put("type", resultSet.getString("type"));
             json.put("is_read", resultSet.getBoolean("is_read"));
-            json.put("time", resultSet.getString("date"));
+            json.put("time", resultSet.getString("timemess"));
 
 
             cont_row++;
@@ -508,7 +508,7 @@ public class DB_act {
 
         String title = String.format("Ответ на \"%s\"", json.getString("title"));
 
-        String sql = String.format("INSERT INTO messages (id_user, id_prev_mes, date, is_read, title, main_text, type) VALUES ('%d', " +
+        String sql = String.format("INSERT INTO messages (id_user, id_prev_mes, timemess, is_read, title, main_text, type) VALUES ('%d', " +
                         "'%d', '%s', '%b', '%s', '%s', '%s')", json.getInt("id_user"), json.getInt("id_prev_mes"),
                 current_time, false, title, json.getString("main_text"), "mess");
         PreparedStatement statement = connection.prepareStatement(sql);

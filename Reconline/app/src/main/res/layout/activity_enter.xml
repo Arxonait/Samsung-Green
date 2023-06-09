@@ -51,6 +51,7 @@
             android:layout_width="222dp"
             android:layout_height="45dp"
             android:layout_marginTop="20dp"
+            android:backgroundTint="#4CAF50"
             android:text="Войти" />
 
         <Button
@@ -59,6 +60,7 @@
             android:layout_height="45dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
+            android:backgroundTint="#4CAF50"
             android:text="Зарегистрироваться" />
     </LinearLayout>
 
