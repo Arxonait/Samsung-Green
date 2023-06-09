@@ -13,6 +13,100 @@ public class DB_act {
     static final String USERNAME = "postgres";
     static final String PassWord = "1234";
 
+    public static void createDB() throws SQLException {
+        Connection connection;
+        try {
+            connection = DriverManager.getConnection(URL, USERNAME, PassWord);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        Statement statement = connection.createStatement();
+        String SQL = String.format("CREATE TABLE IF NOT EXISTS public.factory\n" +
+                "(\n" +
+                "    id bigint NOT NULL DEFAULT nextval('factory_id_seq'::regclass),\n" +
+                "    name text COLLATE pg_catalog.\"default\",\n" +
+                "    adres text COLLATE pg_catalog.\"default\",\n" +
+                "    x double precision,\n" +
+                "    y double precision,\n" +
+                "    work_time text COLLATE pg_catalog.\"default\",\n" +
+                "    mobile text COLLATE pg_catalog.\"default\",\n" +
+                "    glass boolean,\n" +
+                "    plastic boolean,\n" +
+                "    metal boolean,\n" +
+                "    CONSTRAINT factory_pkey PRIMARY KEY (id)\n" +
+                ")\n" +
+                "\n" +
+                "TABLESPACE pg_default;");
+        int resultSet = statement.executeUpdate(SQL);
+
+        SQL = String.format("CREATE TABLE IF NOT EXISTS public.messages\n" +
+                "(\n" +
+                "    id bigint NOT NULL DEFAULT nextval('messages_id_seq'::regclass),\n" +
+                "    id_user bigint NOT NULL,\n" +
+                "    id_prev_mes bigint,\n" +
+                "    timemess timestamp with time zone,\n" +
+                "    is_read boolean,\n" +
+                "    title text COLLATE pg_catalog.\"default\",\n" +
+                "    main_text text COLLATE pg_catalog.\"default\",\n" +
+                "    type text COLLATE pg_catalog.\"default\",\n" +
+                "    CONSTRAINT messages_pkey PRIMARY KEY (id),\n" +
+                "    CONSTRAINT messages_id_user_fkey FOREIGN KEY (id_user)\n" +
+                "        REFERENCES public.users (id) MATCH SIMPLE\n" +
+                "        ON UPDATE NO ACTION\n" +
+                "        ON DELETE NO ACTION\n" +
+                "        NOT VALID\n" +
+                ")\n" +
+                "\n" +
+                "TABLESPACE pg_default;");
+        resultSet = statement.executeUpdate(SQL);
+
+        SQL = String.format("CREATE TABLE IF NOT EXISTS public.operations\n" +
+                "(\n" +
+                "    id_fact bigint,\n" +
+                "    id_user bigint,\n" +
+                "    glass bigint,\n" +
+                "    metal bigint,\n" +
+                "    plastic bigint,\n" +
+                "    ball bigint,\n" +
+                "    id bigint NOT NULL DEFAULT nextval('gift_id_seq'::regclass),\n" +
+                "    codestatus bigint,\n" +
+                "    timeoper timestamp with time zone,\n" +
+                "    reason text COLLATE pg_catalog.\"default\",\n" +
+                "    CONSTRAINT gift_pkey PRIMARY KEY (id),\n" +
+                "    CONSTRAINT operations_id_fact_fkey FOREIGN KEY (id_fact)\n" +
+                "        REFERENCES public.factory (id) MATCH SIMPLE\n" +
+                "        ON UPDATE NO ACTION\n" +
+                "        ON DELETE NO ACTION\n" +
+                "        NOT VALID,\n" +
+                "    CONSTRAINT operations_id_user_fkey FOREIGN KEY (id_user)\n" +
+                "        REFERENCES public.users (id) MATCH SIMPLE\n" +
+                "        ON UPDATE NO ACTION\n" +
+                "        ON DELETE NO ACTION\n" +
+                "        NOT VALID\n" +
+                ")\n" +
+                "\n" +
+                "TABLESPACE pg_default;");
+
+        resultSet = statement.executeUpdate(SQL);
+
+        SQL = String.format("CREATE TABLE IF NOT EXISTS public.users\n" +
+                "(\n" +
+                "    id integer NOT NULL DEFAULT nextval('users_id_seq'::regclass),\n" +
+                "    surname text COLLATE pg_catalog.\"default\",\n" +
+                "    name text COLLATE pg_catalog.\"default\",\n" +
+                "    phone text COLLATE pg_catalog.\"default\",\n" +
+                "    login text COLLATE pg_catalog.\"default\",\n" +
+                "    password text COLLATE pg_catalog.\"default\",\n" +
+                "    admin boolean DEFAULT false,\n" +
+                "    CONSTRAINT users_pkey PRIMARY KEY (id)\n" +
+                ")\n" +
+                "\n" +
+                "TABLESPACE pg_default;");
+
+        resultSet = statement.executeUpdate(SQL);
+
+    }
+
     public static String enter(String login, String password) throws SQLException {
         Connection connection;
         JSONObject response = new JSONObject();
