@@ -143,6 +143,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         } else {
             Toast.makeText(this, "GPS не доступен", Toast.LENGTH_SHORT).show();
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
         }
 
 
@@ -409,8 +411,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 Animation fadeAnimation = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.fade);
                 v.startAnimation(fadeAnimation);
-                //Intent activity_new = new Intent(MapsActivity.this, MapsActivity.class);
-                //startActivity(activity_new);
             }
         });
 

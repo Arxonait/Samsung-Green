@@ -52,6 +52,7 @@
         android:layout_height="305dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/rounded_background"
+        android:gravity="center_horizontal|center_vertical"
         android:orientation="horizontal"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +65,7 @@
             android:layout_height="match_parent"
             android:visibility="gone"
             tools:ignore="MissingConstraints"
-            tools:visibility="gone">
+            tools:visibility="visible">
 
             <LinearLayout
                 android:id="@+id/plastic"
@@ -293,6 +294,7 @@
             android:id="@+id/sec_operFar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="gone"
             tools:ignore="MissingConstraints">
 
             <TextView
@@ -452,6 +454,16 @@
                     android:textSize="16sp" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tv_rec_gps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="GPS выключен"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="24sp" />
 
     </LinearLayout>
 

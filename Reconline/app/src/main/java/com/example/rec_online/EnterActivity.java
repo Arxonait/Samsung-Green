@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -81,6 +82,11 @@ public class EnterActivity extends AppCompatActivity {
         });
     }
 
+    public boolean isGPSEnabled(Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
     public static User_obj get_dataEnter(){
         return user_enter;
     }
@@ -103,76 +109,86 @@ public class EnterActivity extends AppCompatActivity {
             password = sharedPreferences.getString("password", "");
         }
 
+
         if(login.length() > 0 && password.length() > 0 ){
-            new Thread(new Runnable() {
-                public void run() {
-                    // выполнение сетевого запроса
-                    String response;
+            boolean gpsEnabled = isGPSEnabled(this);
+            if (gpsEnabled){
+                new Thread(new Runnable() {
+                    public void run() {
+                        // выполнение сетевого запроса
+                        String response;
 
 
-                    try {
-                        response = Main_server.Enter(login, password);
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-
-
-
-                    if(response.equals("server")){
-                        handler.post(new Runnable() {
-                            public void run() {
-                                Toast.makeText(getApplicationContext(), "Отсутствует соединение с сервером",
-                                        Toast.LENGTH_SHORT).show();
-                                is_new_user = true;
-                                process_load(true);
-                            }
-                        });
-                        return;
-                    }
+                        try {
+                            response = Main_server.Enter(login, password);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
 
 
 
-                    String finalResponse = response;
-                    handler.post(new Runnable() {
-                        public void run() {
-                            // обновление пользовательского интерфейса с использованием результата
-                            try {
-                                JSONObject answer = new JSONObject(finalResponse);
-                                if(answer.getBoolean("status")){
-                                    user_enter = new User_obj();
-                                    user_enter.parseJson(answer);
-
-                                    if(is_new_user){
-                                        // Получение объекта редактора SharedPreferences для внесения изменений
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                                        // Сохранение логина и пароля
-                                        editor.putString("login", login);
-                                        editor.putString("password", password);
-
-                                        // Применение изменений
-                                        editor.apply();
-                                    }
-
-                                    Pass_act.main();
-
-                                    Intent MapsActivity = new Intent(EnterActivity.this, MapsActivity.class);
-                                    startActivity(MapsActivity);
-                                    finish();
-                                }
-                                else{
-                                    Toast.makeText(getApplicationContext(), "Логин или пароль не верен",
+                        if(response.equals("server")){
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "Отсутствует соединение с сервером",
                                             Toast.LENGTH_SHORT).show();
+                                    is_new_user = true;
                                     process_load(true);
                                 }
-
-                            } catch (JSONException e) {
-                                throw new RuntimeException(e);
-                            }
+                            });
+                            return;
                         }
-                    });
-                }
-            }).start();
+
+
+
+                        String finalResponse = response;
+                        handler.post(new Runnable() {
+                            public void run() {
+                                // обновление пользовательского интерфейса с использованием результата
+                                try {
+                                    JSONObject answer = new JSONObject(finalResponse);
+                                    if(answer.getBoolean("status")){
+                                        user_enter = new User_obj();
+                                        user_enter.parseJson(answer);
+
+                                        if(is_new_user){
+                                            // Получение объекта редактора SharedPreferences для внесения изменений
+                                            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                                            // Сохранение логина и пароля
+                                            editor.putString("login", login);
+                                            editor.putString("password", password);
+
+                                            // Применение изменений
+                                            editor.apply();
+                                        }
+
+                                        Pass_act.main();
+
+                                        Intent MapsActivity = new Intent(EnterActivity.this, MapsActivity.class);
+                                        startActivity(MapsActivity);
+                                        finish();
+                                    }
+                                    else{
+                                        Toast.makeText(getApplicationContext(), "Логин или пароль не верен",
+                                                Toast.LENGTH_SHORT).show();
+                                        process_load(true);
+                                    }
+
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        });
+                    }
+                }).start();
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "Включите GPS",
+                        Toast.LENGTH_SHORT).show();
+                process_load(true);
+            }
+
         }
         else{
             Toast.makeText(getApplicationContext(), "Заполните все поля",

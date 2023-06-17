@@ -8,10 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -59,15 +61,28 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
     }
 
+    public boolean isGPSEnabled(Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
     private void load_sec_oper(){
-        Factory_obj near_factory = near_fact();
-        double near_dist = MapsActivity.calcDist(near_factory.x, near_factory.y, RecActivity.this);
-        if(near_dist > 150){
-            load_sec_operFar(near_factory, near_dist);
+        boolean gpsEnabled = isGPSEnabled(this);
+
+
+        if (gpsEnabled) {
+            Factory_obj near_factory = near_fact();
+            double near_dist = MapsActivity.calcDist(near_factory.x, near_factory.y, RecActivity.this);
+            if(near_dist > 150){
+                load_sec_operFar(near_factory, near_dist);
+            }
+            else {
+                load_sec_newOper(near_factory);
+            }
+        } else {
+            Toast.makeText(this, "GPS не доступен", Toast.LENGTH_SHORT).show();
         }
-        else {
-            load_sec_newOper(near_factory);
-        }
+
     }
 
     private void load_sec_operFar(Factory_obj nearFactory, double nearDist){
