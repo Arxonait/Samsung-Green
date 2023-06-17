@@ -1,5 +1,6 @@
 package com.example.rec_online;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -129,29 +130,47 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         };
 
-        try {
-            // Проверка доступности провайдера GPS
-            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        // Проверка доступности провайдера GPS
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            // Запрос разрешений, если они еще не предоставлены
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // Запрос разрешений
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-                }
-                // Регистрация LocationListener
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
             } else {
-                Toast.makeText(this, "GPS не доступен", Toast.LENGTH_SHORT).show();
+                // Разрешения уже предоставлены, регистрируем LocationListener
+                registerLocationUpdates();
             }
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
-        }
-        catch (Exception e){
-
+        } else {
+            Toast.makeText(this, "GPS не доступен", Toast.LENGTH_SHORT).show();
         }
 
 
 
 
+    }
+
+
+    private void registerLocationUpdates() {
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+        // Остальной код для инициализации карты
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+
+    // Обработка результатов запроса разрешений
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Разрешения предоставлены, регистрируем LocationListener
+                registerLocationUpdates();
+            } else {
+                Toast.makeText(this, "Разрешения не предоставлены", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     public void onMapReady(GoogleMap googleMap) {
