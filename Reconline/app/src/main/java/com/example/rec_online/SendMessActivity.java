@@ -19,6 +19,7 @@ public class SendMessActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_mess);
+        getSupportActionBar().hide();
         Handler handler = new Handler(Looper.getMainLooper());
 
         EditText ed_title = findViewById(R.id.ed_sendMess_title);

@@ -40,6 +40,7 @@ public class Admin_panelActivity extends AppCompatActivity implements Adapter_ne
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_panel);
+        getSupportActionBar().hide();
 
 
         newOper();

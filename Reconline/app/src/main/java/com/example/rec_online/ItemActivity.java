@@ -31,6 +31,7 @@ public class ItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item);
+        getSupportActionBar().hide();
 
         if(oper_s != null){
             load_sec_desOper();

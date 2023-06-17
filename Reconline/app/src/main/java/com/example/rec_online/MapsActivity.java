@@ -71,6 +71,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        getSupportActionBar().hide();
 
 
 
@@ -128,20 +129,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         };
 
-        // Проверка доступности провайдера GPS
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            // Запрос разрешений
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        try {
+            // Проверка доступности провайдера GPS
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                // Запрос разрешений
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                }
+                // Регистрация LocationListener
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            } else {
+                Toast.makeText(this, "GPS не доступен", Toast.LENGTH_SHORT).show();
             }
-            // Регистрация LocationListener
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        } else {
-            Toast.makeText(this, "GPS не доступен", Toast.LENGTH_SHORT).show();
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
         }
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        catch (Exception e){
+
+        }
+
 
 
 

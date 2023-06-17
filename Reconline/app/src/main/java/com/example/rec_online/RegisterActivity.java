@@ -22,6 +22,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        getSupportActionBar().hide();
         Handler handler = new Handler(Looper.getMainLooper());
 
         EditText login_element = findViewById(R.id.et_reg_login);
@@ -51,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if(login.length() * password1.length() * password2.length() *  name.length() *
                         surname.length() * phone.length() > 0){
                     if(password1.equals(password2)){
-                        if (password1.length() > 0){
+                        if (password1.length() > 4){
                             new Thread(new Runnable() {
                                 public void run() {
                                     // выполнение сетевого запроса

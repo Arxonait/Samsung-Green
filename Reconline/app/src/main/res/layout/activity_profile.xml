@@ -330,7 +330,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sec_profile_history"
         android:layout_width="375dp"
-        android:layout_height="265dp"
+        android:layout_height="325dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/rounded_background"
         android:elevation="100dp"
@@ -354,11 +354,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rview_prof_mes"
             android:layout_width="match_parent"
-            android:layout_height="210dp"
+            android:layout_height="245dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"

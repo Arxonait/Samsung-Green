@@ -46,6 +46,8 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rec);
 
+        getSupportActionBar().hide();
+
         load_sec_infBall();
         load_sec_oper();
 

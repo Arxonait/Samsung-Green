@@ -50,7 +50,7 @@
     <LinearLayout
         android:layout_width="375dp"
         android:layout_height="305dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/rounded_background"
         android:orientation="horizontal"
         android:padding="8dp"
@@ -459,7 +459,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="375dp"
         android:layout_height="350dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/rounded_background"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"

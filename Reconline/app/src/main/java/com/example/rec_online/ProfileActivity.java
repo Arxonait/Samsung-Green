@@ -44,6 +44,8 @@ public class ProfileActivity extends AppCompatActivity implements Adapter_prof.I
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        getSupportActionBar().hide();
+
         sharedPreferences = this.getSharedPreferences("Rec_online_memory", Context.MODE_PRIVATE);
         load_sec_info();
         load_menu();
