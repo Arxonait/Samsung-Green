@@ -55,15 +55,14 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         if(Pass_act.factories.isEmpty()){
             Toast.makeText(this, "Отсутствуют данные о центрах переработки", Toast.LENGTH_SHORT).show();
             finish();
+        } else {
+            load_sec_infBall();
+            load_sec_oper();
+
+            load_menu();
         }
 
-        load_sec_infBall();
-        load_sec_oper();
 
-
-
-
-        load_menu();
 
 
     }
