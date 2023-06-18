@@ -52,6 +52,10 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
         setContentView(R.layout.activity_rec);
 
         getSupportActionBar().hide();
+        if(Pass_act.factories.isEmpty()){
+            Toast.makeText(this, "Отсутствуют данные о центрах переработки", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         load_sec_infBall();
         load_sec_oper();
