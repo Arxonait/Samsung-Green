@@ -1,10 +1,8 @@
 package com.example.rec_online;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -43,14 +41,12 @@ import java.util.Map;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private static GoogleMap mMap;
-    private ActivityMapsBinding binding;
 
     private static LocationManager locationManager;
     private LocationListener locationListener;
 
-    private boolean isCreate_device_marker = true;
+    private boolean isStart = true;
     private Marker marker_geo = null;
-    private String marker_geo_id;
     private ConstraintLayout menu_fact;
     private TextView  name_fact;
     private TextView  adres_fact;
@@ -89,96 +85,69 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 double longitude = location.getLongitude();
                 LatLng latLng = new LatLng(latitude, longitude);
 
-                if (isCreate_device_marker) {
+                if (isStart) {
+                    create_marker(latLng);
                     try {
-                        marker_geo = mMap.addMarker(new MarkerOptions().position(latLng).title("Вы здесь"));
-                        if(factory != null){
+                        if(factory == null){
+                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15.0f);
+                            mMap.animateCamera(cameraUpdate);
+                        }
+                        else{
                             start_location();
                         }
-                        else {
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
-                        }
+                        isStart = false;
 
-                        isCreate_device_marker = false;
-                        markerMap.put("my_geo", marker_geo);
-                        marker_geo_id = marker_geo.getId();
-                        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.geo);
-                        marker_geo.setIcon(icon);
-                        marker_geo.setPosition(latLng);
                     } catch (Exception e){
 
                     }
+                }
 
+
+
+                marker_geo.setPosition(latLng);
+
+            }
+            @Override
+            public void onProviderEnabled(String provider) {
+            }
+
+            public void create_marker(LatLng latLng){
+                marker_geo = mMap.addMarker(new MarkerOptions().position(latLng).title("Вы здесь"));
+                markerMap.put("my_geo", marker_geo);
+                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.geo);
+                marker_geo.setIcon(icon);
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+                Toast.makeText(MapsActivity.this, "GPS не доступен", Toast.LENGTH_SHORT).show();
+                isStart = true;
+                if(marker_geo != null){
+                    marker_geo.remove();
                 }
 
             }
 
 
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-            }
-
-
         };
 
-        // Проверка доступности провайдера GPS
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            // Запрос разрешений, если они еще не предоставлены
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // Запрос разрешений
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-            } else {
-                // Разрешения уже предоставлены, регистрируем LocationListener
-                registerLocationUpdates();
-            }
-        } else {
-            Toast.makeText(this, "GPS не доступен", Toast.LENGTH_SHORT).show();
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
-        }
-
-
-
-
-    }
-
-
-    private void registerLocationUpdates() {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-
-        // Остальной код для инициализации карты
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
     }
 
-    // Обработка результатов запроса разрешений
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Разрешения предоставлены, регистрируем LocationListener
-                registerLocationUpdates();
-            } else {
-                Toast.makeText(this, "Разрешения не предоставлены", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+
 
     public void onMapReady(GoogleMap googleMap) {
+
         load_menu();
         mMap = googleMap;
         menu_fact = findViewById(R.id.menu_fact);
+
+
+
+
 
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.green);
 
@@ -260,13 +229,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         im_glass = findViewById(R.id.im_map_glass);
         im_plastic = findViewById(R.id.im_map_plastic);
         im_metal = findViewById(R.id.im_map_metal);
-
-
-
-
-
-
-
     }
 
 
@@ -286,28 +248,48 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private void moveToMyLocation() {
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String provider = locationManager.getBestProvider(criteria, false);
-
-        if (provider != null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                Location location = locationManager.getLastKnownLocation(provider);
-                if (location != null) {
-                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15.0f);
-                    mMap.animateCamera(cameraUpdate);
-                }
-            }
+        LatLng latLng = getMyLocation();
+        if (latLng != null){
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15.0f);
+            mMap.animateCamera(cameraUpdate);
         }
-
     }
+
+    private LatLng getMyLocation(){
+        LatLng latLng = null;
+        if(locationManager.isLocationEnabled()){
+            Criteria criteria = new Criteria();
+            String provider = locationManager.getBestProvider(criteria, false);
+            Location location = locationManager.getLastKnownLocation(provider);
+            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+        }
+        else {
+            Toast.makeText(MapsActivity.this, "GPS не доступен", Toast.LENGTH_SHORT).show();
+
+        }
+        return latLng;
+    }
+
+    private double calcDist(double objLat, double objLong){
+        double distance = 0.0;
+
+        LatLng latLng = getMyLocation();
+        if (latLng != null){
+            float[] results = new float[1];
+            Location.distanceBetween(latLng.latitude, latLng.longitude, objLat, objLong, results);
+            distance = results[0];
+        }
+        return distance;
+    }
+
+
+
 
     public boolean onMarkerClick(Marker marker) {
         // Обработка события нажатия на маркер
         Factory_obj factory_marker = null;
-        if(!marker.getId().equals(marker_geo_id)){
+        if(!marker.getId().equals(marker_geo.getId())){
             for (Map.Entry<String, Marker> entry : markerMap.entrySet()) {
                 Marker marker_cur = entry.getValue();
                 if(marker.getId().equals(marker_cur.getId())){
@@ -331,7 +313,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             work_time_fact.setText(factory_marker.work_time);
             mobile_fact.setText(factory_marker.phone);
             adres_fact.setText(factory_marker.address);
-            double dist = calcDist(factory_marker.x, factory_marker.y, MapsActivity.this);
+            double dist = calcDist(factory_marker.x, factory_marker.y);
             String dist_str;
             if(dist < 1300){
                 dist = Math.round(dist*10)/10.0;
@@ -359,29 +341,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return false;
     }
 
-    public static double calcDist(double objLat, double objLong, Context context){
-        double distance = 0.0;
-
-        Criteria criteria = new Criteria();
-        String provider = locationManager.getBestProvider(criteria, false);
-
-        if (provider != null) {
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                Location location = locationManager.getLastKnownLocation(provider);
-                if (location != null) {
-                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    float[] results = new float[1];
-                    Location.distanceBetween(location.getLatitude(), location.getLongitude(), objLat, objLong, results);
-
-                    distance = results[0];
-                }
-            }
-        }
 
 
-        return distance;
-    }
 
 
     private static void start_location(){

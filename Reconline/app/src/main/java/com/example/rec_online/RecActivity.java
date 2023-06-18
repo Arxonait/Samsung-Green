@@ -13,6 +13,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.location.Criteria;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,7 +75,7 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
         if (gpsEnabled) {
             Factory_obj near_factory = near_fact();
-            double near_dist = MapsActivity.calcDist(near_factory.x, near_factory.y, RecActivity.this);
+            double near_dist = calcDist(near_factory.x, near_factory.y);
             if(near_dist > 150){
                 load_sec_operFar(near_factory, near_dist);
             }
@@ -304,9 +307,9 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
 
     private Factory_obj near_fact(){
         Factory_obj best_factory = Pass_act.factories.get(0);
-        double best_dist = MapsActivity.calcDist(best_factory.x, best_factory.y, RecActivity.this);
+        double best_dist = calcDist(best_factory.x, best_factory.y);
         for (Factory_obj factory : Pass_act.factories) {
-            double cur_dist = MapsActivity.calcDist(factory.x, factory.y, RecActivity.this);
+            double cur_dist = calcDist(factory.x, factory.y);
             if (best_dist > cur_dist){
                 best_dist = cur_dist;
                 best_factory = factory;
@@ -484,6 +487,38 @@ public class RecActivity extends AppCompatActivity implements Adapter_rec.ItemCl
                 startActivity(activity_new);
             }
         });
+    }
+
+
+
+
+    private LatLng getMyLocation(){
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if(locationManager.isLocationEnabled()){
+            Criteria criteria = new Criteria();
+            String provider = locationManager.getBestProvider(criteria, false);
+
+            Location location = locationManager.getLastKnownLocation(provider);
+            if (location != null) {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                LatLng latLng = new LatLng(latitude, longitude);
+                return latLng;
+            }
+        }
+        return null;
+    }
+
+    private double calcDist(double objLat, double objLong){
+        double distance = 0.0;
+
+        LatLng latLng = getMyLocation();
+        if (latLng != null){
+            float[] results = new float[1];
+            Location.distanceBetween(latLng.latitude, latLng.longitude, objLat, objLong, results);
+            distance = results[0];
+        }
+        return distance;
     }
 
 }

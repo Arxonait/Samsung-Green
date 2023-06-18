@@ -17,6 +17,8 @@ import org.json.JSONObject;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private final int NUM_PASSWORD = 4;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if(login.length() * password1.length() * password2.length() *  name.length() *
                         surname.length() * phone.length() > 0){
                     if(password1.equals(password2)){
-                        if (password1.length() > 4){
+                        if (password1.length() > NUM_PASSWORD){
                             new Thread(new Runnable() {
                                 public void run() {
                                     // выполнение сетевого запроса
@@ -85,7 +87,8 @@ public class RegisterActivity extends AppCompatActivity {
                             }).start();
                         }
                         else{
-                            Toast.makeText(getApplicationContext(), "Пароль должен быть больше n символов",
+                            Toast.makeText(getApplicationContext(), String.format("Пароль должен быть больше %d символов",
+                                            NUM_PASSWORD),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
